@@ -4,9 +4,9 @@ Test it with your travel photoes with your friends.
 
 # Requirement
 
-Fill friend-dataset directory first.
+## Fill friend-dataset directory
 
-This below is directory hierarchy of dataset. 
+This below is directory hierarchy of this project. 
 
 ```
 project
@@ -14,6 +14,8 @@ project
 │   friend_detect.py
 │   friend_embedding.py
 │   friend_classify.py
+│   face_who_detect.py
+│   facenet_keras.h5
 │
 └───friend-dataset
 │   │
@@ -37,14 +39,17 @@ project
 │   
 ```
 
+## Pretrained model
+You can download pretrained Keras facenet model (trained by MS-Celeb-1M dataset).
+- Download model from [here](https://drive.google.com/open?id=1pwQ3H4aJ8a6yyJHZkTwtjcL4wYWQb7bn) and save it in topmost directory.
 
 # How to run
 
 There are three steps to get results.
 
-First, detect and extract faces from your dataset folder.
-Second, do embedding to it (preprocessing).
-Finally, run SVM to classify face in your test dataset.
+1. detect and extract faces from your dataset folder.
+1. do embedding to it (preprocessing).
+1. run SVM to classify face in your test dataset.
 
 ## Face detection
 
