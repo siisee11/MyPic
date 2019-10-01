@@ -12,28 +12,28 @@ This below is directory hierarchy of dataset.
 project
 │   README.md
 │   friend_detect.py
-│	friend_embedding.py
-│	friend_classify.py
+│   friend_embedding.py
+│   friend_classify.py
 │
 └───friend-dataset
-│	│
-│	└───train
-│   │	└───person1 
-│	│	│	│   p1.jpg
-│   │	│	│   ...
+│   │
+│   └───train
+│   │   └───person1 
+│	│   │   │   p1.jpg
+│   │   │   │   ...
 │   │   │
-│   │	└───person2 
-│	│		│   p1.jpg
-│   │		│   ...
+│   │   └───person2 
+│   │       │   p1.jpg
+│   │       │   ...
 │   │
 │   └───test
-│   	└───person1 
-│		│   │   p1.jpg
-│		│	│   ...
+│       └───person1 
+│       │   │   p1.jpg
+│       │   │   ...
 │       │
-│   	└───person2 
-│			│   p2.jpg
-│   	    │   ...
+│       └───person2 
+│           │   p2.jpg
+│           │   ...
 │   
 ```
 
