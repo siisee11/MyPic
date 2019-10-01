@@ -19,7 +19,7 @@ project
 │   │
 │   └───train
 │   │   └───person1 
-│	│   │   │   p1.jpg
+│   │   │   │   p1.jpg
 │   │   │   │   ...
 │   │   │
 │   │   └───person2 
