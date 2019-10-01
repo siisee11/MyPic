@@ -16,23 +16,23 @@ project
 │	friend_classify.py
 │
 └───friend-dataset
-│   │
-│   └───train
+│	│
+│	└───train
 │   │	└───person1 
-│	│   │   │   p1.jpg
-│   │	│   │   ...
+│	│	│	│   p1.jpg
+│   │	│	│   ...
 │   │   │
 │   │	└───person2 
-│	│       │   p1.jpg
-│   │	    │   ...
+│	│		│   p1.jpg
+│   │		│   ...
 │   │
 │   └───test
 │   	└───person1 
-│	    │   │   p1.jpg
-│   	│   │   ...
+│		│   │   p1.jpg
+│		│	│   ...
 │       │
 │   	└───person2 
-│	        │   p2.jpg
+│			│   p2.jpg
 │   	    │   ...
 │   
 ```
