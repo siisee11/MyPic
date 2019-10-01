@@ -1,10 +1,14 @@
 # Face-classification
 
-Test it with your travel photoes with your friends.
+Test it with your travel photo with your friends.
 
 ## Requirement
 
 ### Fill friend-dataset directory
+
+Fill the friend-dataset directory with your photo.
+
+If there is no data then you can download celebrities picture from [here](https://drive.google.com/drive/folders/1exa2lr6yWRS2RW1NGCYKqUjfsv32dL5Z?usp=sharing)
 
 This below is directory hierarchy of this project. 
 
