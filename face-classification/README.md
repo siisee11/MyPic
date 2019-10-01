@@ -56,13 +56,19 @@ There are three steps to get results.
 ```python friend_detect.py```
 
 It will generate friend-dataset.npz
+
 It contains 160X160 pixels of detected faces as zipped numpy.
+
+You can show detected faces of specific person, just type this line below.
+
+```python face_who_detect.py <person's name>```
 
 
 ### Face embedding
 
 ```python friend_embedding.py```
 
+It will generate friend-embeddings.npz
 
 ### Face classifying
 
