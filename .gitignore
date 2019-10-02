@@ -103,6 +103,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-.tar.gz
+*.tar.gz
 friend-dataset/
-.h5
+*.h5
