@@ -1,4 +1,4 @@
-[![GitHub contributors](https://img.shields.io/github/contributors/BlindedShooter/SKKU-2019-Fall-Capstone-Design.svg)](https://GitHub.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design.js/graphs/contributors/)
+[![GitHub contributors](https://img.shields.io/github/contributors/BlindedShooter/SKKU-2019-Fall-Capstone-Design.svg)](https://GitHub.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design/graphs/contributors/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design/graphs/commit-activity)
 
 
