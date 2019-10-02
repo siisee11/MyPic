@@ -1,5 +1,5 @@
-[![GitHub contributors](https://img.shields.io/github/contributors/Naereen/StrapDown.js.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/contributors/)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
+[![GitHub contributors](https://img.shields.io/github/contributors/BlindedShooter/SKKU-2019-Fall-Capstone-Design.svg)](https://GitHub.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design.js/graphs/contributors/)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design/graphs/commit-activity)
 
 
 # SKKU-2019-Fall-Capstone-Design
