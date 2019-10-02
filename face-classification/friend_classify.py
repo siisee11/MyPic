@@ -1,5 +1,6 @@
 # develop a classifier for the 5 Celebrity Faces Dataset
 from random import choice
+import numpy as np
 from numpy import load
 from numpy import expand_dims
 from sklearn.preprocessing import LabelEncoder
@@ -9,18 +10,29 @@ from matplotlib import pyplot
 # load faces
 data = load('friend-dataset.npz')
 testX_faces = data['arr_2']
+
 # load face embeddings
 data = load('friend-embeddings.npz')
 trainX, trainy, testX, testy = data['arr_0'], data['arr_1'], data['arr_2'], data['arr_3']
+
 # normalize input vectors
 in_encoder = Normalizer(norm='l2')
 trainX = in_encoder.transform(trainX)
 testX = in_encoder.transform(testX)
+
 # label encode targets
 out_encoder = LabelEncoder()
 out_encoder.fit(trainy)
+
+for label in np.unique(testy):
+	if label not in out_encoder.classes_: # unseen label 데이터인 경우( )
+		out_encoder.classes_ = np.append(out_encoder.classes_, label) # 미처리 시 ValueError발생
+
 trainy = out_encoder.transform(trainy)
 testy = out_encoder.transform(testy)
+print(trainy)
+print(testy)
+
 # fit model
 model = SVC(kernel='linear', probability=True)
 model.fit(trainX, trainy)
