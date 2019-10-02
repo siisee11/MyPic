@@ -53,10 +53,9 @@ def extract_face_test(filename, required_size=(160, 160)):
 		return None
 
 	for result in results:
-		print(result)
-		# 
 		if result['confidence'] < 0.8 :
 			continue
+		print(result)
 		# extract the bounding box from the first face
 		x1, y1, width, height = result['box']
 		# bug fix
@@ -69,7 +68,6 @@ def extract_face_test(filename, required_size=(160, 160)):
 		image = image.resize(required_size)
 		face_array = asarray(image)
 		face_arrays.append(face_array)
-		print(face_array.shape)
 
 	return face_array
 
