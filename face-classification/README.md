@@ -1,5 +1,3 @@
-https://img.shields.io/badge/<LABEL>-<MESSAGE>-<COLOR>
-
 # Face-classification
 
 Test it with your travel photo with your friends.
