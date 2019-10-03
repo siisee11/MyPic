@@ -1,0 +1,3 @@
+# simple detector
+
+It works.

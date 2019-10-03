@@ -1,9 +1,10 @@
 import face_recognition
+import sys
 
 # Load the jpg files into numpy arrays
 JY_image = face_recognition.load_image_file("JY.jpg")
 TY_image = face_recognition.load_image_file("TY.jpg")
-unknown_image = face_recognition.load_image_file("JYandTY.jpg")
+unknown_image = face_recognition.load_image_file(sys.argv[1])
 
 # Get the face encodings for each face in each image file
 # Since there could be more than one face in each image, it returns a list of encodings.
