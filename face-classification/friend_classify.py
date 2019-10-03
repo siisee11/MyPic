@@ -30,8 +30,6 @@ for label in np.unique(testy):
 
 trainy = out_encoder.transform(trainy)
 testy = out_encoder.transform(testy)
-print(trainy)
-print(testy)
 
 # fit model
 model = SVC(kernel='linear', probability=True)

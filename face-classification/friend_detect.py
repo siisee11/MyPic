@@ -69,7 +69,7 @@ def extract_face_test(filename, required_size=(160, 160)):
 		face_array = asarray(image)
 		face_arrays.append(face_array)
 
-	return face_array
+	return face_arrays
 
 
 	# load images and extract faces for all images in a directory
@@ -97,7 +97,7 @@ def load_faces_test(directory):
 		face = extract_face_test(path)
 		if face is not None:
 			# store
-			faces.append(face)
+			faces.extend(face)
 	return faces
 
 # load a dataset that contains one subdir for each class that in turn contains images
