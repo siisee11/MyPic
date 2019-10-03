@@ -5,22 +5,30 @@
 
 
 
-# SKKU-2019-Fall-Capstone-Design
+# SKKU-2019-Fall-Capstone-Design :camera_flash:
 성균관대학교 2019학년도 가을학기 종합설계프로젝트 1조 Github 레포지토리
 
+## Environment setting
 
-## face-classification
+You need to download Anaconda3 [here](https://www.anaconda.com/distribution/) to run these application.
+
+After downloading it, you have to change the python version from 3.7 to 3.6. Type this.
+```conda install python=3.6```
+
+## Directory description
+
+### face-classification
 
 It is first repository to test whether this project can be done or not.
 
 See this directory first.
 
-## Mypic
+### Mypic
 
 It is our project directory.
 
 Currently working directory.
 
-## opencv-face-recognition
+### opencv-face-recognition
 
 It is reference project.
