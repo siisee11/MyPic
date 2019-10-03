@@ -3,7 +3,7 @@
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
 
 
-# Face-classification
+# Face-classification :family_woman_woman_girl_boy:
 
 Test it with your travel photo with your friends.
 
@@ -24,6 +24,7 @@ project
 │   friend_embedding.py
 │   friend_classify.py
 │   face_who_detect.py
+│   show_npz.py
 │   facenet_keras.h5
 │
 └───friend-dataset
@@ -64,9 +65,11 @@ There are three steps to get results.
 
 ```python friend_detect.py```
 
-It will generate friend-dataset.npz
+It will generate friend-dataset.npz.
 
 It contains 160X160 pixels of detected faces as zipped numpy.
+
+```python show_npz.py friend-dataset.npz``` visualize the results.
 
 You can show detected faces of specific person, just type this line below.
 
