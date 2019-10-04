@@ -89,16 +89,19 @@ def load_faces(directory):
 # load images and extract faces for all images in a directory
 def load_faces_test(directory):
 	faces = list()
+	paths = list()
 	# enumerate files
 	for filename in listdir(directory):
 		# path
 		path = directory + filename
 		# get face
 		face = extract_face_test(path)
+		file_path = [filename for _ in range(len(face))]
 		if face is not None:
 			# store
 			faces.extend(face)
-	return faces
+			paths.extend(file_path)
+	return faces, paths
 
 # load a dataset that contains one subdir for each class that in turn contains images
 def load_dataset(directory):
@@ -124,6 +127,7 @@ def load_dataset(directory):
 # load a dataset that contains one subdir for each class that in turn contains images
 def load_dataset_test(directory):
 	X, y = list(), list()
+	files = list()
 	# enumerate folders, on per class
 	for subdir in listdir(directory):
 		# path
@@ -132,7 +136,7 @@ def load_dataset_test(directory):
 		if not isdir(path):
 			continue
 		# load all faces in the subdirectory
-		faces = load_faces_test(path)
+		faces, paths = load_faces_test(path)
 		# create labels
 		labels = [subdir for _ in range(len(faces))]
 		# summarize progress
@@ -140,12 +144,13 @@ def load_dataset_test(directory):
 		# store
 		X.extend(faces)
 		y.extend(labels)
-	return asarray(X), asarray(y)
+		files.extend(paths)
+	return asarray(X), asarray(y), asarray(files)
  
 # load train dataset
 trainX, trainy = load_dataset('friend-dataset/train/')
 print(trainX.shape, trainy.shape)
 # load test dataset
-testX, testy = load_dataset_test('friend-dataset/test/')
+testX, testy, test_file = load_dataset_test('friend-dataset/test/')
 # save arrays to one file in compressed format
-savez_compressed('friend-dataset.npz', trainX, trainy, testX, testy)
+savez_compressed('friend-dataset.npz', trainX, trainy, testX, testy, test_file)

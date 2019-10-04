@@ -107,3 +107,4 @@ venv.bak/
 *.tar.gz
 friend-dataset/
 *.h5
+result/
