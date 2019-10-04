@@ -61,6 +61,14 @@ There are three steps to get results.
 1. do embedding to it (preprocessing).
 1. run SVM to classify face in your test dataset.
 
+Total workload is below.
+
+```
+python friend_detect.py
+python friend_embedding.py
+python friend_classify <target>.py
+```
+
 ### Face detection
 
 ```python friend_detect.py```
