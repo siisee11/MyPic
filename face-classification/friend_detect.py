@@ -39,6 +39,7 @@ def extract_face(filename, required_size=(160, 160)):
 def extract_face_test(filename, required_size=(160, 160)):
 	# load image from file
 	face_arrays = list()
+	face_boxes = list()
 	print(filename)
 	image = Image.open(filename)
 	# convert to RGB, if needed
@@ -68,8 +69,9 @@ def extract_face_test(filename, required_size=(160, 160)):
 		image = image.resize(required_size)
 		face_array = asarray(image)
 		face_arrays.append(face_array)
+		face_boxes.append([x1, y1, x2, y2])
 
-	return face_arrays
+	return face_arrays, face_boxes
 
 
 	# load images and extract faces for all images in a directory
@@ -90,18 +92,20 @@ def load_faces(directory):
 def load_faces_test(directory):
 	faces = list()
 	paths = list()
+	boxes = list()
 	# enumerate files
 	for filename in listdir(directory):
 		# path
 		path = directory + filename
 		# get face
-		face = extract_face_test(path)
+		face, box = extract_face_test(path)
 		file_path = [filename for _ in range(len(face))]
 		if face is not None:
 			# store
 			faces.extend(face)
 			paths.extend(file_path)
-	return faces, paths
+			boxes.extend(box)
+	return faces, paths, boxes
 
 # load a dataset that contains one subdir for each class that in turn contains images
 def load_dataset(directory):
@@ -128,6 +132,7 @@ def load_dataset(directory):
 def load_dataset_test(directory):
 	X, y = list(), list()
 	files = list()
+	face_box = list()
 	# enumerate folders, on per class
 	for subdir in listdir(directory):
 		# path
@@ -136,7 +141,7 @@ def load_dataset_test(directory):
 		if not isdir(path):
 			continue
 		# load all faces in the subdirectory
-		faces, paths = load_faces_test(path)
+		faces, paths, boxes = load_faces_test(path)
 		# create labels
 		labels = [subdir for _ in range(len(faces))]
 		# summarize progress
@@ -145,12 +150,13 @@ def load_dataset_test(directory):
 		X.extend(faces)
 		y.extend(labels)
 		files.extend(paths)
-	return asarray(X), asarray(y), asarray(files)
+		face_box.extend(boxes)
+	return asarray(X), asarray(y), asarray(files), asarray(face_box)
  
 # load train dataset
 trainX, trainy = load_dataset('friend-dataset/train/')
 print(trainX.shape, trainy.shape)
 # load test dataset
-testX, testy, test_file = load_dataset_test('friend-dataset/test/')
+testX, testy, test_file, boxes = load_dataset_test('friend-dataset/test/')
 # save arrays to one file in compressed format
-savez_compressed('friend-dataset.npz', trainX, trainy, testX, testy, test_file)
+savez_compressed('friend-dataset.npz', trainX, trainy, testX, testy, test_file, boxes)

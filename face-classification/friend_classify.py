@@ -52,7 +52,7 @@ model.fit(trainX, trainy)
 # test model on a all example from the test dataset
 selection = choice([i for i in range(testX.shape[0])])
 
-for selection in range(testX.shape[0]):
+for selection in range(testX.shape[0]-1):
 	random_face_pixels = testX_faces[selection]
 	random_face_emb = testX[selection]
 	random_face_class = testy[selection]
@@ -79,8 +79,8 @@ for selection in range(testX.shape[0]):
 	print('Predicted: %s (%.3f)' % (predict_names[0], class_probability))
 	print('Expected: %s' % random_face_name[0])
 
-	# plot for fun
-	pyplot.imshow(random_face_pixels)
-	title = '%s (%.3f)' % (predict_names[0], class_probability)
-	pyplot.title(title)
-	pyplot.show()
+# plot for fun
+pyplot.imshow(random_face_pixels)
+title = '%s (%.3f)' % (predict_names[0], class_probability)
+pyplot.title(title)
+pyplot.show()
