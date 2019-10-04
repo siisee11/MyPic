@@ -84,6 +84,8 @@ It will generate friend-embeddings.npz
 
 ### Face classifying
 
-```python friend_classify.py```
+```python friend_classify.py <target>```
 
 It trains SVM model from your train inputs and test one of photo from your test inputs.
+
+Target is one of name from your train directory. It will generate result/target directory and extract targes's photos from test directory into it.
