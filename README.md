@@ -5,10 +5,14 @@
 
 
 
-# SKKU-2019-Fall-Capstone-Design :camera_flash:
+# SKKU-2019-Fall-Capstone-Design (MyPic) :camera_flash:
 성균관대학교 2019학년도 가을학기 종합설계프로젝트 1조 Github 레포지토리
 
-## Environment setting
+## Getting Started with Mypic
+
+This tutorial walks you through the workflow of setting up environment, running an application with your own pictures.
+
+### Environment setting
 
 You need to download Anaconda3 [here](https://www.anaconda.com/distribution/) to run these application.
 
@@ -16,14 +20,14 @@ After downloading it, you have to change the python version from 3.7 to 3.6.
 
 Type this. ```conda install python=3.6```
 
-## Directory description
+
+## Contents
 
 ### face-classification
 
 Exprimental directory. Codes will developed here and migrate to Mypic directory.
 
 See this first.
-
 
 ### Mypic
 
