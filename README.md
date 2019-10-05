@@ -12,22 +12,22 @@
 
 You need to download Anaconda3 [here](https://www.anaconda.com/distribution/) to run these application.
 
-After downloading it, you have to change the python version from 3.7 to 3.6. Type this.
-```conda install python=3.6```
+After downloading it, you have to change the python version from 3.7 to 3.6. 
+
+Type this. ```conda install python=3.6```
 
 ## Directory description
 
 ### face-classification
 
-It is first repository to test whether this project can be done or not.
+Exprimental directory. Codes will developed here and migrate to Mypic directory.
 
-See this directory first.
+See this first.
+
 
 ### Mypic
 
-It is our project directory.
-
-Currently working directory.
+Our actual project directory.
 
 ### opencv-face-recognition
 
