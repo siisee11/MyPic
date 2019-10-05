@@ -91,7 +91,7 @@ It will generate friend-embeddings.npz
 
 ### Face classifying
 
-```python friend_classify.py <target>```
+```python friend_classify.py -t <target> [--display]```
 
 It trains SVM model from your train inputs and test one of photo from your test inputs.
 
