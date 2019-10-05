@@ -23,8 +23,6 @@ Type this. ```conda install python=3.6```
 
 ## Contents
 
-1. `face-classification/` Exprimental directory. Codes will developed here and migrate to Mypic directory. See this first.
-
-2. `Mypic` Our actual project directory.
-
-3. `opencv-face-recognition` It is reference project.
+1. `face-classification/` contains exprimental codes. Codes will developed here and migrate to Mypic directory. See this first.
+2. `Mypic/` contains our actual project directory.
+3. `opencv-face-recognition/` contains reference project.
