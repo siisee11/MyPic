@@ -1,8 +1,3 @@
-[![GitHub contributors](https://img.shields.io/github/contributors/BlindedShooter/SKKU-2019-Fall-Capstone-Design.svg)](https://GitHub.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design/graphs/contributors/)
-[![GitHub watchers](https://img.shields.io/github/watchers/BlindedShooter/SKKU-2019-Fall-Capstone-Design.svg?style=social&label=Watch&maxAge=2592000)](https://GitHub.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design/watchers/)
-[![GitHub stars](https://img.shields.io/github/stars/BlindedShooter/SKKU-2019-Fall-Capstone-Design.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design/stargazers/)
-
-
 <h1 align="center"> MYPIC </h1> <br>
 
 <p align="center">
@@ -19,8 +14,8 @@
   </a>
 </p>
 
+[![Current Version](https://img.shields.io/badge/version-0.1.0-green.svg)](https://github.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design)
 ![Python](https://img.shields.io/badge/python-v3.6+-blue.svg)
-[![Build Status](https://travis-ci.org/BlindedShooter/SKKU-2019-Fall-Capstone-Design?branch=master)](https://travis-ci.org/BlindedShooter/SKKU-2019-Fall-Capstone-Design)
 ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
 [![GitHub Issues](https://img.shields.io/github/issues/BlindedShooter/SKKU-2019-Fall-Capstone-Design)](https://github.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design/issues)
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
