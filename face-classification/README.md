@@ -77,11 +77,10 @@ It will generate friend-dataset.npz.
 
 It contains 160X160 pixels of detected faces as zipped numpy.
 
-```python show_npz.py friend-dataset.npz``` visualize the results.
+You can use show_npz python file to visualize the results.
 
-You can show detected faces of specific person, just type this line below.
+```python show_npz.py -f friend-dataset.npz -t <test|train>``` 
 
-```python face_who_detect.py <person's name>```
 
 
 ### Face embedding
