@@ -18,6 +18,8 @@ import cv2
 ap = argparse.ArgumentParser()
 ap.add_argument("-t", "--target", required=True,
 		help="name of person to classify")
+ap.add_argument("-p", "--probability", required=False, default=50,
+		help="minimum probability on predicting")
 ap.add_argument('--verbose', help='Print more data',
 		    action='store_true')
 ap.add_argument('--display', help='Display result data',
@@ -71,7 +73,6 @@ for selection in range(nr_test-1):
 	random_file_name = file_names[selection]
 	random_box = boxes[selection]
 
-
 	# prediction for the face
 	samples = expand_dims(random_face_emb, axis=0)
 	yhat_class = model.predict(samples)
@@ -81,6 +82,9 @@ for selection in range(nr_test-1):
 	class_index = yhat_class[0]
 	class_probability = yhat_prob[0,class_index] * 100
 	predict_names = out_encoder.inverse_transform(yhat_class)
+
+	if class_probability < int(args.probability) :
+		continue
 
 	src = 'friend-dataset/test/' + random_face_name[0] + '/' + random_file_name
 	dest = 'result/' + target + '/' + random_file_name
@@ -92,21 +96,23 @@ for selection in range(nr_test-1):
 	print('Predicted: %s (%.3f)' % (predict_names[0], class_probability))
 	print('Expected: %s' % random_face_name[0])
 
-	# plot for fun
-	original = cv2.imread(src, cv2.IMREAD_COLOR)
+	if args.display :
 
-	# box position
-	(startX, startY, endX, endY) = random_box.astype("int")
-	y = startY - 10 if startY - 10 > 10 else startY + 10
-	x= startX - 200
-	cv2.rectangle(original, (startX, startY, endX - startX, endY - startY), (0,0,255), 4)
-	text = "Predicted: %s (%.3f)" % (predict_names[0], class_probability)
-	cv2.putText(original, text, (x, y),
-			cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 4)
-	small = cv2.resize(original, dsize=(0,0), 
-			fx=0.2, fy=0.2, interpolation=cv2.INTER_LINEAR)
-	cv2.imshow("image", small)
+		# plot for fun
+		original = cv2.imread(src, cv2.IMREAD_COLOR)
 
-	k = cv2.waitKey(0)
-	if k == 27 :
-		cv2.destroyAllWindow()
+		# box position
+		(startX, startY, endX, endY) = random_box.astype("int")
+		y = startY - 10 if startY - 10 > 10 else startY + 10
+		x= startX - 200
+		cv2.rectangle(original, (startX, startY, endX - startX, endY - startY), (0,0,255), 4)
+		text = "Predicted: %s (%.3f)" % (predict_names[0], class_probability)
+		cv2.putText(original, text, (x, y),
+				cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 4)
+		small = cv2.resize(original, dsize=(0,0), 
+				fx=0.2, fy=0.2, interpolation=cv2.INTER_LINEAR)
+		cv2.imshow("image", small)
+
+		k = cv2.waitKey(0)
+		if k == 27 :
+			cv2.destroyAllWindow()
