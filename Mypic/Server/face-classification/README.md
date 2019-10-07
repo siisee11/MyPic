@@ -35,7 +35,7 @@ project
 │   │   │   │   ...
 │   │   │
 │   │   └───person2 
-│   │       │   p1.jpg
+│   │       │   p2.jpg
 │   │       │   ...
 │   │
 │   └───test
