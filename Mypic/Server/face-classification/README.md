@@ -25,6 +25,7 @@ project
 │   friend_classify.py
 │   face_who_detect.py
 │   show_npz.py
+│   download.sh
 │   facenet_keras.h5
 │
 └───friend-dataset
@@ -56,7 +57,10 @@ You can download pretrained Keras facenet model (trained by MS-Celeb-1M dataset)
 ### Simple setup
 Just run *download.sh* to download all requirements.
 
-```./download.sh```
+```
+./download.sh
+tar xvzf friend-dataset.tar.gz
+```
 
 ## How to run
 
@@ -71,7 +75,7 @@ Total workload is below.
 ```
 python friend_detect.py
 python friend_embedding.py
-python friend_classify <target>.py
+python friend_classify -t <target> [--display].py
 ```
 
 ### Face detection
@@ -85,8 +89,6 @@ It contains 160X160 pixels of detected faces as zipped numpy.
 You can use show_npz python file to visualize the results.
 
 ```python show_npz.py -f friend-dataset.npz -t <test|train>``` 
-
-
 
 ### Face embedding
 
