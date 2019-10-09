@@ -80,7 +80,9 @@ python friend_classify -t <target> [--display].py
 
 ### Face detection
 
-```python friend_detect.py```
+```
+python friend_detect.py
+```
 
 It will generate friend-dataset.npz.
 
@@ -88,17 +90,23 @@ It contains 160X160 pixels of detected faces as zipped numpy.
 
 You can use show_npz python file to visualize the results.
 
-```python show_npz.py -f friend-dataset.npz -t <test|train>``` 
+```
+python show_npz.py -f friend-dataset.npz -t <test|train>
+``` 
 
 ### Face embedding
 
-```python friend_embedding.py```
+```
+python friend_embedding.py
+```
 
 It will generate friend-embeddings.npz
 
 ### Face classifying
 
-```python friend_classify.py -t <target> [--display]```
+```
+python friend_classify.py -t <target> [--display]
+```
 
 It trains SVM model from your train inputs and test one of photo from your test inputs.
 
