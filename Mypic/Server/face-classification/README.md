@@ -53,6 +53,11 @@ project
 You can download pretrained Keras facenet model (trained by MS-Celeb-1M dataset).
 - Download model from [here](https://drive.google.com/open?id=1pwQ3H4aJ8a6yyJHZkTwtjcL4wYWQb7bn) and save it in topmost directory.
 
+### Simple setup
+Just run *download.sh* to download all requirements.
+
+```./download.sh```
+
 ## How to run
 
 There are three steps to get results.
