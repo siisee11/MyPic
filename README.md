@@ -32,9 +32,31 @@ This tutorial walks you through the workflow of setting up environment, running 
 
 You need to download Anaconda3 [here](https://www.anaconda.com/distribution/) to run these application.
 
+``` 
+$ cd ~
+$ wget https://repo.anaconda.com/archive/Anaconda3-2019.07-Linux-x86_64.sh
+$ sh Anaconda3-2019.07-Linux-x86_64.sh
+$ source .bashrc
+```
+
 After downloading it, you have to change the python version from 3.7 to 3.6. 
 
-Type this. ```conda install python=3.6```
+```
+$ conda install python=3.6
+```
+
+Or create secondary python environment.
+
+```
+$ conda create --name python36 python=3.6
+$ conda activate python36
+```
+
+Install all requirements.
+
+```
+$ pip install -r requirements.txt
+```
 
 
 ## Contents
