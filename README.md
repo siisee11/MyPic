@@ -15,7 +15,9 @@
     <a href="https://play.google.com/store/apps">
       <img alt="Get it on Google Play" title="Google Play" src="http://i.imgur.com/mtGRPuM.png" width="140">
     </a>
+    
   </p>
+  
 </div>
 
 [![Current Version](https://img.shields.io/badge/version-0.1.0-green.svg)](https://github.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design)
