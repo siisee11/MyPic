@@ -1,22 +1,19 @@
 <div align="center">
   <img alt="MyPic logo" src="Mypic-logo.png" width="200px" />
 
-  <h1 align="center"> MYPIC </h1> <br>
+  <h1> MYPIC </h1> <br>
 
-  <p align="center">
+  <p>
     Get my photos from anyone. What you need to do is just a click.
   </p>
 
-  <p align="center">
-    <a href="https://itunes.apple.com/us/app/">
-      <img alt="Download on the App Store" title="App Store" src="http://i.imgur.com/0n2zqHD.png" width="140">
-    </a>
+  <a href="https://itunes.apple.com/us/app/">
+    <img alt="Download on the App Store" title="App Store" src="http://i.imgur.com/0n2zqHD.png" width="140">
+  </a>
 
-    <a href="https://play.google.com/store/apps">
-      <img alt="Get it on Google Play" title="Google Play" src="http://i.imgur.com/mtGRPuM.png" width="140">
-    </a>
-    
-  </p>
+  <a href="https://play.google.com/store/apps">
+    <img alt="Get it on Google Play" title="Google Play" src="http://i.imgur.com/mtGRPuM.png" width="140">
+  </a>
   
 </div>
 
