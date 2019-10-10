@@ -1,18 +1,22 @@
-<h1 align="center"> MYPIC </h1> <br>
+<div align="center">
+  <img alt="MyPic logo" src="Mypic-logo.png" width="400px" />
 
-<p align="center">
-  Get my photos from anyone. What you need to do is just a click.
-</p>
+  <h1 align="center"> MYPIC </h1> <br>
 
-<p align="center">
-  <a href="https://itunes.apple.com/us/app/">
-    <img alt="Download on the App Store" title="App Store" src="http://i.imgur.com/0n2zqHD.png" width="140">
-  </a>
+  <p align="center">
+    Get my photos from anyone. What you need to do is just a click.
+  </p>
 
-  <a href="https://play.google.com/store/apps">
-    <img alt="Get it on Google Play" title="Google Play" src="http://i.imgur.com/mtGRPuM.png" width="140">
-  </a>
-</p>
+  <p align="center">
+    <a href="https://itunes.apple.com/us/app/">
+      <img alt="Download on the App Store" title="App Store" src="http://i.imgur.com/0n2zqHD.png" width="140">
+    </a>
+
+    <a href="https://play.google.com/store/apps">
+      <img alt="Get it on Google Play" title="Google Play" src="http://i.imgur.com/mtGRPuM.png" width="140">
+    </a>
+  </p>
+</div>
 
 [![Current Version](https://img.shields.io/badge/version-0.1.0-green.svg)](https://github.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design)
 ![Python](https://img.shields.io/badge/python-v3.6+-blue.svg)
