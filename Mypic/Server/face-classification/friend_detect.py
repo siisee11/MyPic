@@ -6,6 +6,10 @@ from numpy import savez_compressed
 from numpy import asarray
 from mtcnn.mtcnn import MTCNN
 
+# create the detector, using default weights
+detector = MTCNN()
+
+
 # extract a single face from a given photograph X
 def extract_face(filename, required_size=(160, 160)):
 	# load image from file
@@ -15,8 +19,6 @@ def extract_face(filename, required_size=(160, 160)):
 	image = image.convert('RGB')
 	# convert to array
 	pixels = asarray(image)
-	# create the detector, using default weights
-	detector = MTCNN()
 	# detect faces in the image
 	results = detector.detect_faces(pixels)
 	if not results:
@@ -46,8 +48,6 @@ def extract_face_test(filename, required_size=(160, 160)):
 	image = image.convert('RGB')
 	# convert to array
 	pixels = asarray(image)
-	# create the detector, using default weights
-	detector = MTCNN()
 	# detect faces in the image
 	results = detector.detect_faces(pixels)
 	if not results:
