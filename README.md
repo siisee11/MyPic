@@ -30,7 +30,7 @@
 ## Roadmap
   - [x] ~~face recognation and classifying~~
   - [x] ~~GPU enable~~
-  - [x] ~~Support Docker
+  - [x] ~~Support Docker~~
   - [ ] web application
 
 ## Getting Started with Mypic
