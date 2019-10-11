@@ -10,9 +10,11 @@
 
   <h1> MYPIC </h1>
 
+  <blockquote>
   <p>
     Get my photos from anyone. What you need to do is just a click.
   </p>
+  </blockquote>
 
   <a href="https://itunes.apple.com/us/app/">
     <img alt="Download on the App Store" title="App Store" src="http://i.imgur.com/0n2zqHD.png" width="140">
@@ -24,7 +26,7 @@
 
 </div>
 
-# SKKU-2019-Fall-Capstone-Design (MyPic) :camera_flash:
+# SKKU-2019-Fall-Capstone-Design (MyPic)
 성균관대학교 2019학년도 가을학기 종합설계프로젝트 1조 Github 레포지토리
 
 ## Roadmap
