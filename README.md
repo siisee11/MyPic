@@ -28,13 +28,26 @@
 성균관대학교 2019학년도 가을학기 종합설계프로젝트 1조 Github 레포지토리
 
 ## Roadmap
-  - [x] face recognation and classifying.
+  - [x] face recognation and classifying
   - [x] GPU enable
+  - [x] Support Docker
   - [ ] web application
 
 ## Getting Started with Mypic
 
 This tutorial walks you through the workflow of setting up environment, running an application with your own pictures.
+
+1. Use docker to run.
+1. Build environment on your own computer.
+
+### Docker
+
+If you have sudo privilege, nvidia-docker, and GPUs, you can simply run this app with docker. 
+
+```
+docker run --gpus all --rm -it siisee11/mypic:2
+```
+
 
 ### Environment setting
 
@@ -63,7 +76,9 @@ $ conda activate python36
 Install all requirements.
 
 ```
-$ pip install -r requirements.txt
+$ pip install -r requirements.txt			# without GPU
+or
+$ pip install -r requirements-gpu.txt		# with GPU
 ```
 
 
@@ -71,3 +86,6 @@ $ pip install -r requirements.txt
 
 1. `Mypic/` contains our actual project directory.
 2. `reference/` contains reference project.
+3. `Dockerfile` is used to make docker image for this project.
+4. `requirements*.txt` are used by pip install.
+5. `mypic-logo.png` is our project logo.
