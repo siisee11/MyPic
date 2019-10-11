@@ -28,17 +28,18 @@
 성균관대학교 2019학년도 가을학기 종합설계프로젝트 1조 Github 레포지토리
 
 ## Roadmap
-  - [x] face recognation and classifying
-  - [x] GPU enable
-  - [x] Support Docker
+  - [x] ~~face recognation and classifying~~
+  - [x] ~~GPU enable~~
+  - [x] ~~Support Docker
   - [ ] web application
 
 ## Getting Started with Mypic
 
 This tutorial walks you through the workflow of setting up environment, running an application with your own pictures.
+There are two ways of it.
 
-1. Use docker to run.
-1. Build environment on your own computer.
+* Use docker to run.
+* Build environment on your own computer.
 
 ### Docker
 
