@@ -10,11 +10,9 @@
 
   <h1> MYPIC </h1>
 
-  <blockquote>
   <p>
-    Get my photos from anyone. What you need to do is just a click.
+    <b>Get my photos from anyone. What you need to do is just a click.</b>
   </p>
-  </blockquote>
 
   <a href="https://itunes.apple.com/us/app/">
     <img alt="Download on the App Store" title="App Store" src="http://i.imgur.com/0n2zqHD.png" width="140">
