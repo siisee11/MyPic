@@ -32,6 +32,7 @@
   - [x] ~~GPU enable~~
   - [x] ~~Support Docker~~
   - [ ] web application
+  - [ ] galaxy application with React.js
 
 ## Getting Started with Mypic
 
