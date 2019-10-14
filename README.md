@@ -44,10 +44,15 @@ There are two ways of it.
 
 ### Docker
 
-If you have sudo privilege, nvidia-docker, and GPUs, you can simply run this app with docker. 
+If you have sudo privilege, and docker, you can simply build environment with docker. 
+```
+docker run --rm -it siisee11/mypic:latest
+```
+
+If you have sudo privilege, nvidia-docker, and GPUs, you can simply type this.
 
 ```
-docker run --gpus all --rm -it siisee11/mypic:2
+docker run --gpus all --rm -it siisee11/mypic-gpu:1
 ```
 
 
