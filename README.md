@@ -29,6 +29,7 @@
 
 ## Roadmap
   - [x] ~~face recognation and classifying~~
+  - [ ] enhance classfication
   - [x] ~~GPU enable~~
   - [x] ~~Support Docker~~
   - [ ] web application
