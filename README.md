@@ -29,11 +29,11 @@
 
 ## Roadmap
   - [x] ~~face recognation and classifying~~
-  - [ ] enhance classfication
-  - [x] ~~GPU enable~~
   - [x] ~~Support Docker~~
-  - [ ] web application
-  - [ ] galaxy application with React.js
+  - [ ] enhance classfication
+  - [ ] GPU enable
+  - [ ] web 
+  - [ ] hybrid application with React.js
 
 ## Getting Started with Mypic
 
