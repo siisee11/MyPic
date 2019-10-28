@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "mypic",
+    "slug": "mypic",
+    "privacy": "public",
+    "sdkVersion": "35.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.capstone.mypic"
+    },
+    "android": {
+      "package": "com.capstone.mypic",
+      "googleServicesFile": "google-services.json",
+      "config": {
+        "googleSignIn": {
+          "apiKey": "AIzaSyBtErZYm0vP-Glc9wqea8pfvHJf-w-UpFs",
+          "certificateHash": "B374DFB13D0E6267176DD5D8A76218919DF09824"
+        }
+      }
+    },
+    "description": "",
+    "githubUrl": "https://github.com/siisee11/react-native"
+  }
+}
+

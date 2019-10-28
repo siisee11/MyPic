@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "940807570090",
+    "firebase_url": "https://mypic-92b94.firebaseio.com",
+    "project_id": "mypic-92b94",
+    "storage_bucket": "mypic-92b94.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940807570090:android:f6fd5ccaaf80d9343f46d3",
+        "android_client_info": {
+          "package_name": "com.capstone.mypic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "940807570090-t8ql54gf38i91b4436nmslqso40hsk03.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqN-r6Y2L16QH3jbqKde34Uqlno7MS9dU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "940807570090-t8ql54gf38i91b4436nmslqso40hsk03.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "940807570090-hivdattitrnm03du5134bk696qe9ippb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "host.exp.exponent"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
