@@ -12,10 +12,10 @@ let SCREEN_WIDTH = Dimensions.get('window').width;
 let SCREEN_HEIGHT= Dimensions.get('window').height;
 
 const getimages = [
-    { id: 1, tour:"종설투어", city: "수원", src: require('../../assets/images/sea.jpg')},
-    { id: 2, tour:"종설투어", city: "광명", src: require('../../assets/images/sunrise.jpg')},
-    { id: 3, tour:"재필투어", city: "광주", src: require('../../assets/images/maldives.jpg')},
-    { id: 4, tour:"재필투어", city: "광양", src: require('../../assets/images/hot-air-balloon.jpg')},
+    { id: 1, tour:"종설투어", nation: "대한민국", city: "수원", date: "2019년 10월 10일", src: require('../../assets/images/sea.jpg')},
+    { id: 2, tour:"종설투어", nation: "대한민국", city: "광명", date: "2019년 9월 10일", src: require('../../assets/images/sunrise.jpg')},
+    { id: 3, tour:"재필투어", nation: "대한민국", city: "광주", date: "2019년 8월 10일", src: require('../../assets/images/maldives.jpg')},
+    { id: 4, tour:"재필투어", nation: "대한민국", city: "광양", date: "2019년 5월 10일", src: require('../../assets/images/hot-air-balloon.jpg')},
 ];
 
 const fonts = [
