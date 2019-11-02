@@ -45,12 +45,16 @@ export default class MyHeader extends Component {
                         ) : null
                     }
                 </Body>
-                <Right>
-                    <TouchableWithoutFeedback
-                        onPress={this.goAddTour}>
-                        <Ionicons name='ios-add-circle' size={25} style={{ paddingRight:10 }}/>
-                    </TouchableWithoutFeedback>
-                </Right>
+                {
+                    /*
+                    <Right>
+                        <TouchableWithoutFeedback
+                            onPress={this.goAddTour}>
+                            <Ionicons name='ios-add-circle' size={25} style={{paddingRight: 10}}/>
+                        </TouchableWithoutFeedback>
+                    </Right>
+                     */
+                }
             </Header>
         );
     }
