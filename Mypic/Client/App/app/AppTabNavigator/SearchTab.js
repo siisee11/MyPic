@@ -29,18 +29,18 @@ export default class SearchTab extends Component {
     state = {
         fontLoaded: false,
         search: '',
-				images: []
+        images: []
     };
 
     updateSearch = search => {
-				let images = [];
-				for (let i=0; i<getimages.length; i++){
-//						ToastAndroid.show(getimages[i].city+" == "+this.state.search, ToastAndroid.SHORT);
-					if(getimages[i].city === this.state.search){
-						images.push(getimages[i]);
-					}
-				}
-				this.setState({images});
+        let images = [];
+        for (let i=0; i<getimages.length; i++){
+//            ToastAndroid.show(getimages[i].city+" == "+this.state.search, ToastAndroid.SHORT);
+          if(getimages[i].city === this.state.search){
+            images.push(getimages[i]);
+          }
+        }
+        this.setState({images});
     };
 
     async componentDidMount() {
@@ -69,9 +69,9 @@ export default class SearchTab extends Component {
                     style={{marginRight: 10,
                     marginLeft: 5}}/>
                     <TextInput
-												onChangeText={(text) => this.setState({search: text})}
-												value = {this.state.search}
-												onSubmitEditing={(search)=>this.updateSearch(this.state.search)}
+                        onChangeText={(text) => this.setState({search: text})}
+                        value = {this.state.search}
+                        onSubmitEditing={(search)=>this.updateSearch(this.state.search)}
                         underlineColorAndroid="transparent"
                         placeholder="Type here..."
                         placeholderTextColor="grey"
@@ -117,7 +117,7 @@ export default class SearchTab extends Component {
                                                        fontFamily : fonts[random].font,
                                                    }}>
                                                        대한민국 {image.city}시{"\n"}
-																											 {image.tour} 여행
+                                                       {image.tour} 여행
                                                    </Text>
                                                ) : null
                                            }
