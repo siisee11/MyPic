@@ -4,6 +4,7 @@ import { Platform, View, Text, StyleSheet, ScrollView, StatusBar,
 
 import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
+import firebase from 'firebase'
 
 import MyHeader from '../components/MyHeader'
 
@@ -11,10 +12,13 @@ let SCREEN_WIDTH = Dimensions.get('window').width;
 let SCREEN_HEIGHT= Dimensions.get('window').height;
 
 const images = [
-    { id: 1, src: require('../../assets/images/sea.jpg')},
-    { id: 2, src: require('../../assets/images/sunrise.jpg')},
-    { id: 3, src: require('../../assets/images/maldives.jpg')},
-    { id: 4, src: require('../../assets/images/hot-air-balloon.jpg')},
+    { id: 1, uri: 'https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Fcinque-terre.jpg?alt=media&token=84ee3271-5468-464c-ac1d-78ceadf50247'},
+    { id: 2, uri: 'https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Feiffel-tower.jpg?alt=media&token=895c6c6f-6702-4187-b886-bc90dfd7dfb3'},
+    { id: 3, uri: 'https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Fgo-pro.jpg?alt=media&token=b4724847-16e1-4eeb-8f9e-1642645bd3e1'},
+    { id: 4, uri: 'https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Fhot-air-balloon.jpg?alt=media&token=e640261f-9872-405c-a6bd-eeea4341b837'},
+    { id: 5, uri: 'https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Fmaldives.jpg?alt=media&token=2ca5699a-8ab7-4b88-aaa6-27608131453c'},
+    { id: 6, uri: 'https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Fsea.jpg?alt=media&token=9518ce10-9d60-42b7-8db3-6e9e2c089bb1'},
+    { id: 7, uri: 'https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Fsunrise.jpg?alt=media&token=d6a14fa6-0a1f-437e-b229-9162a426cf13'},
 ];
 
 const fonts = [
@@ -29,6 +33,7 @@ export default class HomeTab extends Component {
         super()
         this.state={
             activeImage:null,
+            data: [],
         }
     }
 
@@ -66,7 +71,7 @@ export default class HomeTab extends Component {
                                             padding: 15
                                         }}>
                                        <ImageBackground
-                                           source={image.src}
+                                           source={{uri: image.uri}}
                                            imageStyle={{ borderRadius: 20}}
                                            style={{flex:1, height:null, width:null,
                                            resizeMode: 'cover', borderRadius:20,

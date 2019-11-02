@@ -8,7 +8,10 @@ import { TapGestureHandler, State } from "react-native-gesture-handler";
 import {Actions} from 'react-native-router-flux';
 import * as Font from "expo-font";
 
-import firebase from 'firebase';
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/firestore'
+
 import * as Google from 'expo-google-app-auth';
 
 
@@ -190,27 +193,39 @@ export class MusicApp extends Component {
                     );
                     // Sign in with credential from the Google user.
                     firebase.auth().signInWithCredential(credential).then(function (result) {
-                        console.log('user signed in')
+                        console.log('user signed in');
                         if (result.additionalUserInfo.isNewUser)
                         {
+                            console.log('new user');
                             firebase
-                                .database()
-                                .ref('/users/' + result.user.uid)
+                                .firestore()
+                                .collection('User')
+                                .doc(result.user.uid)
                                 .set({
                                     gmail: result.user.email,
                                     profile_picture: result.additionalUserInfo.profile.picture,
                                     locale: result.additionalUserInfo.profile.locale,
                                     first_name: result.additionalUserInfo.profile.given_name,
                                     last_name: result.additionalUserInfo.profile.family_name,
-                                    created_at: Date.now()
-                                })
+                                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                                }).then((result) => {
+                                    console.log(result)
+                                }).catch((error) => {
+                                    console.log(error)
+                                });
                         } else {
+                            console.log('signed user');
                             firebase
-                                .database()
-                                .ref('/users/' + result.user.uid)
+                                .firestore()
+                                .collection('User')
+                                .doc(result.user.uid)
                                 .update({
                                     last_logged_in: Date.now()
-                                })
+                                }).then((result) => {
+                                console.log(result)
+                                }).catch((error) => {
+                                console.log(error)
+                                });
                         }
                     })
                         .catch(function(error) {
