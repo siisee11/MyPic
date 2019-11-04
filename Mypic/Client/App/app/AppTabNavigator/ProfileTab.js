@@ -57,9 +57,6 @@ export default class ProfileTab extends Component {
     }
 
     onChooseImagePress = async () => {
-        console.log("photo:");
-        console.log(this.state.photos);
-
         this.state.photos.map( (photo, index) => {
             this.uploadImage(photo.uri, index)
                 .then(() => {
@@ -123,7 +120,6 @@ export default class ProfileTab extends Component {
 
     imageBrowserCallback = (callback) => {
         callback.then((photos) => {
-            console.log("image callback");
             this.setState({
                 imageBrowserOpen: false,
                 photos
