@@ -9,6 +9,7 @@ import 'firebase/auth'
 import 'firebase/firestore'
 
 import MyHeader from '../components/MyHeader'
+import {Actions} from 'react-native-router-flux';
 
 let SCREEN_WIDTH = Dimensions.get('window').width;
 let SCREEN_HEIGHT= Dimensions.get('window').height;
@@ -40,6 +41,10 @@ export default class HomeTab extends Component {
     state = {
         fontLoaded: false,
     };
+
+    downloadPic () {
+      Actions.downloadPic();
+    }
 
     componentDidMount = async () => {
         await this.getUserInfo();
@@ -115,7 +120,9 @@ export default class HomeTab extends Component {
                             let date_json = tour.tour_startedAt.toDate();
                             let date_string = date_json.getFullYear() + '년 ' + date_json.getMonth() + '월 ' + date_json.getDate() + '일';
                             return (
-                                <TouchableWithoutFeedback key={index}>
+                                <TouchableWithoutFeedback
+                                  key={index}
+                                  onPress={this.downloadPic}>
                                     <Animated.View
                                         style={{
                                             height : SCREEN_HEIGHT - 150,
