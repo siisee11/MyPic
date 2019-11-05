@@ -16,9 +16,9 @@ import {
 import {Actions} from 'react-native-router-flux';
 import ImageBrowser from "../components/ImageBrower";
 import MyHeader from "../components/MyHeader";
-import AddTourHeader from "../components/AddTourHeader"
+import DownloadPicHeader from "../components/DownloadPicHeader"
 
-export default class AddTour extends Component {
+export default class DownloadPic extends Component {
     constructor(props){
         super(props);
         this.state={
@@ -80,7 +80,7 @@ export default class AddTour extends Component {
 
         return(
             <SafeAreaView style={styles.container}>
-                <AddTourHeader title="Create tour" />
+                <DownloadPicHeader title="Download Pictures" />
                 <TextInput style={{...styles.textInput, marginTop:20}}
                            onChangeText={(email) => this.setState({email})}
                            underlineColorAndroid='rgba(0,0,0,0)'

@@ -8,7 +8,7 @@ import {Actions} from 'react-native-router-flux';
 import { Ionicons } from '@expo/vector-icons';
 import * as Font from "expo-font";
 
-export default class AddTourHeader extends Component {
+export default class DownloadPicHeader extends Component {
     constructor(props){
         super(props)
     }
@@ -24,8 +24,8 @@ export default class AddTourHeader extends Component {
         this.setState({ fontLoaded: true });
     }
 
-    goAddTour () {
-        Actions.addtour()
+    goDownloadPic () {
+        Actions.downloadPic()
     }
 
     goBack () {
