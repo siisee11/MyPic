@@ -1,6 +1,6 @@
 <div align="center">
   
-  [![Current Version](https://img.shields.io/badge/version-0.1.0-green.svg)](https://github.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design)
+  [![Current Version](https://img.shields.io/badge/version-0.2.0-green.svg)](https://github.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design)
   ![Python](https://img.shields.io/badge/python-v3.6+-blue.svg)
   ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
   ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
@@ -33,7 +33,7 @@
   - [ ] enhance classfication
   - [ ] GPU enable
   - [ ] web 
-  - [ ] hybrid application with React.js
+  - [ ] cross-platform application with React.js
 
 ## Getting Started with Mypic
 
