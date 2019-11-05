@@ -113,7 +113,7 @@ export default class DownloadPic extends Component {
 
                 <TouchableOpacity style={{...styles.button}}>
                     <Text style={{fontSize:20, fontWeight: 'bold'}} onPress={this.saveData}>
-                        MAKE TOUR
+                        DOWNLOAD IMAGES
                     </Text>
                 </TouchableOpacity>
             </SafeAreaView>
