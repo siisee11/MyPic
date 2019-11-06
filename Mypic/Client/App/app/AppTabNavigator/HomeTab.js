@@ -43,8 +43,8 @@ export default class HomeTab extends Component {
         fontLoaded: false,
     };
 
-    downloadPic () {
-      Actions.downloadPic();
+    goDownloadPic () {
+      Actions.downloadPic({uid: this.state.user.uid})
     }
 
     componentDidMount = async () => {
@@ -113,7 +113,6 @@ export default class HomeTab extends Component {
         return (
             <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
                 <MyHeader />
-                <DownloadPic uid={123} />
                 <ScrollView style={{flex : 1}}>
                     {
                         this.state.tours.map((tour, index) => {
@@ -123,7 +122,7 @@ export default class HomeTab extends Component {
                             return (
                                 <TouchableWithoutFeedback
                                   key={index}
-                                  onPress={this.downloadPic}>
+                                  onPress={this.goDownloadPic.bind(this)}>
                                     <Animated.View
                                         style={{
                                             height : SCREEN_HEIGHT - 150,
