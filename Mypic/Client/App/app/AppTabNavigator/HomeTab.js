@@ -37,14 +37,18 @@ export default class HomeTab extends Component {
                 uid: '',
             },
         }
+        this.goDownloadPic = this.goDownloadPic.bind(this)
     }
 
     state = {
         fontLoaded: false,
     };
 
-    goDownloadPic () {
-      Actions.downloadPic({uid: this.state.user.uid})
+    goDownloadPic (index) {
+      Actions.downloadPic({
+        uid: this.state.user.uid,
+        tour: this.state.tours[index],
+      })
     }
 
     componentDidMount = async () => {
@@ -122,7 +126,7 @@ export default class HomeTab extends Component {
                             return (
                                 <TouchableWithoutFeedback
                                   key={index}
-                                  onPress={this.goDownloadPic.bind(this)}>
+                                  onPress={() => this.goDownloadPic(index)}>
                                     <Animated.View
                                         style={{
                                             height : SCREEN_HEIGHT - 150,
