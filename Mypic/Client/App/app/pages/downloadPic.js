@@ -25,20 +25,35 @@ export default class DownloadPic extends Component {
     constructor(props){
         super(props);
 
-        let date_json = this.props.tour.tour_startedAt.toDate();
-        let date_string = date_json.toDateString();
-
         this.state={
             name:'',
             owner : '',
             imageBrowserOpen: false,
             photos: [],
-            date_string: date_string,
-            tour_ref: this.props.tour.tour_ref,
             images:[],
+            tour: null,
         };
-        alert("uid: " + this.props.uid + "\ntours_: " + this.props.tour.tour_ref.tourName);
+//        alert("uid: " + this.props.uid + "\ntours_: " + this.props.tour.tour_ref.tourName);
 
+    }
+
+    componentDidMount = async () => {
+      this.props.tour.get()
+      .then(res => {
+        let data = res.data();
+        console.log(data);
+        let tour_info = {
+            tour_name : data.tourName,
+            tour_description : data.description,
+            tour_thumbnail : data.thumbnail,
+            tour_startedAt : data.tourStartedAt,
+            tour_images : data.images,
+            tour_date_string : data.tourStartedAt.toDate().toDateString(),
+        };
+        this.setState(prevState => ({
+            tour: tour_info,
+        }));
+      }).catch(error => console.log(error))
     }
 
     goBack() {
@@ -71,12 +86,8 @@ export default class DownloadPic extends Component {
         this.goBack();
     };
 
-    componentDidMount(){
-
-    }
-
     renderGridImages() {
-        return this.props.tour.tour_ref.images.map((image, index) => {
+        return this.state.tour.tour_images.map((image, index) => {
             return (
                 <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
                     <Image style={{
@@ -109,15 +120,21 @@ export default class DownloadPic extends Component {
             <SafeAreaView style={styles.container}>
                 <DownloadPicHeader title="Download Pictures" />
                 <Text style={{...styles.textInput, marginTop:20}}>
-                           {this.props.tour.tour_ref.tourName}
+                           {
+                             this.state.tour ?
+                             this.state.tour.tour_name : null
+                           }
                 </Text>
 
                 <Text style={styles.textInput}>
-                           {this.state.date_string}
+                           {
+                             this.state.tour ?
+                             this.state.tour.tour_startedAt.toDate().toDateString() : null
+                           }
                 </Text>
 
                 <View style={{ flex: 1, }}>
-                    {this.state.images ? this.renderSection() : null }
+                    {this.state.tour ? this.renderSection() : null }
                 </View>
 
                 <TouchableOpacity style={{...styles.button, backgroundColor: '#12799f'}}>
