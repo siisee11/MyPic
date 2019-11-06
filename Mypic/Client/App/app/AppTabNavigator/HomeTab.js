@@ -29,6 +29,7 @@ export default class HomeTab extends Component {
             activeImage:null,
             data: [],
             tours: [],
+            tours_ref: [],
             thumbnails: [],
             user: {
                 name: '',
@@ -47,7 +48,7 @@ export default class HomeTab extends Component {
     goDownloadPic (index) {
       Actions.downloadPic({
         uid: this.state.user.uid,
-        tour: this.state.tours[index],
+        tour: this.state.tours_ref[index],
       })
     }
 
@@ -58,13 +59,14 @@ export default class HomeTab extends Component {
             .onSnapshot((doc) => {
 
                 let tours = doc.data().tours;
+                this.setState({tours_ref: tours})
                 tours? (
                     tours.map( tour => {
                         tour.get()
                             .then(res =>{
                                 let data = res.data();
                                 let tour_info = {
-                                    tour_ref : data,
+//                                    tour_ref : data,
                                     tour_name : data.tourName,
                                     tour_description : data.description,
                                     tour_thumbnail : data.thumbnail,
@@ -74,8 +76,6 @@ export default class HomeTab extends Component {
                                 this.setState(prevState => ({
                                     tours : append_tours,
                                 }));
-                                console.log("tours");
-                                console.log(this.state.tours);
                             }).catch(error => console.log(error))
                     })
                 ) : null;
