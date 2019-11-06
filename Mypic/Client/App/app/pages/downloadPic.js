@@ -31,6 +31,7 @@ export default class DownloadPic extends Component {
             imageBrowserOpen: false,
             photos: [],
             date_string: date_string,
+            tour_ref: this.props.tour.tour_ref,
         };
         alert("uid: " + this.props.uid + "\ntours_: " + this.props.tour.tour_ref.tourName);
 
@@ -54,7 +55,7 @@ export default class DownloadPic extends Component {
         return(
             <Image
                 style={{height: 300, width: 300}}
-                source={{uri: item.file}}
+                source={{uri: item}}
                 key={i}
             />
         )
@@ -83,7 +84,7 @@ export default class DownloadPic extends Component {
     componentDidMount = async () => {
         StatusBar.setHidden(true);
 
-        await firebase.firestore().collection("Tour").doc(this.state.tour.)
+        await firebase.firestore().collection("Tour").doc(this.state.tour_ref.images)
             .onSnapshot((doc) => {
                 let tours = doc.data().tours;
                 tours? (
@@ -118,6 +119,7 @@ export default class DownloadPic extends Component {
         this.setState({ fontLoaded: true });
     }
 */
+
     render() {
         if (this.state.imageBrowserOpen) {
             return(<ImageBrowser max={100} callback={this.imageBrowserCallback}/>);
@@ -138,7 +140,7 @@ export default class DownloadPic extends Component {
                     horizontal={true}
                     contentContainerStyle={{flexGrow : 1, justifyContent: 'center'}}
                     style={styles.scrollView}>
-                    {this.state.photos.map((item,i) => this.renderImage(item,i))}
+                    {this.props.tour.tour_ref.images.map((item,i) => this.renderImage(item,i))}
                 </ScrollView>
 
                 <TouchableOpacity style={{...styles.button, backgroundColor: '#12799f'}}>
