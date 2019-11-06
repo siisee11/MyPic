@@ -20,27 +20,30 @@ export default class DownloadPic extends Component {
     constructor(props){
         super(props);
         this.state={
-            tour: null,
+            tour: {
+                tour_name : '',
+                tour_description : '',
+                tour_startedAt : null,
+                tour_images : [],
+            },
         };
     }
 
     componentDidMount = async () => {
-      this.props.tour.get()
-      .then(res => {
-        let data = res.data();
-        let tour_info = {
-            tour_name : data.tourName,
-            tour_description : data.description,
-            tour_thumbnail : data.thumbnail,
-            tour_startedAt : data.tourStartedAt,
-            tour_images : data.images,
-            tour_date_string : data.tourStartedAt.toDate().toDateString(),
-        };
-        this.setState(prevState => ({
-            tour: tour_info,
-        }));
+      this.props.tour
+          .get()
+          .then(res => {
+            let data = res.data();
+            this.setState({
+                tour: {
+                    tour_name : data.tourName,
+                    tour_description : data.description,
+                    tour_startedAt : data.tourStartedAt,
+                    tour_images : data.images,
+                },
+            });
       }).catch(error => console.log(error))
-    }
+    };
 
     goBack() {
         Actions.pop()
@@ -82,27 +85,27 @@ export default class DownloadPic extends Component {
                 <DownloadPicHeader title="Download Pictures" />
                 <Text style={{...styles.textInput, marginTop:20, fontSize: 25, fontWeight: "bold"}}>
                            {
-                             this.state.tour ?
+                             this.state.tour.tour_name ?
                              this.state.tour.tour_name : null
                            }
                 </Text>
 
                 <Text style={{...styles.textInput, fontSize:15, }}>
                            {
-                             this.state.tour ?
+                             this.state.tour.tour_startedAt ?
                              this.state.tour.tour_startedAt.toDate().toDateString() : null
                            }
                 </Text>
 
                 <Text style={{...styles.textInput, fontSize: 15,}}>
                     {
-                        this.state.tour ?
+                        this.state.tour.tour_description ?
                             this.state.tour.tour_description: null
                     }
                 </Text>
 
                 <View style={{ flex: 1, }}>
-                    {this.state.tour ? this.renderSection() : null }
+                    {this.state.tour.tour_images ? this.renderSection() : null }
                 </View>
 
                 <TouchableOpacity style={{...styles.button}}>
