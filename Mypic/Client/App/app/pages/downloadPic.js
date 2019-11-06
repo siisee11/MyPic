@@ -11,6 +11,7 @@ import {
     ScrollView,
     StatusBar,
     SafeAreaView,
+    Dimensions,
 } from 'react-native';
 
 import {Actions} from 'react-native-router-flux';
@@ -18,12 +19,14 @@ import ImageBrowser from "../components/ImageBrower";
 import MyHeader from "../components/MyHeader";
 import DownloadPicHeader from "../components/DownloadPicHeader"
 
+var { height, width } = Dimensions.get('window');
+
 export default class DownloadPic extends Component {
     constructor(props){
         super(props);
 
         let date_json = this.props.tour.tour_startedAt.toDate();
-        let date_string = date_json.getFullYear() + '년 ' + date_json.getMonth()+1 + '월 ' + date_json.getDate() + '일';
+        let date_string = date_json.toDateString();
 
         this.state={
             name:'',
@@ -32,6 +35,7 @@ export default class DownloadPic extends Component {
             photos: [],
             date_string: date_string,
             tour_ref: this.props.tour.tour_ref,
+            images:[],
         };
         alert("uid: " + this.props.uid + "\ntours_: " + this.props.tour.tour_ref.tourName);
 
@@ -50,16 +54,6 @@ export default class DownloadPic extends Component {
             })
         }).catch((e) => console.log(e))
     };
-
-    renderImage(item, i) {
-        return(
-            <Image
-                style={{height: 300, width: 300}}
-                source={{uri: item}}
-                key={i}
-            />
-        )
-    }
 
     saveData =async()=>{
         const {name ,owner} = this.state;
@@ -120,6 +114,31 @@ export default class DownloadPic extends Component {
     }
 */
 
+    renderGridImages() {
+        return this.props.tour.tour_ref.images.map((image, index) => {
+            return (
+                <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
+                    <Image style={{
+                        flex: 1,
+                        alignSelf: 'stretch',
+                        width: undefined,
+                        height: undefined,
+                    }}
+                           source={{ uri: image}}>
+                    </Image>
+                </View>
+            )
+        })
+    }
+
+    renderSection() {
+        return (
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginVertical: 20, }}>
+                {this.renderGridImages()}
+            </View>
+        )
+    }
+
     render() {
         if (this.state.imageBrowserOpen) {
             return(<ImageBrowser max={100} callback={this.imageBrowserCallback}/>);
@@ -136,12 +155,9 @@ export default class DownloadPic extends Component {
                            {this.state.date_string}
                 </Text>
 
-                <ScrollView
-                    horizontal={true}
-                    contentContainerStyle={{flexGrow : 1, justifyContent: 'center'}}
-                    style={styles.scrollView}>
-                    {this.props.tour.tour_ref.images.map((item,i) => this.renderImage(item,i))}
-                </ScrollView>
+                <View style={{ flex: 1, }}>
+                    {this.state.images ? this.renderSection() : null }
+                </View>
 
                 <TouchableOpacity style={{...styles.button, backgroundColor: '#12799f'}}>
                     <Text style={{fontSize:20, fontWeight: 'bold', color: 'white'}}

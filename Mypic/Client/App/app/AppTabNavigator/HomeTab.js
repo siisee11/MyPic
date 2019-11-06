@@ -124,8 +124,7 @@ export default class HomeTab extends Component {
                         this.state.tours.map((tour, index) => {
                             const random = Math.floor(Math.random() * 4);
                             let date_json = tour.tour_startedAt.toDate();
-                            let date_string = date_json.getFullYear() + '년 ' + date_json.getMonth()+1 + '월 ' + date_json.getDate() + '일';
-
+                            let date_string = date_json.toDateString();
                             return (
                                 <TouchableWithoutFeedback
                                   key={index}
