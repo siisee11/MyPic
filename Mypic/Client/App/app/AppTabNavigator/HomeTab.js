@@ -9,6 +9,7 @@ import 'firebase/auth'
 import 'firebase/firestore'
 
 import MyHeader from '../components/MyHeader'
+import DownloadPic from '../pages/downloadPic'
 import {Actions} from 'react-native-router-flux';
 
 let SCREEN_WIDTH = Dimensions.get('window').width;
@@ -112,7 +113,7 @@ export default class HomeTab extends Component {
         return (
             <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
                 <MyHeader />
-
+                <DownloadPic uid={123} />
                 <ScrollView style={{flex : 1}}>
                     {
                         this.state.tours.map((tour, index) => {
