@@ -21,14 +21,19 @@ import DownloadPicHeader from "../components/DownloadPicHeader"
 export default class DownloadPic extends Component {
     constructor(props){
         super(props);
+
+        let date_json = this.props.tour.tour_startedAt.toDate();
+        let date_string = date_json.getFullYear() + '년 ' + date_json.getMonth()+1 + '월 ' + date_json.getDate() + '일';
+
         this.state={
             name:'',
             owner : '',
             imageBrowserOpen: false,
-            photos: []
+            photos: [],
+            date_string: date_string,
         };
-        this.props.tours
-        alert("uid: " + this.props.uid + "\ntours_: " + this.props.tour.tour_name);
+        alert("uid: " + this.props.uid + "\ntours_: " + this.props.tour.tour_ref.tourName);
+
     }
 
     goBack() {
@@ -71,15 +76,14 @@ export default class DownloadPic extends Component {
         this.goBack();
     };
 
-    componentDidMount() {
-        StatusBar.setHidden(true);
+    componentDidMount(){
+
     }
 /*
     componentDidMount = async () => {
         StatusBar.setHidden(true);
-        await this.getUserInfo();
 
-        await firebase.firestore().collection("User").doc(this.state.user.uid)
+        await firebase.firestore().collection("Tour").doc(this.state.tour.)
             .onSnapshot((doc) => {
                 let tours = doc.data().tours;
                 tours? (
@@ -113,8 +117,7 @@ export default class DownloadPic extends Component {
         });
         this.setState({ fontLoaded: true });
     }
-    */
-
+*/
     render() {
         if (this.state.imageBrowserOpen) {
             return(<ImageBrowser max={100} callback={this.imageBrowserCallback}/>);
@@ -123,21 +126,13 @@ export default class DownloadPic extends Component {
         return(
             <SafeAreaView style={styles.container}>
                 <DownloadPicHeader title="Download Pictures" />
-                <TextInput style={{...styles.textInput, marginTop:20}}
-                           onChangeText={(email) => this.setState({email})}
-                           underlineColorAndroid='rgba(0,0,0,0)'
-                           placeholder={this.props.tour.tour_name}
-                           placeholderTextColor = "#121212"
-                           selectionColor="#fff"
-                           onSubmitEditing={()=> this.password.focus()}/>
+                <Text style={{...styles.textInput, marginTop:20}}>
+                           {this.props.tour.tour_ref.tourName}
+                </Text>
 
-                <TextInput style={styles.textInput}
-                           onChangeText={(password) => this.setState({password})}
-                           underlineColorAndroid='rgba(0,0,0,0)'
-                           placeholder="Date"
-                           placeholderTextColor = "#121212"
-                           ref={(input) => this.password = input}
-                />
+                <Text style={styles.textInput}>
+                           {this.state.date_string}
+                </Text>
 
                 <ScrollView
                     horizontal={true}
