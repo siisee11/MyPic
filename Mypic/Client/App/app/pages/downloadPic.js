@@ -27,6 +27,8 @@ export default class DownloadPic extends Component {
             imageBrowserOpen: false,
             photos: []
         };
+
+        alert("uid: " + this.props.uid);
     }
 
     goBack() {
