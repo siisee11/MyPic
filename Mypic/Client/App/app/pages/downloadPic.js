@@ -74,45 +74,6 @@ export default class DownloadPic extends Component {
     componentDidMount(){
 
     }
-/*
-    componentDidMount = async () => {
-        StatusBar.setHidden(true);
-
-        await firebase.firestore().collection("Tour").doc(this.state.tour_ref.images)
-            .onSnapshot((doc) => {
-                let tours = doc.data().tours;
-                tours? (
-                    tours.map( tour => {
-                        tour.get()
-                            .then(res =>{
-                                let data = res.data();
-                                let tour_info = {
-                                    tour_name : data.tourName,
-                                    tour_description : data.description,
-                                    tour_thumbnail : data.thumbnail,
-                                    tour_startedAt : data.tourStartedAt,
-                                };
-                                let append_tours = this.state.tours.concat(tour_info);
-                                this.setState(prevState => ({
-                                    tours : append_tours,
-                                }));
-                                console.log("tours");
-                                console.log(this.state.tours);
-                            }).catch(error => console.log(error))
-                    })
-                ) : null;
-            });
-
-        await Font.loadAsync({
-            'Dancing_Script-Bold': require('../../assets/fonts/Dancing_Script/DancingScript-Bold.ttf'),
-            'Gaegu-Regular': require('../../assets/fonts/Gaegu/Gaegu-Regular.ttf'),
-            'EastSeaDokdo-Regular': require('../../assets/fonts/East_Sea_Dokdo/EastSeaDokdo-Regular.ttf'),
-            'Nanum_pen_Script-Regular': require('../../assets/fonts/Nanum_Pen_Script/NanumPenScript-Regular.ttf'),
-            'Yeon_Sung-Regular': require('../../assets/fonts/Yeon_Sung/YeonSung-Regular.ttf'),
-        });
-        this.setState({ fontLoaded: true });
-    }
-*/
 
     renderGridImages() {
         return this.props.tour.tour_ref.images.map((image, index) => {
