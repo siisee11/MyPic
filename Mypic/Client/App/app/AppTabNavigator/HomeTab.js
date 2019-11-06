@@ -56,6 +56,7 @@ export default class HomeTab extends Component {
 
         await firebase.firestore().collection("User").doc(this.state.user.uid)
             .onSnapshot((doc) => {
+
                 let tours = doc.data().tours;
                 tours? (
                     tours.map( tour => {
@@ -63,6 +64,7 @@ export default class HomeTab extends Component {
                             .then(res =>{
                                 let data = res.data();
                                 let tour_info = {
+                                    tour_ref : data,
                                     tour_name : data.tourName,
                                     tour_description : data.description,
                                     tour_thumbnail : data.thumbnail,
@@ -122,7 +124,7 @@ export default class HomeTab extends Component {
                         this.state.tours.map((tour, index) => {
                             const random = Math.floor(Math.random() * 4);
                             let date_json = tour.tour_startedAt.toDate();
-                            let date_string = date_json.getFullYear() + '년 ' + date_json.getMonth() + '월 ' + date_json.getDate() + '일';
+                            let date_string = date_json.toDateString();
                             return (
                                 <TouchableWithoutFeedback
                                   key={index}
