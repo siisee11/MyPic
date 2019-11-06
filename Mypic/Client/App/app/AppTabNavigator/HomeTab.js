@@ -26,8 +26,6 @@ export default class HomeTab extends Component {
     constructor(){
         super()
         this.state={
-            activeImage:null,
-            data: [],
             tours: [],
             tours_ref: [],
             thumbnails: [],
@@ -37,7 +35,7 @@ export default class HomeTab extends Component {
                 photoURL: '',
                 uid: '',
             },
-        }
+        };
         this.goDownloadPic = this.goDownloadPic.bind(this)
     }
 
@@ -66,7 +64,6 @@ export default class HomeTab extends Component {
                             .then(res =>{
                                 let data = res.data();
                                 let tour_info = {
-//                                    tour_ref : data,
                                     tour_name : data.tourName,
                                     tour_description : data.description,
                                     tour_thumbnail : data.thumbnail,
@@ -93,16 +90,13 @@ export default class HomeTab extends Component {
 
     getUserInfo = () => {
         let user = firebase.auth().currentUser;
-        let name, email, photoUrl, uid, emailVerified;
+        let name, email, photoUrl, uid;
 
         if (user != null) {
             name = user.displayName;
             email = user.email;
             photoUrl = user.photoURL;
-            emailVerified = user.emailVerified;
-            uid = user.uid;  // The user's ID, unique to the Firebase project. Do NOT use
-                             // this value to authenticate with your backend server, if
-                             // you have one. Use User.getToken() instead.
+            uid = user.uid;
         }
 
         this.setState({
