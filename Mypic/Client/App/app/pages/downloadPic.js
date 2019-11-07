@@ -66,24 +66,18 @@ export default class DownloadPic extends Component {
 
         let image_uri ='https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/tour_images%2Fjaepiltour%2F20190924_131413.jpg?alt=media&token=5e9242cd-8610-488d-97d1-c5ec99e2aa0d'
 //        let image_name = image_uri.split('%')[1].split('?')[0].substring(2);
-        await this._downloadFile(image_uri);
+        const asset = await MediaLibrary.createAssetAsync(image_uri);
+        MediaLibrary.createAlbumAsync('Expo', asset)
+            .then(() => {
+                console.log('Album created!');
+            })
+            .catch(error => {
+                console.log('err', error);
+            });
 
         this.goBack();
     };
 
-    _downloadFile = async (uri) => {
-//permission for camera_roll
-        if (status === "granted") {
-//store the cached file
-            const file = await FileSystem.downloadAsync(
-                uri,
-                FileSystem.documentDirectory + "filename.jpg"
-            );
-
-            const assetLink = await MediaLibrary.createAssetAsync(file.uri);
-            console.log(file, assetLink);
-        }
-    };
 
     renderGridImages() {
         return this.state.tour.tour_images.map((image, index) => {
