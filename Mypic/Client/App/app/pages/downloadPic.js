@@ -14,6 +14,9 @@ import {
 import {Actions} from 'react-native-router-flux';
 import DownloadPicHeader from "../components/DownloadPicHeader"
 import * as Font from "expo-font";
+import * as MediaLibrary from 'expo-media-library';
+import * as Permissions from 'expo-permissions';
+import * as FileSystem from 'expo-file-system';
 
 var { height, width } = Dimensions.get('window');
 
@@ -60,9 +63,31 @@ export default class DownloadPic extends Component {
     }
 
     saveData =async()=>{
-        alert('Tour images saved to gallery');
+        alert('Saving to local device finish in few seconds.');
+        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        if (status == 'granted') {
+            this.state.tour.tour_images.map(async (img_uri) => {
+                let img_name = img_uri.split('%')[2].split('?')[0].substring(2);
+
+                const file = await FileSystem.downloadAsync(
+                    img_uri,
+                    FileSystem.documentDirectory + img_name,
+                );
+
+                const asset = await MediaLibrary.createAssetAsync(file.uri);
+                MediaLibrary.createAlbumAsync(this.state.tour.tour_name, asset)
+                    .then(() => {
+                        console.log('Album ' + this.state.tour.tour_name + ' created!');
+                    })
+                    .catch(error => {
+                        console.log('err', error);
+                    });
+            }) /* map end */
+        }
+
         this.goBack();
     };
+
 
     renderGridImages() {
         return this.state.tour.tour_images.map((image, index) => {
