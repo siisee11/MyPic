@@ -15,6 +15,7 @@ import {Actions} from 'react-native-router-flux';
 import DownloadPicHeader from "../components/DownloadPicHeader"
 import * as Font from "expo-font";
 import * as MediaLibrary from 'expo-media-library';
+import * as Permissions from 'expo-permissions';
 import * as FileSystem from 'expo-file-system';
 
 var { height, width } = Dimensions.get('window');
@@ -62,18 +63,27 @@ export default class DownloadPic extends Component {
     }
 
     saveData =async()=>{
-        alert('Tour images saved to gallery');
+        alert('Saving to local device finish in few seconds.');
+        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        if (status == 'granted') {
+            this.state.tour.tour_images.map(async (img_uri) => {
+                let img_name = img_uri.split('%')[2].split('?')[0].substring(2);
 
-        let image_uri ='https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/tour_images%2Fjaepiltour%2F20190924_131413.jpg?alt=media&token=5e9242cd-8610-488d-97d1-c5ec99e2aa0d'
-//        let image_name = image_uri.split('%')[1].split('?')[0].substring(2);
-        const asset = await MediaLibrary.createAssetAsync(image_uri);
-        MediaLibrary.createAlbumAsync('Expo', asset)
-            .then(() => {
-                console.log('Album created!');
-            })
-            .catch(error => {
-                console.log('err', error);
-            });
+                const file = await FileSystem.downloadAsync(
+                    img_uri,
+                    FileSystem.documentDirectory + img_name,
+                );
+
+                const asset = await MediaLibrary.createAssetAsync(file.uri);
+                MediaLibrary.createAlbumAsync(this.state.tour.tour_name, asset)
+                    .then(() => {
+                        console.log('Album ' + this.state.tour.tour_name + ' created!');
+                    })
+                    .catch(error => {
+                        console.log('err', error);
+                    });
+            }) /* map end */
+        }
 
         this.goBack();
     };
