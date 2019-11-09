@@ -9,6 +9,9 @@ import {
     StatusBar,
     SafeAreaView,
     Dimensions,
+    ImageBackground,
+    TouchableWithoutFeedback,
+    Platform,
 } from 'react-native';
 
 import {Actions} from 'react-native-router-flux';
@@ -28,7 +31,9 @@ export default class DownloadPic extends Component {
                 tour_name : '',
                 tour_description : '',
                 tour_startedAt : null,
+                tour_location: '',
                 tour_images : [],
+                tour_thumbnail: '',
             },
             fontLoaded: false,
         };
@@ -43,8 +48,10 @@ export default class DownloadPic extends Component {
                     tour: {
                         tour_name : data.tourName,
                         tour_description : data.description,
+                        tour_location : data.location,
                         tour_startedAt : data.tourStartedAt,
                         tour_images : data.images,
+                        tour_thumbnail: data.thumbnail,
                     },
                 });
             }).catch(error => console.log(error))
@@ -108,36 +115,69 @@ export default class DownloadPic extends Component {
 
     renderSection() {
         return (
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginVertical: 20, }}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', }}>
                 {this.renderGridImages()}
             </View>
         )
+    }
+
+    renderThumbnail() {
+        return (
+            <ImageBackground
+                blurRadius={ Platform.OS == 'ios' ? 10 : 5 }
+                source={{uri: this.state.tour.tour_thumbnail}}
+                imageStyle={{ borderRadius: 0}}
+                style={{flex:1, height:null, width:null,
+                    resizeMode: 'cover', borderRadius:0,
+                    justifyContent: 'center'}}>
+                <View style={{...styles.overlay, borderRadius:0 }}>
+                {
+                    this.state.fontLoaded ? (
+                        <Text style={{...styles.textInput, marginTop:10, fontSize: 40, fontFamily: 'EastSeaDokdo-Regular'}}>
+                            {
+                                this.state.tour.tour_name ?
+                                    this.state.tour.tour_name : null
+                            }
+                        </Text>
+                    ) : null
+                }
+                {
+                    this.state.fontLoaded ? (
+                        <Text style={{...styles.textInput, fontSize:20, marginVertical:0, color: '#868e96', fontFamily: 'Nanum_pen_Script-Regular', }}>
+                            {
+                                this.state.tour.tour_startedAt ?
+                                    this.state.tour.tour_startedAt.toDate().toDateString() : null
+                            }
+                        </Text>
+                    ) : null
+                }
+                {
+                    <Text style={{...styles.textInput, fontSize: 30,fontFamily: 'EastSeaDokdo-Regular', }}>
+                        {
+                            this.state.tour.tour_location?
+                                this.state.tour.tour_location: null
+                        }
+                    </Text>
+                }
+                </View>
+            </ImageBackground>
+        );
     }
 
     render() {
         return(
             <SafeAreaView style={styles.container}>
                 <DownloadPicHeader title="Download Pictures" />
-                <Text style={{...styles.textInput, marginTop:20, fontSize: 30, fontFamily: 'Yeon_Sung-Regular'}}>
-                           {
-                             this.state.tour.tour_name ?
-                             this.state.tour.tour_name : null
-                           }
-                </Text>
 
-                <Text style={{...styles.textInput, fontSize:20,fontFamily: 'Nanum_pen_Script-Regular', }}>
-                           {
-                             this.state.tour.tour_startedAt ?
-                             this.state.tour.tour_startedAt.toDate().toDateString() : null
-                           }
-                </Text>
+                <View
+                    style={{
+                        height : height / 5,
+                        width: width,
+                        marginVertical: 5
+                    }}>
+                    { this.state.tour.tour_thumbnail? this.renderThumbnail() : null }
+                </View>
 
-                <Text style={{...styles.textInput, fontSize: 20,fontFamily: 'Yeon_Sung-Regular', }}>
-                    {
-                        this.state.tour.tour_description ?
-                            this.state.tour.tour_description: null
-                    }
-                </Text>
 
                 <View style={{ flex: 1, }}>
                     {this.state.tour.tour_images ? this.renderSection() : null }
@@ -160,13 +200,19 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
 //        backgroundColor: '#121212',
     },
+    overlay: {
+        flex:1,
+        backgroundColor:'rgba(255,255,255,0.6)',
+//        alignItems: 'center',
+        justifyContent: 'center',
+    },
     textInput:{
         marginHorizontal: 20,
         paddingLeft: 10,
         marginVertical: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        alignSelf: 'center',
+//        alignSelf: 'center',
     },
     button: {
         backgroundColor: 'white',
