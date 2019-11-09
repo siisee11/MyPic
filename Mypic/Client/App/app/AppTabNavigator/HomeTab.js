@@ -4,22 +4,16 @@ import { Platform, View, Text, StyleSheet, ScrollView, StatusBar,
 
 import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/firestore'
 
 import MyHeader from '../components/MyHeader'
+import DownloadPic from '../pages/downloadPic'
+import {Actions} from 'react-native-router-flux';
 
 let SCREEN_WIDTH = Dimensions.get('window').width;
 let SCREEN_HEIGHT= Dimensions.get('window').height;
-
-const images = [
-    { id: 1, uri: 'https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Fcinque-terre.jpg?alt=media&token=84ee3271-5468-464c-ac1d-78ceadf50247'},
-    { id: 2, uri: 'https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Feiffel-tower.jpg?alt=media&token=895c6c6f-6702-4187-b886-bc90dfd7dfb3'},
-    { id: 3, uri: 'https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Fgo-pro.jpg?alt=media&token=b4724847-16e1-4eeb-8f9e-1642645bd3e1'},
-    { id: 4, uri: 'https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Fhot-air-balloon.jpg?alt=media&token=e640261f-9872-405c-a6bd-eeea4341b837'},
-    { id: 5, uri: 'https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Fmaldives.jpg?alt=media&token=2ca5699a-8ab7-4b88-aaa6-27608131453c'},
-    { id: 6, uri: 'https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Fsea.jpg?alt=media&token=9518ce10-9d60-42b7-8db3-6e9e2c089bb1'},
-    { id: 7, uri: 'https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Fsunrise.jpg?alt=media&token=d6a14fa6-0a1f-437e-b229-9162a426cf13'},
-];
 
 const fonts = [
     { id: 1, font: 'Gaegu-Regular'},
@@ -32,16 +26,58 @@ export default class HomeTab extends Component {
     constructor(){
         super()
         this.state={
-            activeImage:null,
-            data: [],
-        }
+            tours: [],
+            tours_ref: [],
+            thumbnails: [],
+            user: {
+                name: '',
+                email: '',
+                photoURL: '',
+                uid: '',
+            },
+        };
+        this.goDownloadPic = this.goDownloadPic.bind(this)
     }
 
     state = {
         fontLoaded: false,
     };
 
-    async componentDidMount() {
+    goDownloadPic (index) {
+      Actions.downloadPic({
+        uid: this.state.user.uid,
+        tour: this.state.tours_ref[index],
+      })
+    }
+
+    componentDidMount = async () => {
+        await this.getUserInfo();
+
+        await firebase.firestore().collection("User").doc(this.state.user.uid)
+            .onSnapshot((doc) => {
+
+                let tours = doc.data().tours;
+                this.setState({tours_ref: tours})
+                tours? (
+                    tours.map( tour => {
+                        tour.get()
+                            .then(res =>{
+                                let data = res.data();
+                                let tour_info = {
+                                    tour_name : data.tourName,
+                                    tour_description : data.description,
+                                    tour_thumbnail : data.thumbnail,
+                                    tour_startedAt : data.tourStartedAt,
+                                };
+                                let append_tours = this.state.tours.concat(tour_info);
+                                this.setState(prevState => ({
+                                    tours : append_tours,
+                                }));
+                            }).catch(error => console.log(error))
+                    })
+                ) : null;
+            });
+
         await Font.loadAsync({
             'Dancing_Script-Bold': require('../../assets/fonts/Dancing_Script/DancingScript-Bold.ttf'),
             'Gaegu-Regular': require('../../assets/fonts/Gaegu/Gaegu-Regular.ttf'),
@@ -49,21 +85,44 @@ export default class HomeTab extends Component {
             'Nanum_pen_Script-Regular': require('../../assets/fonts/Nanum_Pen_Script/NanumPenScript-Regular.ttf'),
             'Yeon_Sung-Regular': require('../../assets/fonts/Yeon_Sung/YeonSung-Regular.ttf'),
         });
-
         this.setState({ fontLoaded: true });
+    }
+
+    getUserInfo = () => {
+        let user = firebase.auth().currentUser;
+        let name, email, photoUrl, uid;
+
+        if (user != null) {
+            name = user.displayName;
+            email = user.email;
+            photoUrl = user.photoURL;
+            uid = user.uid;
+        }
+
+        this.setState({
+            user: {
+                name: name,
+                email: email,
+                photoURL: photoUrl,
+                uid: uid,
+            }
+        })
     }
 
     render() {
         return (
             <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
                 <MyHeader />
-
                 <ScrollView style={{flex : 1}}>
                     {
-                        images.map((image, index) => {
+                        this.state.tours.map((tour, index) => {
                             const random = Math.floor(Math.random() * 4);
+                            let date_json = tour.tour_startedAt.toDate();
+                            let date_string = date_json.toDateString();
                             return (
-                                <TouchableWithoutFeedback key={image.id}>
+                                <TouchableWithoutFeedback
+                                  key={index}
+                                  onPress={() => this.goDownloadPic(index)}>
                                     <Animated.View
                                         style={{
                                             height : SCREEN_HEIGHT - 150,
@@ -71,7 +130,7 @@ export default class HomeTab extends Component {
                                             padding: 15
                                         }}>
                                        <ImageBackground
-                                           source={{uri: image.uri}}
+                                           source={{uri: tour.tour_thumbnail}}
                                            imageStyle={{ borderRadius: 20}}
                                            style={{flex:1, height:null, width:null,
                                            resizeMode: 'cover', borderRadius:20,
@@ -83,7 +142,7 @@ export default class HomeTab extends Component {
                                                        fontFamily : fonts[random].font,
                                                        fontSize : 20,
                                                    }}>
-                                                       2019년 10월 21일
+                                                       {date_string}
                                                    </Text>
                                                    ) : null
                                            }
@@ -93,8 +152,8 @@ export default class HomeTab extends Component {
                                                        ...style.textOverImage,
                                                        fontFamily : fonts[random].font,
                                                    }}>
-                                                       대한민국 수원시{"\n"}
-                                                       종설투어 여행
+                                                       {tour.tour_name}{"\n"}
+                                                       {tour.tour_description}
                                                    </Text>
                                                ) : null
                                            }

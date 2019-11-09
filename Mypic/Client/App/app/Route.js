@@ -5,7 +5,7 @@ import Signup from './pages/signup';
 import MusicApp from './pages/login';
 import MainPage from './pages/mainpage'
 import Loading from './pages/Loading'
-import AddTour from './pages/addTour'
+import DownloadPic from './pages/downloadPic'
 
 export default class Route extends Component {
     render() {
@@ -18,7 +18,7 @@ export default class Route extends Component {
                     animation='fade' />
                     <Scene key="signup" component={Signup} title="Sign up" hideNavBar={false}
                     animation='fade' />
-                    <Scene key="addtour" component={AddTour} title="Create tour" hideNavBar={true}
+                    <Scene key="downloadPic" component={DownloadPic} title="Download pictures" hideNavBar={true}
                            animation='fade' />
                     <Scene key="mainpage" component={MainPage} hideNavBar={true} animation='fade' />
                 </Stack>

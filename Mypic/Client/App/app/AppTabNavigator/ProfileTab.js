@@ -30,24 +30,12 @@ export default class ProfileTab extends Component {
     componentDidMount = async() => {
         await this.getUserInfo();
 
-        await firebase.firestore().collection("User").doc(this.state.user.uid)
+        firebase.firestore().collection("User").doc(this.state.user.uid)
             .onSnapshot((doc) => {
-                console.log("Current data: ", doc.data());
                 doc.data().uris ? (
                     this.setState({data: doc.data().uris})
                 ) : null
             });
-/*
-        const ref = firebase.database().ref().child("images").child(this.state.user.uid);
-        ref.on("value", snapshot => {
-            this.setState({data: []});
-            snapshot.forEach( childSnapshot => {
-                this.setState(prevState => ({
-                    data : [childSnapshot.val(), ...prevState.data]
-                }));
-            })
-        });
- */
 
         await Font.loadAsync({
             'Dancing_Script-Bold': require('../../assets/fonts/Dancing_Script/DancingScript-Bold.ttf'),
@@ -57,9 +45,6 @@ export default class ProfileTab extends Component {
     }
 
     onChooseImagePress = async () => {
-        console.log("photo:");
-        console.log(this.state.photos);
-
         this.state.photos.map( (photo, index) => {
             this.uploadImage(photo.uri, index)
                 .then(() => {
@@ -123,7 +108,6 @@ export default class ProfileTab extends Component {
 
     imageBrowserCallback = (callback) => {
         callback.then((photos) => {
-            console.log("image callback");
             this.setState({
                 imageBrowserOpen: false,
                 photos
@@ -132,7 +116,7 @@ export default class ProfileTab extends Component {
         }).catch((e) => console.log(e))
     };
 
-    getUserInfo = () => {
+    getUserInfo = async () => {
         let user = firebase.auth().currentUser;
         let name, email, photoUrl, uid, emailVerified;
 

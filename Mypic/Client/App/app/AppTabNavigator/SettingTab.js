@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, Button, ScrollView, ImageBackground} from 'react-native';
+import {View, Text, StyleSheet, Button, TouchableOpacity, ScrollView, ImageBackground} from 'react-native';
 import { Container, Content, Icon, Thumbnail, Header, Left, Right, Body } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import * as Font from "expo-font";
@@ -27,8 +27,10 @@ export default class SettingTab extends Component {
                 <MyHeader />
 
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text>Setting</Text>
-                    <Button title="Sign out" onPress={() => firebase.auth().signOut()}/>
+                    <TouchableOpacity onPress={() => firebase.auth().signOut()}>
+                        <Text style={{color : '#12799f'}}> SignOut </Text>
+                    </TouchableOpacity>
+
                 </View>
 
             </Container>
