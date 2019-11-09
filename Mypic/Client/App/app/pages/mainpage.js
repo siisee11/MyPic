@@ -5,15 +5,13 @@ import {createAppContainer} from "react-navigation";
 import { Ionicons } from '@expo/vector-icons';
 
 import HomeTab from "../AppTabNavigator/HomeTab";
-import SearchTab from "../AppTabNavigator/SearchTab";
 import ProfileTab from "../AppTabNavigator/ProfileTab";
-
 import IconWithBadge from '../AppTabNavigator/IconWithBadge'
 import SettingTab from "../AppTabNavigator/SettingTab";
 
 const HomeIconWithBadge = props => {
     // You should pass down the badgeCount in some other ways like context, redux, mobx or event emitters.
-    return <IconWithBadge {...props} badgeCount={3} />;
+    return <IconWithBadge {...props} badgeCount={0} />;
 };
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
@@ -40,7 +38,6 @@ const AppTabContainet = createAppContainer(
     createBottomTabNavigator(
         {
             Home: { screen: HomeTab},
-            Search: { screen: SearchTab},
             Profile: { screen: ProfileTab},
             Setting: { screen: SettingTab},
         },
