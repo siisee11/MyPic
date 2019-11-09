@@ -27,32 +27,19 @@ export default class DownloadPic extends Component {
     constructor(props){
         super(props);
         this.state={
-            tour: {
-                tour_name : '',
-                tour_description : '',
-                tour_startedAt : null,
-                tour_location: '',
-                tour_images : [],
-                tour_thumbnail: '',
-            },
+            tour: this.props.tour_info,
+            my_images : [],
             fontLoaded: false,
         };
     }
 
     componentDidMount = async () => {
-        this.props.tour
+        this.props.mypic_ref
             .get()
             .then(res => {
                 let data = res.data();
                 this.setState({
-                    tour: {
-                        tour_name : data.tourName,
-                        tour_description : data.description,
-                        tour_location : data.location,
-                        tour_startedAt : data.tourStartedAt,
-                        tour_images : data.images,
-                        tour_thumbnail: data.thumbnail,
-                    },
+                    my_images : data.myImages,
                 });
             }).catch(error => console.log(error))
 
@@ -73,7 +60,7 @@ export default class DownloadPic extends Component {
         alert('Saving to local device finish in few seconds.');
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         if (status == 'granted') {
-            this.state.tour.tour_images.map(async (img_uri) => {
+            this.state.my_images.map(async (img_uri) => {
                 let img_name = img_uri.split('%')[2].split('?')[0].substring(2);
 
                 const file = await FileSystem.downloadAsync(
@@ -97,7 +84,7 @@ export default class DownloadPic extends Component {
 
 
     renderGridImages() {
-        return this.state.tour.tour_images.map((image, index) => {
+        return this.state.my_images.map((image, index) => {
             return (
                 <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
                     <Image style={{
@@ -165,6 +152,7 @@ export default class DownloadPic extends Component {
     }
 
     render() {
+        console.log(this.state.tour)
         return(
             <SafeAreaView style={styles.container}>
                 <DownloadPicHeader title="Download Pictures" />
@@ -180,7 +168,7 @@ export default class DownloadPic extends Component {
 
 
                 <View style={{ flex: 1, }}>
-                    {this.state.tour.tour_images ? this.renderSection() : null }
+                    {this.state.my_images? this.renderSection() : null }
                 </View>
 
                 <TouchableOpacity style={{...styles.button}}>
