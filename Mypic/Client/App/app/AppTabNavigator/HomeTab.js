@@ -27,7 +27,7 @@ export default class HomeTab extends Component {
         super()
         this.state={
             tours: [],
-            tours_ref: [],
+            mypic_refs: [],
             thumbnails: [],
             user: {
                 name: '',
@@ -44,39 +44,44 @@ export default class HomeTab extends Component {
     };
 
     goDownloadPic (index) {
-      Actions.downloadPic({
-        uid: this.state.user.uid,
-        tour: this.state.tours_ref[index],
-      })
+        Actions.downloadPic({
+            uid: this.state.user.uid,
+            tour_info : this.state.tours[index],
+            mypic_ref: this.state.mypic_refs[index],
+        })
     }
 
     componentDidMount = async () => {
         await this.getUserInfo();
 
-        await firebase.firestore().collection("User").doc(this.state.user.uid)
-            .onSnapshot((doc) => {
-
-                let tours = doc.data().tours;
-                this.setState({tours_ref: tours})
-                tours? (
-                    tours.map( tour => {
-                        tour.get()
-                            .then(res =>{
-                                let data = res.data();
-                                let tour_info = {
-                                    tour_name : data.tourName,
-                                    tour_description : data.description,
-                                    tour_thumbnail : data.thumbnail,
-                                    tour_startedAt : data.tourStartedAt,
-                                };
-                                let append_tours = this.state.tours.concat(tour_info);
-                                this.setState(prevState => ({
-                                    tours : append_tours,
-                                }));
-                            }).catch(error => console.log(error))
+        await firebase.firestore()
+            .collection("User")
+            .doc(this.state.user.uid)
+            .collection("Mytour")
+            .get().then( (querySnapshot) => {
+                querySnapshot.forEach( (doc) => {
+                    let doc_data = doc.data();
+                    let append_mypic_refs = this.state.mypic_refs.concat(doc_data.thisRef);
+                    this.setState({
+                        mypic_refs : append_mypic_refs,
                     })
-                ) : null;
-            });
+                    doc_data.tourRef.get()
+                        .then(res =>{
+                            let data = res.data();
+                            let tour_info = {
+                                tour_name : data.tourName,
+                                tour_description : data.description,
+                                tour_thumbnail : data.thumbnail,
+                                tour_startedAt : data.tourStartedAt,
+                                tour_location : data.location,
+                            };
+                            let append_tours = this.state.tours.concat(tour_info);
+                            this.setState(prevState => ({
+                                tours : append_tours,
+                            }));
+                        }).catch(error => console.log(error))
+                })
+            })
 
         await Font.loadAsync({
             'Dancing_Script-Bold': require('../../assets/fonts/Dancing_Script/DancingScript-Bold.ttf'),
@@ -121,43 +126,43 @@ export default class HomeTab extends Component {
                             let date_string = date_json.toDateString();
                             return (
                                 <TouchableWithoutFeedback
-                                  key={index}
-                                  onPress={() => this.goDownloadPic(index)}>
+                                    key={index}
+                                    onPress={() => this.goDownloadPic(index)}>
                                     <Animated.View
                                         style={{
                                             height : SCREEN_HEIGHT - 150,
                                             width: SCREEN_WIDTH,
                                             padding: 15
                                         }}>
-                                       <ImageBackground
-                                           source={{uri: tour.tour_thumbnail}}
-                                           imageStyle={{ borderRadius: 20}}
-                                           style={{flex:1, height:null, width:null,
-                                           resizeMode: 'cover', borderRadius:20,
-                                           justifyContent: 'center'}}>
-                                           {
-                                               this.state.fontLoaded ? (
-                                                   <Text style={{
-                                                       ...style.textOverImage,
-                                                       fontFamily : fonts[random].font,
-                                                       fontSize : 20,
-                                                   }}>
-                                                       {date_string}
-                                                   </Text>
-                                                   ) : null
-                                           }
-                                           {
-                                               this.state.fontLoaded ? (
-                                                   <Text style={{
-                                                       ...style.textOverImage,
-                                                       fontFamily : fonts[random].font,
-                                                   }}>
-                                                       {tour.tour_name}{"\n"}
-                                                       {tour.tour_description}
-                                                   </Text>
-                                               ) : null
-                                           }
-                                       </ImageBackground>
+                                        <ImageBackground
+                                            source={{uri: tour.tour_thumbnail}}
+                                            imageStyle={{ borderRadius: 20}}
+                                            style={{flex:1, height:null, width:null,
+                                                resizeMode: 'cover', borderRadius:20,
+                                                justifyContent: 'center'}}>
+                                            {
+                                                this.state.fontLoaded ? (
+                                                    <Text style={{
+                                                        ...style.textOverImage,
+                                                        fontFamily : fonts[random].font,
+                                                        fontSize : 20,
+                                                    }}>
+                                                        {date_string}
+                                                    </Text>
+                                                ) : null
+                                            }
+                                            {
+                                                this.state.fontLoaded ? (
+                                                    <Text style={{
+                                                        ...style.textOverImage,
+                                                        fontFamily : fonts[random].font,
+                                                    }}>
+                                                        {tour.tour_name}{"\n"}
+                                                        {tour.tour_location}
+                                                    </Text>
+                                                ) : null
+                                            }
+                                        </ImageBackground>
                                     </Animated.View>
                                 </TouchableWithoutFeedback>
                             )
