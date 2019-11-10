@@ -25,12 +25,12 @@ export default class SettingTab extends Component {
 		
 // 'https://facebook.github.io/react-native/movies.json'
 		async getTermsandConditions() {
-			return fetch('https://raw.githubusercontent.com/brikteknologier/default-terms-and-conditions/master/terms-and-conditions.json')
+			return fetch("https://raw.githubusercontent.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design/client/app/Mypic/Client/terms-and-conditions.json?token=ACZWME5PDDJ7BXCAJIDV5NK52GAQK")
 				.then((response) => response.json())
 				.then((responseJson) => {
 
 					this.setState({
-						dataSource: responseJson,
+						dataSource: responseJson.terms,
 					}, function(){
 						ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
 					});
@@ -53,33 +53,35 @@ export default class SettingTab extends Component {
         return (
             <Container style={style.container}>
                 <MyHeader />
-									<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-						        <TouchableOpacity onPress={() => this.setModalVisible(!this.state.modalVisible)}>
-											<Text style={{color : '#12799f'}}> popup </Text>
-										</TouchableOpacity>
-									
-									</View>
+						        
+									<Modal
+										animationType="slide"
+										transparent={false}
+										visible={this.state.modalVisible}
+										onRequestClose={() => this.setModalVisible(!this.state.modalVisible)}>
 
-												<Modal
-													animationType="slide"
-													transparent={false}
-													visible={this.state.modalVisible}
-													onRequestClose={() => this.setModalVisible(!this.state.modalVisible)}>
+										<View style={{flex: 1, paddingTop:20}}>
+											<FlatList
+												data={this.state.dataSource}
+												renderItem={({item}) => <Text>{item.defaultTermsOfService} </Text>}
+												keyExtractor={(item, id) => id}
+											/>
+										</View>
+									</Modal>
 
-													<View style={{flex: 1, paddingTop:20}}>
-														<FlatList
-															data={this.state.dataSource}
-															renderItem={({item}) => <Text>{item.defaultTermsOfService} {item.defaultPrivacyPolicy}</Text>}
-															keyExtractor={() => id}
-														/>
-													</View>
-												</Modal>
 
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => firebase.auth().signOut()}>
+                  <TouchableOpacity style={{flex: 1}} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
+										<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
+											<Text style={{color : '#12799f'}}> Terms and Conditions </Text>
+										</View>
+                  </TouchableOpacity>
+                    <TouchableOpacity style={{flex: 1}} onPress={() => firebase.auth().signOut()}>
+											<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{color : '#12799f'}}> SignOut </Text>
-                    </TouchableOpacity>
 
+											</View>
+                    </TouchableOpacity>
+								<View style={{ flex: 8, justifyContent: 'center', alignItems: 'center' }}>
                 </View>
 
             </Container>
