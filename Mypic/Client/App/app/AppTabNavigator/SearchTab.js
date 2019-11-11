@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, TextInput, StyleSheet, ScrollView, Platform, ImageBackground} from 'react-native';
+import {View, Text, TextInput, StyleSheet, ScrollView, Platform, ImageBackground, Animated, Dimensions, TouchableWithoutFeedback, ToastAndroid} from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { Container, Content, Icon, Thumbnail, Header, Left, Right, Body } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,14 +8,39 @@ import * as Font from "expo-font";
 
 import MyHeader from '../components/MyHeader'
 
+let SCREEN_WIDTH = Dimensions.get('window').width;
+let SCREEN_HEIGHT= Dimensions.get('window').height;
+
+const getimages = [
+    { id: 1, tour:"종설투어", nation: "대한민국", city: "수원", date: "2019년 10월 10일", src: require('../../assets/images/sea.jpg')},
+    { id: 2, tour:"종설투어", nation: "대한민국", city: "광명", date: "2019년 9월 10일", src: require('../../assets/images/sunrise.jpg')},
+    { id: 3, tour:"재필투어", nation: "대한민국", city: "광주", date: "2019년 8월 10일", src: require('../../assets/images/maldives.jpg')},
+    { id: 4, tour:"재필투어", nation: "대한민국", city: "광양", date: "2019년 5월 10일", src: require('../../assets/images/hot-air-balloon.jpg')},
+];
+
+const fonts = [
+    { id: 1, font: 'Gaegu-Regular'},
+    { id: 2, font: 'EastSeaDokdo-Regular'},
+    { id: 3, font: 'Nanum_pen_Script-Regular'},
+    { id: 4, font: 'Yeon_Sung-Regular'},
+]
+
 export default class SearchTab extends Component {
     state = {
         fontLoaded: false,
         search: '',
+        images: []
     };
 
     updateSearch = search => {
-        this.setState({ search });
+        let images = [];
+        for (let i=0; i<getimages.length; i++){
+//            ToastAndroid.show(getimages[i].city+" == "+this.state.search, ToastAndroid.SHORT);
+          if(getimages[i].city === this.state.search){
+            images.push(getimages[i]);
+          }
+        }
+        this.setState({images});
     };
 
     async componentDidMount() {
@@ -44,6 +69,9 @@ export default class SearchTab extends Component {
                     style={{marginRight: 10,
                     marginLeft: 5}}/>
                     <TextInput
+                        onChangeText={(text) => this.setState({search: text})}
+                        value = {this.state.search}
+                        onSubmitEditing={(search)=>this.updateSearch(this.state.search)}
                         underlineColorAndroid="transparent"
                         placeholder="Type here..."
                         placeholderTextColor="grey"
@@ -53,9 +81,54 @@ export default class SearchTab extends Component {
                     />
                 </View>
 
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text>Search</Text>
-                </View>
+                <ScrollView style={{flex : 1}}>
+                    {
+                        this.state.images.map((image, index) => {
+                            const random = 3;//Math.floor(Math.random() * 4);
+                            return (
+                                <TouchableWithoutFeedback key={image.id}>
+                                    <Animated.View
+                                        style={{
+                                            height : SCREEN_HEIGHT - 150,
+                                            width: SCREEN_WIDTH,
+                                            padding: 15
+                                        }}>
+                                       <ImageBackground
+                                           source={image.src}
+                                           imageStyle={{ borderRadius: 20}}
+                                           style={{flex:1, height:null, width:null,
+                                           resizeMode: 'cover', borderRadius:20,
+                                           justifyContent: 'center'}}>
+                                           {
+                                               this.state.fontLoaded ? (
+                                                   <Text style={{
+                                                       ...style.textOverImage,
+                                                       fontFamily : fonts[random].font,
+                                                       fontSize : 20,
+                                                   }}>
+                                                       2019년 10월 21일
+                                                   </Text>
+                                                   ) : null
+                                           }
+                                           {
+                                               this.state.fontLoaded ? (
+                                                   <Text style={{
+                                                       ...style.textOverImage,
+                                                       fontFamily : fonts[random].font,
+                                                   }}>
+                                                       대한민국 {image.city}시{"\n"}
+                                                       {image.tour} 여행
+                                                   </Text>
+                                               ) : null
+                                           }
+                                       </ImageBackground>
+                                    </Animated.View>
+                                </TouchableWithoutFeedback>
+                            )
+                        })
+                    }
+                </ScrollView>
+
             </Container>
         );
     }
@@ -65,5 +138,11 @@ const style = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white'
-    }
+    },
+    textOverImage: {
+        fontSize: 32,
+        color: 'white',
+        marginLeft: 20
+    },
+
 });
