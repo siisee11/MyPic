@@ -1,4 +1,13 @@
-function googlesign(){
+function fire_init(){
+	console.log("fire init");
+};
+
+function getCookie(name){
+	var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+	return value? value[2] : null;
+};
+
+function GoogleSign(){
 	provider = new firebase.auth.GoogleAuthProvider();
 	firebase.auth().signInWithPopup(provider).then(function(result) {
 		var token = result.credential.accessToken;
@@ -22,7 +31,8 @@ function googlesign(){
 		console.log("Error : ",error);
 	});
 };
-function loadXHR(url) {
+
+function URL_TO_BLOB(url) {
     return new Promise(function(resolve, reject) {
         try {
             var xhr = new XMLHttpRequest();
@@ -37,63 +47,119 @@ function loadXHR(url) {
         }
         catch(err) {reject(err.message)}
     });
-}
+};
 
-function storage(uid){
-	console.log(uid);
+function ReadURL(uid, input) {
+	//We can parse "lastModifiedData, name, size, type"
 	var storageRef = firebase.storage().ref();
-	//const imagesRef = storageRef.child("images");
-	//var filename = "sea.jpg";
-	//var spaceRef = imagesRef.child(filename);
-	//var path = spaceRef.fullPath;
-	//var name = spaceRef.name;
+	console.log(input.files.length)
+	num_of_files = input.files.length;
+	/*for(var i=0;i<num_of_files;i++){
+		console.log(input.files[i].type);
+	}*/
+	if(input.files){
+		for(var i=0; i<num_of_files; i++){
+			if(input.files[i]){
+				Upload(storageRef, uid, input.files[i]);
+				/*var reader = new FileReader();
+				reader.onload = function(f) {
+					var metadata = { contentType : input.files[i].type, };
+					var filename = input.files[i].name;
+					URL_TO_BLOB(f.target.result).then(function(BLOB) {
+						var path = "user_images/"+uid+"/"+filename;
+						var uploadTask = storageRef.child(path).put(BLOB, metadata);
+					});
+				};
+				reader.readAsDataURL(input.files[0]);*/
+				//console.log("%d file is end" % i);
+			} else{
+				console.log("File isn't exist !");
+			}
+		}
+	};
+	//$('#blah').attr('src', e.target.result);
+
+	/*if (input.files && input.files[0]) {
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			var metadata = {contentType : input.files[0].type,};
+			var name = input.files[0].name;
+			console.log("Content type : ", metadata);
+			URL_TO_BLOB(e.target.result).then(function(blob){
+			var uploadTask = storageRef.child("images/jihye_test.jpg").put(blob, metadata);
+			});
+    	};
+		reader.readAsDataURL(input.files[0]);
+		//console.log("Total : ", input.files[0]);
+		console.log("name : ", input.files[0].name);
+	}*/
+};
+
+function Upload(storageRef, uid, file){
+	console.log(uid);
+	var reader = new FileReader();
+	reader.onload = function(f) {
+		var metadata = { contentType : file.type, };
+		var filename = file.name;
+		URL_TO_BLOB(f.target.result).then(function(BLOB) {
+			var path = "user_images/"+uid+"/"+filename;
+			var uploadTask = storageRef.child(path).put(BLOB, metadata);
+		});
+	};
+	reader.readAsDataURL(file);
+
+	/*var storageRef = firebase.storage().ref();
 	var metadata = {
 		contentType : "image/jpg",
 	};
-	loadXHR("../images/bg.jpg").then(function(blob){
+	URL_TO_BLOB("../images/bg.jpg").then(function(blob){
 		var uploadTask = storageRef.child("images/jihye.jpg").put(blob, metadata);
-	});
+	});*/
 	//var imagesRef = spaceRef.parent;
-	console.log(path);
-	console.log(name);
+	//console.log(path);
+	//console.log(name);
 	//console.log(imagesRef);
 };
 
-function src(uid){
+function Download(uid){
 	console.log(uid);
 	var storageRef = firebase.storage().ref();
-	var imageRef = storageRef.child("images/sea.jpg");
-	imageRef.getDownloadURL().then(function(url) {
+	var from_tour = "tour_images/"
+	var from_user = "user_images/"+uid
+	storageRef.child(from_user).listAll().then(function(list){	
+		list.items.forEach(function(foref) {
+			var path = "user_images/"+uid+"/"+foref.name;
+			var imageRef = storageRef.child(path);
+			cnt = 0;
+
+			imageRef.getDownloadURL().then(function(url) {
+				var img = document.createElement('img');
+				var div = document.createElement('div');
+				img.id = "test_img"+cnt
+				img.name = "test_img"+cnt
+				img.src = url
+				cnt+=1;				
+				div.appendChild(img);
+				document.getElementById("test_thumb").appendChild(div);
+			}).catch(function(error) {
+				console.log("Error : ",error);
+			});
+		});
+		
+	}).catch(function(error){
+		console.log("Error : ",error);
+	});
+	//var imageRef = storageRef.child("images/sea.jpg");
+	//var imageRef = storageRef.child(from_user);
+	/*imageRef.getDownloadURL().then(function(url) {
 		console.log("URL : ", url);
 		document.getElementById("tests").src = url;
 	}).catch(function(error){
 		console.log("Error", error);
-	});
+	});*/
 };
 
-function getCookie(name){
-	var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-	return value? value[2] : null;
-};
 
-function readURL(input) {
-	var storageRef = firebase.storage().ref();
-	var metadata = {
-		contentType : "image/png",
-	};
-	if (input.files && input.files[0]) {
-		var reader = new FileReader();
-		reader.onload = function(e) {
-			$('#blah').attr('src', e.target.result);
-			console.log(typeof(loadXHR(e.target.result)));
-			loadXHR(e.target.result).then(function(blob){	
-				var uploadTask = storageRef.child("images/jihye_test.jpg").put(blob, metadata);
-			});
-    	};
-		reader.readAsDataURL(input.files[0]);
-		console.log("::", input.files[0]);
-	}
-};
 
 $(function(){
 	var firebaseConfig = {
@@ -107,17 +173,17 @@ $(function(){
 		measurementId: "G-7SKX7Y9E6T"
 	};
 	firebase.initializeApp(firebaseConfig);
-	uid = getCookie("uid");
+	var uid = getCookie("uid");
 	$("#test_btn1").click(function(){
-		googlesign();
+		GoogleSign();
 		console.log("sign ok")
 	});
 	$("#test_btn2").click(function(){
-		storage(uid);
+		Upload(uid);
 		console.log("storage up")
 	});
 	$("#test_btn3").click(function(){
-		src(uid);
+		Download(uid);
 		console.log("storage src")
 	});
 });

@@ -14,7 +14,15 @@
 	<!--<img id="test_img1" name="test_img1" src="https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Fcinque-terre.jpg?alt=media&token=84ee3271-5468-464c-ac1d-78ceadf50247"/>-->
 	<img id="tests" name="tests" src=""/>
 	<img id="blah" name="blah" src=""/>
-    <input type='file' id="test_filebtn2" onchange="readURL(this);" />	
+	<div id="wrapper">
+		<section id="main">
+			<section class="thumbnails" id="test_thumb">
+			</section>
+		<section>
+	</div>
+	<div id="test_img_div" name="test_img_div">
+	</div>
+    <input type="file" id="test_filebtn2" onchange="ReadURL(getCookie('uid'), this);" multiple/>	
 
 	<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-analytics.js"></script>
