@@ -9,7 +9,8 @@
 	<body>
 		<!--Seungjun-->
 		<div id="header_image">
-			<span class="avatar"><img src="images/profile/profile1.jpg" alt="" width="20%"/></span>
+			<!--<span class="avatar"><img src="images/profile/profile1.jpg" id="profile_image" name="profile_image" alt="" width="20%"/></span>-->
+			<span class="avatar"><img src="" id="profile_image" name="profile_image" alt="" width="20%"/></span>
 		</div>
 			<!-- Wrapper -->
 			<div id="wrapper">
@@ -77,6 +78,7 @@
 	<script src="js/fire.js"></script>
 
 	<script type="text/javascript">
+		document.getElementById("profile_image").src = decodeURIComponent(getCookie("url"));
         document.getElementById("currentTime").value = new Date().toISOString().slice(0,16);
     </script>
 

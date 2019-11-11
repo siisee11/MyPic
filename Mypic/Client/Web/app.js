@@ -119,7 +119,10 @@ app.post('/user/create', function(req, res){
 		}).catch(function(error){
 			console.log("Error : ",error);
 		});
+		res.cookie("token", token);
 		res.cookie("uid", uid);
+		console.log("url : ", photo);
+		res.cookie("url", photo);
 		res.send({result : "success", uid:uid});
 	}).catch(function(error){
 		console.error("Error : ",error);
