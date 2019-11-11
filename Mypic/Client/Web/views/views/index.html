@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<!--
+	Visualize by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+	<head>
+		<title>Mypic~</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="css/main.css" />
+	</head>
+	<body>
+		<!--Seungjun-->
+		<div id="login_wrapper">
+			<form action="client">
+				<button id="client_go">Go to Client For test</button>
+			</form>
+			<button id="google" onclick="googlesign()">Google</button>
+			<button id="signin_btn">Sign in</button>
+			<button id="signup_btn">Sign up</button>
+		</div>
+		<form id="login_form" name="login_form">
+			<h3>----Register----</h3>
+			<h3>Create Your Account. It's free and only take a minute.</h3>
+			<input id="firstname" name="firstname" type="text" placeholder="First Name">
+			<input id="lastname" name="lastname" type="text" placeholder="Last Name">
+			<input id="email" name="email" type="email" placeholder="Email">
+			<input id="passwd1" name="passwd1" type="password" placeholder="Password">
+			<input id="passwd2" name="passwd2" type="password" placeholder="Confirm Password">
+			<br>
+			<input id="login_btn" type="button" value="Create" />
+		</form>	
+		<div id="header_image">
+			<span class="avatar"><img src="images/general/mypic2.png" alt="" width="100%"/></span>
+		</div>
+			<!-- Wrapper -->
+			<div id="wrapper">
+					<!-- Header -->
+					<header id="header">
+						<h1>Welcome to <strong>"Jaepil Tour".</strong> We offer tour guides for various locations and can categorize your photos safely and quickly. If you want more information click <a href="explain">here</a>!</h1>
+						<ul class="icons">
+							<li><a href="https://www.twitter.com" class="icon style2 fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="https://www.facebook.com" class="icon style2 fa-facebook"><span class="label">Facebook</span></a></li>
+							<li><a href="https://www.instagram.com" class="icon style2 fa-instagram"><span class="label">Instagram</span></a></li>
+							<li><a href="#https://www.google.com" class="icon style2 fa-google"><span class="label">Google</span></a></li>
+							<li><a href="#https://www.naver.com" class="icon style2 fa-envelope-o"><span class="label">Naver</span></a></li>
+						</ul>
+					</header>
+
+					<!-- Main -->
+					<section id="main">
+							<!-- Thumbnails -->
+							<section class="thumbnails">
+								<div>
+									<a href="images/my_fulls/image1.jpg">
+										<img src="images/my_thumbs/image1.jpg" alt="" />
+									</a>
+									<a href="images/my_fulls/image2.jpg">
+										<img src="images/my_thumbs/image2.jpg" alt="" />
+									</a>
+								</div>
+								<div>
+									<a href="images/my_fulls/image3.jpg">
+										<img src="images/my_thumbs/image3.jpg" alt="" />
+									</a>
+									<a href="images/my_fulls/image4.jpg">
+										<img src="images/my_thumbs/image4.jpg" alt="" />
+									</a>
+									<a href="images/my_fulls/image5.jpg">
+										<img src="images/my_thumbs/image5.jpg" alt="" />
+									</a>
+								</div>
+								<div>
+									<a href="images/my_fulls/image6.jpg">
+										<img src="images/my_thumbs/image6.jpg" alt="" />
+									</a>
+									<a href="images/my_fulls/image7.jpg">
+										<img src="images/my_thumbs/image7.jpg" alt="" />
+									</a>
+								</div>
+							</section>
+
+					</section>
+					<!-- Footer -->
+					<footer id="footer">
+						<p>Capstone Project Jaepil Tour</p>
+					</footer>
+
+			</div>
+
+			<!-- Scripts -->
+			<script src="js/jquery.min.js"></script>
+			<script src="js/jquery.poptrox.min.js"></script>
+			<script src="js/skel.min.js"></script>
+			<script src="js/main.js"></script>
+			<script src="js/mypic.js"></script>
+
+
+		    <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+		    <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-analytics.js"></script>
+		    <script src="https://www.gstatic.com/firebasejs/6.5.0/firebase-database.js"></script>
+			<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
+			<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-firestore.js"></script>
+
+			<script src="js/fire.js"></script>
+			<!--<script>
+				var firebaseConfig = {
+			        apiKey: "AIzaSyBorxVHu3NNxxsPyXc5pNMQyDSeEXaN-ng",
+			        authDomain: "mypic-92b94.firebaseapp.com",
+			        projectId: "mypic-92b94",
+			        databaseURL: "https://mypic-92b94.firebaseio.com",
+			        storageBucket: "mypic-92b94.appspot.com",
+			        messagingSenderId: "940807570090",
+			        appId: "1:940807570090:web:4987e8bc9c3320903f46d3",
+		    	    measurementId: "G-7SKX7Y9E6T"
+	    		};
+				firebase.initializeApp(firebaseConfig);
+				function googlesign(){
+					provider = new firebase.auth.GoogleAuthProvider();
+					firebase.auth().signInWithPopup(provider).then(function(result) {
+						var token = result.credential.accessToken;
+						var user = result.user;
+						console.log("Token : ", token);
+						console.log("User : ", user);
+					}).catch(function(error){
+						console.log("Error : ",error);
+					});
+				};
+			</script>-->
+	</body>
+</html>

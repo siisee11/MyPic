@@ -40,21 +40,41 @@ firebaseConfig = config();
 firebase_app.initializeApp(firebaseConfig);
 var db = firebase_app.firestore();
 var storage = firebase_app.storage();
+
 app.get('/test', function(req, res) {
 	console.log("test.html");
-	var path = storage.ref("images/sea.jpg");
-	
-	//console.log("path : ", path);
-
-	var url = path.child("images/sea.jpg").getDownloadURL()
-	console.log("?>?? : ", url);
-	/*.then(function(url) {
+	var storageRef = storage.refFromURL();
+	storageRef.child("images/sea.jpg").getDownloadURL().then(function(url) {
+		/*var xhr = new XMLHttpRequesst()
+		xhr.responseType = 'blob';
+		xhr.onload = function(event){
+			var blob = xhr.response;
+		};
+		xhr.open('GET', url);
+		xhr.send();*/
+		var img = document.getElemnetById("tests");
+		img.src = url;
+	}).catch(function(error){
+		console.log("Error : ",error);
+	});
+	/*var storageRef = storage.ref();
+	var seafRef = storageRef("images/sea.jpg")
+	//console.log(storageRef.child("images"));
+	storageRef.putString("asdfasdf", 'base64').then(function(a) {
+		console.log("up");
+	});*/
+	/*var url = path.child("images/sea.jpg").getDownloadURL()
+	.then(function(url) {
 		console.log("url : ", url);
 	}).catch(function(error) {
 		console.log("Error : ",error);
 	});*/
-	/*fs.readFile("./views/assets/images/avatar.jpg", function(error, data) {
-		
+	/*path.put("aa").then(function(){
+		console.log("success");
+	}).catch(function(error) {
+		console.log("Error : ",error);
+	});*/
+	/*fs.readFile("./views/assets/images/avatar.jpg", function(error, data) {	
 	});*/
 	res.render("test");
 });
