@@ -138,9 +138,10 @@ function Download(uid){
 				img.id = "test_img"+cnt
 				img.name = "test_img"+cnt
 				img.src = url
-				cnt+=1;				
+				cnt+=1;
 				div.appendChild(img);
-				document.getElementById("test_thumb").appendChild(div);
+				//document.getElementById("test_thumb").appendChild(div);
+				document.getElementById("thumbnails").appendChild(div);
 			}).catch(function(error) {
 				console.log("Error : ",error);
 			});
@@ -183,6 +184,10 @@ $(function(){
 		console.log("storage up")
 	});
 	$("#test_btn3").click(function(){
+		Download(uid);
+		console.log("storage src")
+	});
+	$("#travel_load").click(function(){
 		Download(uid);
 		console.log("storage src")
 	});
