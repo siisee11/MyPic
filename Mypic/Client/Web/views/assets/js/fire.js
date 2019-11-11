@@ -22,6 +22,53 @@ function googlesign(){
 		console.log("Error : ",error);
 	});
 };
+function loadXHR(url) {
+
+    return new Promise(function(resolve, reject) {
+        try {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url);
+            xhr.responseType = "blob";
+            xhr.onerror = function() {reject("Network error.")};
+            xhr.onload = function() {
+                if (xhr.status === 200) {resolve(xhr.response)}
+                else {reject("Loading error:" + xhr.statusText)}
+            };
+            xhr.send();
+        }
+        catch(err) {reject(err.message)}
+    });
+}
+
+function storage(){
+	var storageRef = firebase.storage().ref();
+	const imagesRef = storageRef.child("images");
+	var filename = "sea.jpg";
+	var spaceRef = imagesRef.child(filename);
+	var path = spaceRef.fullPath;
+	var name = spaceRef.name;
+	var metadata = {
+		contentType : "image/jpg",
+	};
+	loadXHR("../images/avatar.jpg").then(function(blob){
+		var uploadTask = storageRef.child("images/avatar.jpg").put(blob, metadata);
+	});
+	//var imagesRef = spaceRef.parent;
+	console.log(path);
+	console.log(name);
+	//console.log(imagesRef);
+};
+
+function src(){
+	var storageRef = firebase.storage().ref();
+	var imageRef = storageRef.child("images/sea.jpg");
+	imageRef.getDownloadURL().then(function(url) {
+		console.log("URL : ", url);
+		document.getElementById("tests").src = url;
+	}).catch(function(error){
+		console.log("Error", error);
+	});
+};
 $(function(){
 	var firebaseConfig = {
 		apiKey: "AIzaSyBorxVHu3NNxxsPyXc5pNMQyDSeEXaN-ng",
@@ -35,6 +82,15 @@ $(function(){
 	};
 	firebase.initializeApp(firebaseConfig);
 	$("#test_btn1").click(function(){
-		console.log("hihi")
+		googlesign();
+		console.log("sign ok")
+	});
+	$("#test_btn2").click(function(){
+		storage();
+		console.log("storage up")
+	});
+	$("#test_btn3").click(function(){
+		src();
+		console.log("storage src")
 	});
 });
