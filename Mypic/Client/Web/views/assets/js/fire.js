@@ -10,7 +10,7 @@ function googlesign(){
 			traditional : true,
 			success : function(res){
 				if(res.result == "success"){
-					console.log("success");
+					console.log("success! ", res.uid);
 				}else{
 					console.log("fail");
 				}
@@ -23,7 +23,6 @@ function googlesign(){
 	});
 };
 function loadXHR(url) {
-
     return new Promise(function(resolve, reject) {
         try {
             var xhr = new XMLHttpRequest();
@@ -40,18 +39,19 @@ function loadXHR(url) {
     });
 }
 
-function storage(){
+function storage(uid){
+	console.log(uid);
 	var storageRef = firebase.storage().ref();
-	const imagesRef = storageRef.child("images");
-	var filename = "sea.jpg";
-	var spaceRef = imagesRef.child(filename);
-	var path = spaceRef.fullPath;
-	var name = spaceRef.name;
+	//const imagesRef = storageRef.child("images");
+	//var filename = "sea.jpg";
+	//var spaceRef = imagesRef.child(filename);
+	//var path = spaceRef.fullPath;
+	//var name = spaceRef.name;
 	var metadata = {
 		contentType : "image/jpg",
 	};
-	loadXHR("../images/avatar.jpg").then(function(blob){
-		var uploadTask = storageRef.child("images/avatar.jpg").put(blob, metadata);
+	loadXHR("../images/bg.jpg").then(function(blob){
+		var uploadTask = storageRef.child("images/jihye.jpg").put(blob, metadata);
 	});
 	//var imagesRef = spaceRef.parent;
 	console.log(path);
@@ -59,7 +59,8 @@ function storage(){
 	//console.log(imagesRef);
 };
 
-function src(){
+function src(uid){
+	console.log(uid);
 	var storageRef = firebase.storage().ref();
 	var imageRef = storageRef.child("images/sea.jpg");
 	imageRef.getDownloadURL().then(function(url) {
@@ -69,6 +70,31 @@ function src(){
 		console.log("Error", error);
 	});
 };
+
+function getCookie(name){
+	var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+	return value? value[2] : null;
+};
+
+function readURL(input) {
+	var storageRef = firebase.storage().ref();
+	var metadata = {
+		contentType : "image/png",
+	};
+	if (input.files && input.files[0]) {
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			$('#blah').attr('src', e.target.result);
+			console.log(typeof(loadXHR(e.target.result)));
+			loadXHR(e.target.result).then(function(blob){	
+				var uploadTask = storageRef.child("images/jihye_test.jpg").put(blob, metadata);
+			});
+    	};
+		reader.readAsDataURL(input.files[0]);
+		console.log("::", input.files[0]);
+	}
+};
+
 $(function(){
 	var firebaseConfig = {
 		apiKey: "AIzaSyBorxVHu3NNxxsPyXc5pNMQyDSeEXaN-ng",
@@ -81,16 +107,17 @@ $(function(){
 		measurementId: "G-7SKX7Y9E6T"
 	};
 	firebase.initializeApp(firebaseConfig);
+	uid = getCookie("uid");
 	$("#test_btn1").click(function(){
 		googlesign();
 		console.log("sign ok")
 	});
 	$("#test_btn2").click(function(){
-		storage();
+		storage(uid);
 		console.log("storage up")
 	});
 	$("#test_btn3").click(function(){
-		src();
+		src(uid);
 		console.log("storage src")
 	});
 });
