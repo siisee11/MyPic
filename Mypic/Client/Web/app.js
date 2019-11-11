@@ -43,8 +43,8 @@ var storage = firebase_app.storage();
 
 app.get('/test', function(req, res) {
 	console.log("test.html");
-	var storageRef = storage.refFromURL();
-	storageRef.child("images/sea.jpg").getDownloadURL().then(function(url) {
+	//var storageRef = storage.refFromURL();
+	//storageRef.child("images/sea.jpg").getDownloadURL().then(function(url) {
 		/*var xhr = new XMLHttpRequesst()
 		xhr.responseType = 'blob';
 		xhr.onload = function(event){
@@ -52,11 +52,11 @@ app.get('/test', function(req, res) {
 		};
 		xhr.open('GET', url);
 		xhr.send();*/
-		var img = document.getElemnetById("tests");
-		img.src = url;
-	}).catch(function(error){
-		console.log("Error : ",error);
-	});
+	//	var img = document.getElemnetById("tests");
+//		img.src = url;
+//	}).catch(function(error){
+//		console.log("Error : ",error);
+//	});
 	/*var storageRef = storage.ref();
 	var seafRef = storageRef("images/sea.jpg")
 	//console.log(storageRef.child("images"));
@@ -119,10 +119,11 @@ app.post('/user/create', function(req, res){
 		}).catch(function(error){
 			console.log("Error : ",error);
 		});
+		res.cookie("uid", uid);
+		res.send({result : "success", uid:uid});
 	}).catch(function(error){
 		console.error("Error : ",error);
 	});
-	res.send({result : "success"});
 });
 
 app.get('/', function(req, res) {
@@ -151,7 +152,6 @@ app.get('/profile', function(req, res) {
 
 app.get('/travel_load', function(req, res){
 	console.log("travel_load");
-	//connect with firebase and then load whole travel list of user's
 	res.send({result:"fail"});
 });
 app.get('/travel', function(req, res) {

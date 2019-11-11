@@ -13,7 +13,8 @@
 	<button id="test_btn3" name="test_btn3"> button3 </button>
 	<!--<img id="test_img1" name="test_img1" src="https://firebasestorage.googleapis.com/v0/b/mypic-92b94.appspot.com/o/images%2Fcinque-terre.jpg?alt=media&token=84ee3271-5468-464c-ac1d-78ceadf50247"/>-->
 	<img id="tests" name="tests" src=""/>
-	
+	<img id="blah" name="blah" src=""/>
+    <input type='file' id="test_filebtn2" onchange="readURL(this);" />	
 
 	<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-analytics.js"></script>
@@ -27,5 +28,12 @@
 	<script src="js/fire.js"></script>
 	<script src="js/main.js"></script>
 	<script src="js/mypic.js"></script>
+	<script>
+		var getCookie = function(name) {
+			var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+			return value? value[2] : null;
+		};
+		console.log("Cookie : " , getCookie("uid"));
+	</script>
 </body>
 </html>
