@@ -20,6 +20,7 @@ import * as Font from "expo-font";
 import * as MediaLibrary from 'expo-media-library';
 import * as Permissions from 'expo-permissions';
 import * as FileSystem from 'expo-file-system';
+import firebase from "../AppTabNavigator/ProfileTab";
 
 var { height, width } = Dimensions.get('window');
 
@@ -28,20 +29,25 @@ export default class DownloadPic extends Component {
         super(props);
         this.state={
             tour: this.props.tour_info,
-            my_images : [],
+            my_images : null,
+            uris : [],
             fontLoaded: false,
         };
     }
 
     componentDidMount = async () => {
-        this.props.mypic_ref
+        await this.props.mypic_ref
             .get()
             .then(res => {
                 let data = res.data();
                 this.setState({
                     my_images : data.myImages,
                 });
-            }).catch(error => console.log(error))
+            }).catch(error => console.log(error));
+
+        for (var [key, value] of this.state.my_images) {
+            console.log(key + " = " + value);
+        }
 
         await Font.loadAsync({
             'Gaegu-Regular': require('../../assets/fonts/Gaegu/Gaegu-Regular.ttf'),
@@ -82,6 +88,16 @@ export default class DownloadPic extends Component {
         this.goBack();
     };
 
+    getImage = async (image) => {
+        const ref = firebase.storage().ref().child("tour_images/" + this.state.tour.tour_name + image);
+        ref.getDownloadURL().then( (url) => {
+            this.setState(prevState => ({
+                uris : [url, ...prevState.uris]
+            }));
+        }).catch( (error) => {
+            console.log('cannot get image from firebase');
+        });
+    };
 
     renderGridImages() {
         return this.state.my_images.map((image, index) => {
