@@ -6,12 +6,13 @@ import {AppLoading} from "expo";
 import firebase from 'firebase';
 import * as Permissions from 'expo-permissions'
 import {firebaseConfig} from './config'
-
-YellowBox.ignoreWarnings(['Setting a timer']);
-firebase.initializeApp(firebaseConfig);
-
-
 import Route from './app/Route'
+
+if (console) {
+  console.disableYellowBox = true; // eslint-disable-line no-console
+}
+
+firebase.initializeApp(firebaseConfig);
 
 function cacheImages(images) {
   return images.map(image => {
