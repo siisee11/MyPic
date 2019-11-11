@@ -64,12 +64,26 @@
 				</div>
 			</div>
 
-			<!-- Scripts -->
-			<script src="js/jquery.min.js"></script>
-			<script src="js/jquery.poptrox.min.js"></script>
-			<script src="js/skel.min.js"></script>
-			<script src="js/main.js"></script>
-			<script src="js/mypic.js"></script>
+	<!-- Scripts for firebase -->
+    <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.5.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.5.0/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
+
+	<!-- Scripts for jquery default settings -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/jquery.poptrox.min.js"></script>
+	<script src="js/skel.min.js"></script>
+
+	<!-- Scripts by myself -->
+	<script src="js/main.js"></script>
+	<script src="js/mypic.js"></script>
+    <script src="js/fire.js"></script>
+
+    <script type="text/javascript">
+        document.getElementById("currentTime").value = new Date().toISOString().slice(0,16);
+    </script>
 
 	</body>
 </html>

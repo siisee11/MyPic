@@ -2630,7 +2630,7 @@
 		text-align:center;	
 	}
 	#login_form {
-		#display: none;
+		display: none;
 		width: 80%;
 		margin: 0 auto;
 		padding: 5em 5em;

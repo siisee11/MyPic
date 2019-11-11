@@ -1,9 +1,15 @@
 function mypic_init(){
-	console.log("mypic");
+	console.log("mypic init");
+};
+var getCookie = function(name) {
+	console.log("mypic getCookie");
+	var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+	return value? value[2] : null;
 };
 
-mypic_init();
 $(function(){
+	mypic_init();
+	console.log("Cookie : ", getCookie("uid"));
 	$("#signin_btn").click(function(){
 		$("#login_form").slideToggle();
 	});
@@ -24,4 +30,3 @@ $(function(){
 		});
 	});
 });
-//document.getElementById("currentTime").value = new Date().toISOString().slice(0,16);
