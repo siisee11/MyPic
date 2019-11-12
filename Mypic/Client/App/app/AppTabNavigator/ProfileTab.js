@@ -81,6 +81,7 @@ export default class ProfileTab extends Component {
         return true;
     };
 
+
     renderGridImages() {
         return this.state.data.map((image, index) => {
             return (

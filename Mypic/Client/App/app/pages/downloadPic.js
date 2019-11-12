@@ -29,6 +29,7 @@ export default class DownloadPic extends Component {
         this.state={
             tour: this.props.tour_info,
             my_images : [],
+            uris : [],
             fontLoaded: false,
         };
     }
@@ -38,10 +39,16 @@ export default class DownloadPic extends Component {
             .get()
             .then(res => {
                 let data = res.data();
-                this.setState({
-                    my_images : data.myImages,
-                });
-            }).catch(error => console.log(error))
+                console.log(data.myImages);
+                for (const key in data.myImages) {
+                  console.log(key);
+                  let append_my_images = this.state.my_images.concat(key)
+                  this.setState(({
+                      my_images : append_my_images,
+                  }));
+                }
+                console.log(this.state.my_images);
+            }).catch(error => console.log(error));
 
         await Font.loadAsync({
             'Gaegu-Regular': require('../../assets/fonts/Gaegu/Gaegu-Regular.ttf'),
@@ -82,6 +89,16 @@ export default class DownloadPic extends Component {
         this.goBack();
     };
 
+    getImage = async (image) => {
+        const ref = firebase.storage().ref().child("tour_images/" + this.state.tour.tour_name + image);
+        ref.getDownloadURL().then( (url) => {
+            this.setState(prevState => ({
+                uris : [url, ...prevState.uris]
+            }));
+        }).catch( (error) => {
+            console.log('cannot get image from firebase');
+        });
+    };
 
     renderGridImages() {
         return this.state.my_images.map((image, index) => {
@@ -152,7 +169,6 @@ export default class DownloadPic extends Component {
     }
 
     render() {
-        console.log(this.state.tour)
         return(
             <SafeAreaView style={styles.container}>
                 <DownloadPicHeader title="Download Pictures" />

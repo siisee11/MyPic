@@ -57,7 +57,7 @@ export default class HomeTab extends Component {
         await firebase.firestore()
             .collection("User")
             .doc(this.state.user.uid)
-            .collection("Mytour")
+            .collection("MyTour")
             .get().then( (querySnapshot) => {
                 querySnapshot.forEach( (doc) => {
                     let doc_data = doc.data();
