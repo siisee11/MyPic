@@ -101,7 +101,7 @@ export default class ProfileTab extends Component {
 
     renderSection() {
         return (
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginVertical: 20, }}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginVertical: 2, }}>
                 {this.renderGridImages()}
             </View>
         )
@@ -155,34 +155,31 @@ export default class ProfileTab extends Component {
 
                 <View>
                     <View style={{
-                        flexDirection:'row',
                         paddingTop:15,
-                        shadowOffset: { width: 2, height: 2 },
-                        shadowColor: 'black',
-                        shadowOpacity: 0.2,
-                        elevation: 2,
+                        height: height / 5,
+                        backgroundColor:'#232b2b',
                     }}>
-                        <View style={{flex:1, alignItems:'center'}}>
+                        <View style={{alignItems:'center', marginTop: 10}}>
                             {
                                 user.photoURL ? (
                                     <Image source={{ uri: user.photoURL}}
-                                           style={{width:60, height:60, borderRadius:30, borderColor:'#12799f', borderWidth:2}}/>
+                                           style={{width:70, height:70, borderRadius:35, borderColor:'#DDDDDD', borderWidth:2}}/>
                                 ) : null
                             }
                         </View>
-                        <View style={{flex:3}}>
-                            <View style={{flexDirection:'row', justifyContent:'space-around'}}>
-                                <View style={{paddingHorizontal:5, paddingVertical:10}}>
-                                    <Text style={{fontWeight:'bold', fontSize: 15, }}>{user.name} </Text>
-                                    <Text>{user.email}</Text>
+                        <View style={{flex:1, marginBottom:10}}>
+                            <View style={{flexDirection:'row', justifyContent:'space-around', marginVertical:10}}>
+                                <View style={{paddingHorizontal:5, }}>
+                                    <Text style={{fontWeight:'bold', fontSize: 15, color: 'white', alignItems:'center'}}>{user.name} </Text>
+                                    <Text style={{color:'white'}}>{user.email}</Text>
                                 </View>
-                                <View style={{paddingHorizontal:10, paddingVertical:15, alignItems:'center'}}>
-                                    <Text>1</Text>
-                                    <Text style={{fontSize:10, color:'gray'}}>following</Text>
+                                <View style={{paddingHorizontal:10, alignItems:'center'}}>
+                                    <Text style={{color:'white'}}>1</Text>
+                                    <Text style={{fontSize:10, color:'#EEEEEE'}}>following</Text>
                                 </View>
-                                <View style={{paddingHorizontal:10, paddingVertical:15, alignItems:'center'}}>
-                                    <Text>999+</Text>
-                                    <Text style={{fontSize:10, color:'gray'}}>follower</Text>
+                                <View style={{paddingHorizontal:10, alignItems:'center'}}>
+                                    <Text style={{color:'white'}}>999+</Text>
+                                    <Text style={{fontSize:10, color:'#EEEEEE'}}>follower</Text>
                                 </View>
                             </View>
                         </View>
@@ -199,9 +196,9 @@ export default class ProfileTab extends Component {
                         }}
                     >
                         <TouchableOpacity
-                            style={{}}
+                            style={style.closeButton}
                             onPress={()=>this.setState({imageBrowserOpen: true})}>
-                            <Ionicons name='ios-add-circle' size={30} style={{}}/>
+                            <Ionicons name='ios-add' size={35} style={{color:'#232b2b'}}/>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -214,5 +211,16 @@ const style = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white'
+    },
+    closeButton: {
+        height: 40, width: 40,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowOffset: { width: 2, height: 2 },
+        shadowColor: 'black',
+        shadowOpacity: 0.2,
+        elevation: 2
     },
 });
