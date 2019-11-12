@@ -20,7 +20,6 @@ import * as Font from "expo-font";
 import * as MediaLibrary from 'expo-media-library';
 import * as Permissions from 'expo-permissions';
 import * as FileSystem from 'expo-file-system';
-import firebase from "../AppTabNavigator/ProfileTab";
 
 var { height, width } = Dimensions.get('window');
 
@@ -29,25 +28,27 @@ export default class DownloadPic extends Component {
         super(props);
         this.state={
             tour: this.props.tour_info,
-            my_images : null,
+            my_images : [],
             uris : [],
             fontLoaded: false,
         };
     }
 
     componentDidMount = async () => {
-        await this.props.mypic_ref
+        this.props.mypic_ref
             .get()
             .then(res => {
                 let data = res.data();
-                this.setState({
-                    my_images : data.myImages,
-                });
+                console.log(data.myImages);
+                for (const key in data.myImages) {
+                  console.log(key);
+                  let append_my_images = this.state.my_images.concat(key)
+                  this.setState(({
+                      my_images : append_my_images,
+                  }));
+                }
+                console.log(this.state.my_images);
             }).catch(error => console.log(error));
-
-        for (var [key, value] of this.state.my_images) {
-            console.log(key + " = " + value);
-        }
 
         await Font.loadAsync({
             'Gaegu-Regular': require('../../assets/fonts/Gaegu/Gaegu-Regular.ttf'),
@@ -168,7 +169,6 @@ export default class DownloadPic extends Component {
     }
 
     render() {
-        console.log(this.state.tour)
         return(
             <SafeAreaView style={styles.container}>
                 <DownloadPicHeader title="Download Pictures" />
