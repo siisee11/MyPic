@@ -108,3 +108,14 @@ venv.bak/
 friend-dataset/
 *.h5
 result/
+
+# Vue.js
+.DS_Store
+Thumbs.db
+db.json
+*.log
+node_modules/
+public/
+.deploy*/
+src/_drafts
+package-lock.json
