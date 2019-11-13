@@ -1,60 +1,90 @@
 <template>
-  <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+  <v-app >
+    <v-navigation-drawer v-model="sidebar" app>
+      <v-list>
+        <v-list-item
+          v-for="item in menuItems"
+          :key="item.title"
+          :to="item.path">
+          <v-list-item-action>
+            <v-icon>{{ 'mdi-' + item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>{{ item.title }}</v-list-item-content>
+        </v-list-item>
+        <v-list-item v-if="isAuthenticated" @click="userSignOut">
+          <v-list-item-action>
+            <v-icon>mdi-exit-to-app</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>Sign Out</v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+    <v-app-bar app>
+      <span class="hidden-md-and-up">
+        <v-app-bar-nav-icon @click="sidebar = !sidebar">
+        </v-app-bar-nav-icon>
+      </span>
 
-      <v-spacer></v-spacer>
+      <v-toolbar-title>
+        <router-link to="/" tag="span" style="cursor: pointer">
+          {{ appTitle }} 
+        </router-link>
+      </v-toolbar-title>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <v-spacer/>
+        <v-btn
+          text
+          v-for="item in menuItems"
+          :key="item.title"
+          :to="item.path">
+          <v-icon left dark>{{ 'mdi-' + item.icon }}</v-icon>
+          {{ item.title }}
+        </v-btn>
+
+        <v-btn text v-if="isAuthenticated" @click="userSignOut">
+          <v-icon left>mdi-exit-to-app</v-icon>
+          Sign Out
+        </v-btn>
+      
     </v-app-bar>
-
     <v-content>
-      <HelloWorld/>
+      <router-view></router-view>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
-
 export default {
-  name: 'App',
-
-  components: {
-    HelloWorld,
+  data () {
+    return {
+      // appTitle: 'Awesome App',
+      sidebar: false
+    }
   },
-
-  data: () => ({
-    //
-  }),
-};
+  computed: {
+    appTitle () {
+      return this.$store.state.appTitle
+    },
+    isAuthenticated () {
+      return this.$store.getters.isAuthenticated
+    },
+    menuItems () {
+      if (this.isAuthenticated) {
+        return [  // Search Icons from https://materialdesignicons.com/
+          { title: 'Home', path: '/home', icon: 'home' },
+        ]
+      } else {
+        return [
+          { title: 'Sign In', path: '/signin', icon: 'lock-open' }
+        ]
+      }
+    }
+  },
+  methods: {
+    userSignOut () {
+      this.$store.dispatch('userSignOut')
+    }
+  }
+}
 </script>
