@@ -43,39 +43,6 @@ var storage = firebase_app.storage();
 
 app.get('/test', function(req, res) {
 	console.log("test.html");
-	//var storageRef = storage.refFromURL();
-	//storageRef.child("images/sea.jpg").getDownloadURL().then(function(url) {
-		/*var xhr = new XMLHttpRequesst()
-		xhr.responseType = 'blob';
-		xhr.onload = function(event){
-			var blob = xhr.response;
-		};
-		xhr.open('GET', url);
-		xhr.send();*/
-	//	var img = document.getElemnetById("tests");
-//		img.src = url;
-//	}).catch(function(error){
-//		console.log("Error : ",error);
-//	});
-	/*var storageRef = storage.ref();
-	var seafRef = storageRef("images/sea.jpg")
-	//console.log(storageRef.child("images"));
-	storageRef.putString("asdfasdf", 'base64').then(function(a) {
-		console.log("up");
-	});*/
-	/*var url = path.child("images/sea.jpg").getDownloadURL()
-	.then(function(url) {
-		console.log("url : ", url);
-	}).catch(function(error) {
-		console.log("Error : ",error);
-	});*/
-	/*path.put("aa").then(function(){
-		console.log("success");
-	}).catch(function(error) {
-		console.log("Error : ",error);
-	});*/
-	/*fs.readFile("./views/assets/images/avatar.jpg", function(error, data) {	
-	});*/
 	res.render("test");
 });
 
@@ -90,6 +57,55 @@ var options = {
 
 /* Create User Account */
 global.XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+function update_tour_images(db, uid, tour_name){
+	db.collection("Tour").doc(tour_name).get().then(function(doc){
+		var map = {}
+		for(var j=0; j<doc.data().images.length; j++)
+			map[doc.data().images[j]] = 0.99
+		db.collection("User").doc(uid).collection("MyTour").doc(tour_name).update({
+			myImages : map
+		}).then(function(){
+			console.log("Success !");
+		}).catch(function(error){
+			console.log("Error : ", error);
+		});
+	}).catch(function(error){
+		console.log("Error : ", error);
+	});
+};
+app.post("/test_button", function(req, res){
+	console.log("Test Button is clicked. UID : ", req.cookies.uid);
+	uid = req.cookies.uid;
+	temp = []
+	db.collection("User").doc(uid).get().then(function(doc){
+		user_tour_lists = doc.data().tour;
+		//console.log(user_tour_lists);
+		//console.log(JSON.stringify(user_tour_lists));
+		temp = JSON.stringify(user_tour_lists).split(",")
+		length = temp.length
+		//console.log(length)
+		for(var i=0; i<length; i++){
+			tour_name = temp[i].split('"')[1]
+			update_tour_images(db, uid, tour_name)
+			console.log("Tour_name1 : ", tour_name)
+			/*db.collection("Tour").doc(tour_name).get().then(function(doc){
+				console.log(i)
+				console.log(temp[i])
+				var map = {};
+				for(var j=0; j<doc.data().images.length; j++)
+					map[doc.data().images[j]] = 0.99
+				console.log("Map : ",map)
+				console.log("Tour_name : ", tour_name)
+			}).catch(function(error){
+				console.log("Error : ",error);
+			});*/
+		}
+	}).catch(function(error){
+		console.log("Error : ",error);
+		res.send({result : "fail"})
+	});
+	res.send({result : "success"})
+});
 app.post('/user/create', function(req, res){
 	token = req.body.token;
 	email = req.body.email;
@@ -109,19 +125,36 @@ app.post('/user/create', function(req, res){
 		last_logged_in : time,
 		timestamp : time
 	}).then(function(){
-		console.log("success");
 		db.collection("User").doc(uid).get().then(function(doc){
-			if(doc.exists) {
-				console.log(doc.data());
-			}else{
-				console.log("??");
+			user_tour_lists = doc.data().tour;
+			temp = JSON.stringify(user_tour_lists).split(",")
+			length = temp.length
+			for(var i=0; i<length; i++){
+				tour_name = temp[i].split('"')[1]
+				db.collection("User").doc(uid).collection("MyTour").doc(tour_name).set({
+					myImages : null,
+					thisRef : db.collection("User").doc(uid),
+					tourRef : db.collection("Tour").doc(tour_name)
+				}).then(function(){
+					console.log("Success!")
+				}).catch(function(error){
+					console.log("Error : ",error)
+				});
 			}
+		}).catch(function(error){
+			console.log("Error : ",error);
+		});
+		console.log("Success");
+		db.collection("User").doc(uid).get().then(function(doc){
+			if(doc.exists) 
+				console.log(doc.data());
+			else
+				console.log("Doesn't exist user... maybe error.");
 		}).catch(function(error){
 			console.log("Error : ",error);
 		});
 		res.cookie("token", token);
 		res.cookie("uid", uid);
-		console.log("url : ", photo);
 		res.cookie("url", photo);
 		res.send({result : "success", uid:uid});
 	}).catch(function(error){
