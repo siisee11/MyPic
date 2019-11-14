@@ -49,76 +49,51 @@ function URL_TO_BLOB(url) {
     });
 };
 
-function ReadURL(uid, input) {
-	//We can parse "lastModifiedData, name, size, type"
-	var storageRef = firebase.storage().ref();
-	console.log(input.files.length)
-	num_of_files = input.files.length;
-	/*for(var i=0;i<num_of_files;i++){
-		console.log(input.files[i].type);
-	}*/
-	if(input.files){
-		for(var i=0; i<num_of_files; i++){
-			if(input.files[i]){
-				Upload(storageRef, uid, input.files[i]);
-				/*var reader = new FileReader();
-				reader.onload = function(f) {
-					var metadata = { contentType : input.files[i].type, };
-					var filename = input.files[i].name;
-					URL_TO_BLOB(f.target.result).then(function(BLOB) {
-						var path = "user_images/"+uid+"/"+filename;
-						var uploadTask = storageRef.child(path).put(BLOB, metadata);
-					});
-				};
-				reader.readAsDataURL(input.files[0]);*/
-				//console.log("%d file is end" % i);
-			} else{
-				console.log("File isn't exist !");
-			}
-		}
-	};
-	//$('#blah').attr('src', e.target.result);
-
-	/*if (input.files && input.files[0]) {
-		var reader = new FileReader();
-		reader.onload = function(e) {
-			var metadata = {contentType : input.files[0].type,};
-			var name = input.files[0].name;
-			console.log("Content type : ", metadata);
-			URL_TO_BLOB(e.target.result).then(function(blob){
-			var uploadTask = storageRef.child("images/jihye_test.jpg").put(blob, metadata);
-			});
-    	};
-		reader.readAsDataURL(input.files[0]);
-		//console.log("Total : ", input.files[0]);
-		console.log("name : ", input.files[0].name);
-	}*/
-};
-
-function Upload(storageRef, uid, file){
+function Upload(storageRef, uid, file, num_of_files){
 	console.log(uid);
 	var reader = new FileReader();
+	i=0;
+	uris = []
+	db = firebase.firestore();
 	reader.onload = function(f) {
 		var metadata = { contentType : file.type, };
 		var filename = file.name;
 		URL_TO_BLOB(f.target.result).then(function(BLOB) {
 			var path = "user_images/"+uid+"/"+filename;
-			var uploadTask = storageRef.child(path).put(BLOB, metadata);
+			//var path = "tour_images/test_tour3/"+filename;
+			var uploadTask = storageRef.child(path).put(BLOB, metadata).then(function(){
+				storageRef.child(path).getDownloadURL().then(function(url){
+					i+=1
+					uris.push(url)
+					if(i==num_of_files){
+						db.collection("User").doc(uid).update({
+							uris : uris
+						});
+					}
+				}).catch(function(error){
+					console.log("Error : ",error);
+				});
+			});
 		});
 	};
 	reader.readAsDataURL(file);
+};
 
-	/*var storageRef = firebase.storage().ref();
-	var metadata = {
-		contentType : "image/jpg",
+function ReadURL(uid, input) {
+	//We can parse "lastModifiedData, name, size, type"
+
+	var storageRef = firebase.storage().ref();
+	console.log(input.files.length)
+	num_of_files = input.files.length;
+	if(input.files){
+		for(var i=0; i<num_of_files; i++){
+			if(input.files[i]){
+				Upload(storageRef, uid, input.files[i], num_of_files);
+			} else{
+				console.log("File isn't exist !");
+			}
+		}
 	};
-	URL_TO_BLOB("../images/bg.jpg").then(function(blob){
-		var uploadTask = storageRef.child("images/jihye.jpg").put(blob, metadata);
-	});*/
-	//var imagesRef = spaceRef.parent;
-	//console.log(path);
-	//console.log(name);
-	//console.log(imagesRef);
 };
 
 function Download(uid){
@@ -131,7 +106,6 @@ function Download(uid){
 			var path = "user_images/"+uid+"/"+foref.name;
 			var imageRef = storageRef.child(path);
 			cnt = 0;
-
 			imageRef.getDownloadURL().then(function(url) {
 				var img = document.createElement('img');
 				var div = document.createElement('div');
@@ -150,17 +124,7 @@ function Download(uid){
 	}).catch(function(error){
 		console.log("Error : ",error);
 	});
-	//var imageRef = storageRef.child("images/sea.jpg");
-	//var imageRef = storageRef.child(from_user);
-	/*imageRef.getDownloadURL().then(function(url) {
-		console.log("URL : ", url);
-		document.getElementById("tests").src = url;
-	}).catch(function(error){
-		console.log("Error", error);
-	});*/
 };
-
-
 
 $(function(){
 	var firebaseConfig = {

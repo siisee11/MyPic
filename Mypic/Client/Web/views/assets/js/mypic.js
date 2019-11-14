@@ -29,4 +29,19 @@ $(function(){
 			}
 		});
 	});
+	
+	$("#test_btn4").click(function(){
+		console.log("Test Button4");
+		$.ajax({
+			type : "POST",
+			url : "/test_button",
+			success : function(res){
+				if(res.result == "success"){
+					console.log("success");
+				}else{
+					console.log("fail");
+				}
+			}
+		});
+	});
 });
