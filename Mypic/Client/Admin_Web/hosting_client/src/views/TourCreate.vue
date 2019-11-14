@@ -1,5 +1,7 @@
 <template>
-  <tour-form v-model="tourDoc"></tour-form>
+  <v-container>
+    <tour-form v-model="tourDoc"></tour-form>
+  </v-container>
 </template>
 
 <script>

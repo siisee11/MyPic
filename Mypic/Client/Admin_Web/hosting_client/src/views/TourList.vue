@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12">
         <v-card class="mx-auto py-1 px-4" tile>
-          <v-list three-line>
+          <v-list two-line>
             <v-subheader>Tour List</v-subheader>
             <v-list-item-group v-model="numberOfRenderItems" color="primary">
               <v-list-item
@@ -17,7 +17,6 @@
                 <v-list-item-content>
                   <v-list-item-title v-html="doc.get('tourName')"></v-list-item-title>
                   <v-list-item-subtitle v-html="stringifyDocMetadata(doc)"></v-list-item-subtitle>
-                  <v-list-item-subtitle v-html="' - ' + doc.get('description')"></v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
@@ -62,11 +61,12 @@ export default {
     stringifyDocMetadata: function (doc) {
       const startDate = doc.get('tourStartedAt')
       const endDate = doc.get('tourEndedAt')
+      const location = doc.get('location')
 
-      return `${timestampToString(startDate)} ~ ${timestampToString(endDate)}`
+      return `${location}, ${timestampToString(startDate)} ~ ${timestampToString(endDate)}`
     },
     createTourDoc: function () {
-      this.$router.push({ path: '/tourcreate' })
+      this.$router.push({ path: `/tourcreate` })
     },
     editTourDoc: function (doc) {
       this.$router.push({ path: `/touredit/${doc.id}` })
