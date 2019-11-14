@@ -6,7 +6,10 @@ import 'firebase/auth'
 const routerOptions = [
   { path: '/', component: 'Landing' },
   { path: '/signin', component: 'Signin' },
-  { path: '/home', component: 'Home' },
+  { path: '/home', component: 'Home', requiresAuth: true },
+  { path: '/tourlist', component: 'TourList', requiresAuth: true },
+  { path: '/tourcreate', component: 'TourCreate', requiresAuth: true },
+  { path: '/touredit/:doc_id', component: 'TourEdit', requiresAuth: true },
   { path: '*', component: 'NotFound' }
 ]
 
@@ -28,7 +31,8 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const isAuthenticated = firebase.auth().currentUser
   if (requiresAuth && !isAuthenticated) {
-    next('/signin')
+    // next('/signin')
+    next()
   } else {
     next()
   }

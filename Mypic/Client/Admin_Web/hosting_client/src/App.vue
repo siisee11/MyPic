@@ -73,6 +73,7 @@ export default {
       if (this.isAuthenticated) {
         return [  // Search Icons from https://materialdesignicons.com/
           { title: 'Home', path: '/home', icon: 'home' },
+          { title: 'Tour', path: '/tourlist', icon: 'format-list-bulleted'}
         ]
       } else {
         return [
