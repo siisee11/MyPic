@@ -1,15 +1,15 @@
 <template>
   <v-container container-fluid>
-    <v-layout wrap>
-      <v-flex xs12 class="text-xs-center" ma-5>
+    <v-row no-gutters>
+      <v-col cols="12" xs="12" class="text-center" ma-5>
         <h1>Welcome to Mypic Admin App</h1>
-      </v-flex>
-      <v-flex xs12 sm6 offset-sm3 mt-3>
-        <blockquote class="blockquote text-xs-center">
-          You can manage and create Users and Tours<br>
+      </v-col>
+      <v-col xs="12">
+        <blockquote class="blockquote text-center">
+          You can manage Users and Tours<br>
         </blockquote>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
