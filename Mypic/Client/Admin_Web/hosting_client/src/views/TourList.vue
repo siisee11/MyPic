@@ -1,10 +1,8 @@
 <template>
   <v-container>
     <v-row>
-      <v-col
-        cols="12"
-      >
-        <v-card class="mx-auto" tile>
+      <v-col cols="12">
+        <v-card class="mx-auto py-1 px-4" tile>
           <v-list three-line>
             <v-subheader>Tour List</v-subheader>
             <v-list-item-group v-model="numberOfRenderItems" color="primary">
@@ -32,8 +30,6 @@
           </v-list>
         </v-card>
       </v-col>
-      <v-btn @click="consoleDocuments()">
-      </v-btn>
     </v-row>
   </v-container>
 </template>
