@@ -22,7 +22,7 @@ def extract_face(filename, required_size=(160, 160)):
 	# detect faces in the image
 	results = detector.detect_faces(pixels)
 	if not results:
-		return None
+		return None, None
 	print(results)
 	# extract the bounding box from the first face
 	x1, y1, width, height = results[0]['box']
@@ -51,7 +51,7 @@ def extract_face_test(filename, required_size=(160, 160)):
 	# detect faces in the image
 	results = detector.detect_faces(pixels)
 	if not results:
-		return None
+		return None, None
 
 	for result in results:
 		if result['confidence'] < 0.8 :
@@ -102,9 +102,9 @@ def load_faces_test(directory):
 		path = directory + filename
 		# get face
 		face, box = extract_face_test(path)
-		file_path = [filename for _ in range(len(face))]
 		if face is not None:
 			# store
+			file_path = [filename for _ in range(len(face))]
 			faces.extend(face)
 			paths.extend(file_path)
 			boxes.extend(box)
@@ -160,9 +160,9 @@ def load_dataset_test(directory):
 	return asarray(X), asarray(y), asarray(files), asarray(face_box)
  
 # load train dataset
-trainX, trainy, train_file, train_boxes = load_dataset('friend-dataset/train/')
+trainX, trainy, train_file, train_boxes = load_dataset('ASC19-dataset/train/')
 print(trainX.shape, trainy.shape)
 # load test dataset
-testX, testy, test_file, test_boxes = load_dataset_test('friend-dataset/test/')
+testX, testy, test_file, test_boxes = load_dataset_test('ASC19-dataset/test/')
 # save arrays to one file in compressed format
 savez_compressed('friend-dataset.npz', trainX, trainy, train_file, train_boxes, testX, testy, test_file, test_boxes)

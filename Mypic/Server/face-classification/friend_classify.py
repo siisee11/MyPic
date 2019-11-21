@@ -86,7 +86,7 @@ for selection in range(nr_test-1):
 	if class_probability < int(args.probability) :
 		continue
 
-	src = 'friend-dataset/test/' + random_face_name[0] + '/' + random_file_name
+	src = 'ASC19-dataset/test/' + random_face_name[0] + '/' + random_file_name
 	dest = 'result/' + target + '/' + random_file_name
 
 	if predict_names[0] == target:
