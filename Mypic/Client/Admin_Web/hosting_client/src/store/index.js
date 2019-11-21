@@ -2,9 +2,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from 'firebase/app'
+import router from '@/router'
 import 'firebase/auth'
 import 'firebase/firestore'
-import router from '@/router'
 
 Vue.use(Vuex)
 

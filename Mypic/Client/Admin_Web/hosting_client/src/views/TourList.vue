@@ -34,10 +34,10 @@
 </template>
 
 <script>
-import infiniteScrollMixin from '../mixins/InfiniteScroll'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
-import timestampToString from '../utils/FSTimestampToString'
+import timestampToString from '@/utils/FSTimestampToString'
+import infiniteScrollMixin from '@/mixins/InfiniteScroll'
 
 export default {
   mixins: [infiniteScrollMixin, ],
