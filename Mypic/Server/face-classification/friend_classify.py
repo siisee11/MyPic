@@ -34,6 +34,9 @@ if not os.path.exists('result'):
 if not os.path.exists('result/' + target):
 	os.makedirs('result/' + target)
 
+if not os.path.exists('marked'):
+	os.makedirs('marked')
+
 # load faces
 data = load('friend-dataset.npz')
 testX_faces, file_names, boxes = data['arr_4'], data['arr_6'], data['arr_7']
@@ -88,6 +91,7 @@ for selection in range(nr_test-1):
 
 	src = 'ASC19-dataset/test/' + random_face_name[0] + '/' + random_file_name
 	dest = 'result/' + target + '/' + random_file_name
+	dest_marked = 'marked/' + 'marking_' + target + random_file_name
 
 	if predict_names[0] == target:
 		print('[COPY] ' + src + ' => ' + dest) 
@@ -109,9 +113,11 @@ for selection in range(nr_test-1):
 		text = "Predicted: %s (%.3f)" % (predict_names[0], class_probability)
 		cv2.putText(original, text, (x, y),
 				cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 4)
-		small = cv2.resize(original, dsize=(0,0), 
+		small = cv2.resize(original, dsize=(0,0),
 				fx=0.2, fy=0.2, interpolation=cv2.INTER_LINEAR)
 		cv2.imshow("image", small)
+		# cv2.imshow("image", original)
+		cv2.imwrite(dest_marked, original)
 
 		k = cv2.waitKey(0)
 		if k == 27 :
