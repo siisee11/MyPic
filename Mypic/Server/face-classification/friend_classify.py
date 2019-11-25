@@ -68,7 +68,7 @@ model.fit(trainX, trainy)
 # test model on a all example from the test dataset
 nr_test = testX.shape[0]
 
-for selection in range(nr_test-1):
+for selection in range(nr_test):
 	random_face_pixels = testX_faces[selection]
 	random_face_emb = testX[selection]
 	random_face_class = testy[selection]
