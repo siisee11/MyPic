@@ -12,6 +12,7 @@ import {
     ImageBackground,
     TouchableWithoutFeedback,
     Platform,
+    Slider,
 } from 'react-native';
 
 import {Actions} from 'react-native-router-flux';
@@ -28,9 +29,12 @@ export default class DownloadPic extends Component {
         super(props);
         this.state={
             tour: this.props.tour_info,
+            images : [],
+            likelihoods : [],
             my_images : [],
             uris : [],
             fontLoaded: false,
+            threshold: 50,
         };
     }
 
@@ -39,15 +43,27 @@ export default class DownloadPic extends Component {
             .get()
             .then(res => {
                 let data = res.data();
-                console.log(data.myImages);
                 for (const key in data.myImages) {
-                  console.log(key);
-                  let append_my_images = this.state.my_images.concat(key)
-                  this.setState(({
-                      my_images : append_my_images,
-                  }));
+                    let likelihood = data.myImages[key];
+                    let append_images = this.state.images.concat(key)
+                    this.setState(({
+                        images : append_images,
+                    }));
+                    let append_likelihood = this.state.likelihoods.concat(likelihood)
+                    this.setState(({
+                        likelihoods : append_likelihood,
+                    }));
                 }
-                console.log(this.state.my_images);
+
+                this.state.images.map( (image, index) => {
+                    if (this.state.likelihoods[index] * 100 > this.state.threshold) {
+                        let append_my_images = this.state.my_images.concat(image);
+                        this.setState(({
+                            my_images : append_my_images,
+                        }));
+                    }
+                })
+
             }).catch(error => console.log(error));
 
         await Font.loadAsync({
@@ -186,6 +202,17 @@ export default class DownloadPic extends Component {
                 <View style={{ flex: 1, }}>
                     {this.state.my_images? this.renderSection() : null }
                 </View>
+
+                <Slider 
+                    style={{width : width * 2 / 3, alignSelf:'center'}}
+                    maximumValue={100}
+                    minimumValue={0}
+                    minimumTrackTintColor="#307ecc"
+                    maximumTrackTintColor="#000000"
+                    step={1} 
+                    value={this.state.threshold}
+                    onValueChange={(sliderValue) => this.setState({ threshold : sliderValue })}
+                />
 
                 <TouchableOpacity style={{...styles.button}}>
                     <Text style={{fontSize:20, fontWeight: 'bold'}} onPress={this.saveData}>
