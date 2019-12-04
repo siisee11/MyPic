@@ -34,8 +34,8 @@ export default class HomeTab extends Component {
                 email: '',
                 photoURL: '',
                 uid: '',
-                embeddings : null,
             },
+            profile_embeddings : null,
         };
         this.goDownloadPic = this.goDownloadPic.bind(this)
     }
@@ -47,7 +47,7 @@ export default class HomeTab extends Component {
     goDownloadPic (index) {
         Actions.downloadPic({
             uid: this.state.user.uid,
-            embeddings: this.state.embeddings,
+            profile_embeddings: this.state.profile_embeddings,
             tour_info : this.state.tours[index],
             mypic_ref: this.state.mypic_refs[index],
         })
@@ -55,6 +55,15 @@ export default class HomeTab extends Component {
 
     componentDidMount = async () => {
         await this.getUserInfo();
+
+        firebase.firestore().collection("User").doc(this.state.user.uid)
+        .onSnapshot((doc) => {
+            doc.data().embeddings ? (
+                this.setState({
+                        profile_embeddings: doc.data().embeddings
+                })
+            ) : null
+        });
 
         await firebase.firestore()
             .collection("User")
@@ -97,14 +106,13 @@ export default class HomeTab extends Component {
 
     getUserInfo = () => {
         let user = firebase.auth().currentUser;
-        let name, email, photoUrl, uid, embeddings;
+        let name, email, photoUrl, uid;
 
         if (user != null) {
             name = user.displayName;
             email = user.email;
             photoUrl = user.photoURL;
             uid = user.uid;
-            embeddings = user.embeddings;
         }
 
         this.setState({
@@ -113,7 +121,6 @@ export default class HomeTab extends Component {
                 email: email,
                 photoURL: photoUrl,
                 uid: uid,
-                embeddings: embeddings,
             }
         })
     }

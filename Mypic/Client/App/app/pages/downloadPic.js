@@ -73,6 +73,8 @@ export default class DownloadPic extends Component {
             'Yeon_Sung-Regular': require('../../assets/fonts/Yeon_Sung/YeonSung-Regular.ttf'),
         });
         this.setState({ fontLoaded: true });
+
+//        console.log(this.props.profile_embeddings)
     };
 
     goBack() {
@@ -198,27 +200,30 @@ export default class DownloadPic extends Component {
                     { this.state.tour.tour_thumbnail? this.renderThumbnail() : null }
                 </View>
 
+                <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
 
-                <View style={{ flex: 1, }}>
-                    {this.state.my_images? this.renderSection() : null }
-                </View>
+                    <View style={{ flex: 1, }}>
+                        {this.state.my_images? this.renderSection() : null }
+                    </View>
+                </ScrollView>
 
-                <Slider 
-                    style={{width : width * 2 / 3, alignSelf:'center'}}
-                    maximumValue={100}
-                    minimumValue={0}
-                    minimumTrackTintColor="#307ecc"
-                    maximumTrackTintColor="#000000"
-                    step={1} 
-                    value={this.state.threshold}
-                    onValueChange={(sliderValue) => this.setState({ threshold : sliderValue })}
-                />
+                    <Slider 
+                        style={{width : width * 2 / 3, alignSelf:'center', marginTop:5,}}
+                        maximumValue={100}
+                        minimumValue={0}
+                        minimumTrackTintColor="#307ecc"
+                        maximumTrackTintColor="#000000"
+                        step={1} 
+                        value={this.state.threshold}
+                        onValueChange={(sliderValue) => this.setState({ threshold : sliderValue })}
+                    />
 
-                <TouchableOpacity style={{...styles.button}}>
-                    <Text style={{fontSize:20, fontWeight: 'bold'}} onPress={this.saveData}>
-                        DOWNLOAD IMAGES
-                    </Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={{...styles.button}}>
+                        <Text style={{fontSize:20, fontWeight: 'bold'}} onPress={this.saveData}>
+                            DOWNLOAD IMAGES
+                        </Text>
+                    </TouchableOpacity>
+
             </SafeAreaView>
         )
     }
