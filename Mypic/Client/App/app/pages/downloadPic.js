@@ -27,14 +27,26 @@ var { height, width } = Dimensions.get('window');
 export default class DownloadPic extends Component {
     constructor(props){
         super(props);
+        /*
+        props : {
+            uid : user id
+            profile_embeddings: user's profile embeddings
+            tour_info : tour information
+            mypic_ref: reference to 'User/Mytour/<Tourname>'
+            tour_refs : reference to 'Tour/<Tourname>'
+        }
+        */
+
         this.state={
-            tour: this.props.tour_info,
-            images : [],
-            likelihoods : [],
-            my_images : [],
-            uris : [],
+            tour: this.props.tour_info, // copy from props for easy use
+            images : [],                // All images from myImages
+            likelihoods : [],           // All likelihoods from myImages
+            my_images : [],             // images above threshold
+            uris : [],                  // uri for download images (Unused)
             fontLoaded: false,
             threshold: 50,
+            profile_embeddings: this.props.profile_embeddings,
+            tour_images_embeddings: [],
         };
     }
 
@@ -66,6 +78,33 @@ export default class DownloadPic extends Component {
 
             }).catch(error => console.log(error));
 
+
+        this.props.tour_ref
+            .collection("Embedding")
+            .get().then( (querySnapshot) => {
+                querySnapshot.forEach( (doc) => {
+                    let doc_data = doc.data();
+                    let doc_id = doc.id;
+                    let image_embeddings = new Array(); 
+                    let image_map = new Map();      // map image name and embedding
+                    for (var key in doc_data){
+                        value = doc_data[key]
+                        image_embeddings.push(value)
+                    }
+                    image_map.set("embeddings", image_embeddings);
+                    image_map.set("file_name", doc_id);
+
+//                    if (doc_id === '20190924_131430.jpg')
+//                        console.log(image_embeddings)
+
+                    let append_tour_images_embeddings= this.state.tour_images_embeddings.concat(image_embeddings);
+                    this.setState({
+                        tour_images_embeddings : append_tour_images_embeddings,
+                    })
+                })
+                console.log(this.state.tour_images_embeddings)
+            }).catch(error => console.log(error));
+
         await Font.loadAsync({
             'Gaegu-Regular': require('../../assets/fonts/Gaegu/Gaegu-Regular.ttf'),
             'EastSeaDokdo-Regular': require('../../assets/fonts/East_Sea_Dokdo/EastSeaDokdo-Regular.ttf'),
@@ -74,11 +113,20 @@ export default class DownloadPic extends Component {
         });
         this.setState({ fontLoaded: true });
 
-//        console.log(this.props.profile_embeddings)
     };
 
     goBack() {
         Actions.pop()
+    }
+
+    get_angular_distances(embs1, embs2) {
+        dots = nj.dot(embs1, embs2.transpose())
+        norms1 = nj.linalg.norm(embs1, axis=1).reshape((embs1.shape[0], 1))
+        norms2 = nj.linalg.norm(embs2, axis=1).reshape((1, embs2.shape[0]))
+        cos_angle = nj.clip(dots / norms1 / norms2, -1.0, 1.0)
+        angle = nj.arccos(cos_angle)
+        
+        return angle
     }
 
     saveData =async()=>{
@@ -137,8 +185,10 @@ export default class DownloadPic extends Component {
 
     renderSection() {
         return (
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', }}>
-                {this.renderGridImages()}
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginVertical: 2, }}>
+                {
+                    this.renderGridImages()
+                }
             </View>
         )
     }
@@ -187,6 +237,11 @@ export default class DownloadPic extends Component {
     }
 
     render() {
+        this.state.tour_images_embeddings ? (
+            console.log("calculate angular distance fail.")
+//            console.log(this.get_angular_distances(this.state.tour_images_embeddings, this.state.profile_embeddings))
+        ) : null
+
         return(
             <SafeAreaView style={styles.container}>
                 <DownloadPicHeader title="Download Pictures" />
@@ -195,7 +250,7 @@ export default class DownloadPic extends Component {
                     style={{
                         height : height / 5,
                         width: width,
-                        marginVertical: 5
+                        marginTop: 5,
                     }}>
                     { this.state.tour.tour_thumbnail? this.renderThumbnail() : null }
                 </View>

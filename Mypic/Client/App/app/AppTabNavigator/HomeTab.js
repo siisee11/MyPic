@@ -28,6 +28,7 @@ export default class HomeTab extends Component {
         this.state={
             tours: [],
             mypic_refs: [],
+            tour_refs: [],
             thumbnails: [],
             user: {
                 name: '',
@@ -50,6 +51,7 @@ export default class HomeTab extends Component {
             profile_embeddings: this.state.profile_embeddings,
             tour_info : this.state.tours[index],
             mypic_ref: this.state.mypic_refs[index],
+            tour_ref : this.state.tour_refs[index],
         })
     }
 
@@ -73,8 +75,10 @@ export default class HomeTab extends Component {
                 querySnapshot.forEach( (doc) => {
                     let doc_data = doc.data();
                     let append_mypic_refs = this.state.mypic_refs.concat(doc_data.thisRef);
+                    let append_tour_refs = this.state.tour_refs.concat(doc_data.tourRef);
                     this.setState({
                         mypic_refs : append_mypic_refs,
+                        tour_refs : append_tour_refs,
                     })
                     doc_data.tourRef.get()
                         .then(res =>{
