@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, TextInput, Button, TouchableOpacity, Image, StyleSheet, Alert, ScrollView, ImageBackground, Dimensions, TouchableWithoutFeedback} from 'react-native';
+import {View, Text, TextInput, Button, TouchableOpacity, TouchableHighlight, Image, StyleSheet, Alert, ScrollView, ImageBackground, Dimensions, TouchableWithoutFeedback} from 'react-native';
 import { Container, Content, } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import * as Font from "expo-font";
@@ -14,8 +14,15 @@ import ImageBrowser from "../components/ImageBrower";
 var { height, width } = Dimensions.get('window');
 
 export default class ProfileTab extends Component {
+    constructor(props) {
+        super(props);
+    
+        this.onLongPress = this.onLongPress.bind(this);
+    }
+
     state = {
         fontLoaded: false,
+        file_name: [],
         data: [],
         imageBrowserOpen: false,
         photos: [],
@@ -56,6 +63,45 @@ export default class ProfileTab extends Component {
         })
     }
 
+    urlToFilename(url) {
+        let filename = url.split('%')[2].split('?')[0].slice(2);
+        console.log(filename)
+        return filename
+    }
+
+    onLongPress= (index) => {
+        //handler for Long Click
+        let uri = this.state.data[index];
+        let imageName = this.urlToFilename(uri);
+        let ref = firebase.storage().ref().child("user_images/" + this.state.user.uid + '/' + imageName)
+
+        ref.delete().then(function() {
+            Alert.alert(index + ' image deleted');
+        }).catch(function(error) {
+            // Uh-oh, an error occurred!
+            console.log(error)
+        });
+
+        firebase
+                .firestore()
+                .collection('User')
+                .doc(this.state.user.uid)
+                .update({
+                    uris: firebase.firestore.FieldValue.arrayRemove(uri),
+                }).then((result) => {
+                    console.log("URI uploaded to cloud firestore.")
+                }).catch((error) => {
+                    console.log(error)
+                });
+
+
+        let filteredArray = this.state.data.filter((_, i) => i !== index)
+        this.setState({
+            data: filteredArray
+        })           // File deleted successfully
+
+    };
+
     uploadImage = async (uri, imageName) => {
         const response = await fetch(uri);
         const blob = await response.blob();
@@ -85,7 +131,11 @@ export default class ProfileTab extends Component {
     renderGridImages() {
         return this.state.data.map((image, index) => {
             return (
-                <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
+                <TouchableHighlight 
+                    key={index} 
+                    style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}
+                    onLongPress={() => this.onLongPress(index)}
+                    >
                     <Image style={{
                         flex: 1,
                         alignSelf: 'stretch',
@@ -94,7 +144,7 @@ export default class ProfileTab extends Component {
                     }}
                            source={{ uri: image}}>
                     </Image>
-                </View>
+                </TouchableHighlight>
             )
         })
     }
