@@ -23,21 +23,20 @@ export default class SettingTab extends Component {
         this.setState({ fontLoaded: true });
     }
 		
-// 'https://facebook.github.io/react-native/movies.json'
 		async getTermsandConditions() {
-			return fetch("https://raw.githubusercontent.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design/client/app/Mypic/Client/terms-and-conditions.json?token=ACZWME5PDDJ7BXCAJIDV5NK52GAQK")
+			return fetch("https://raw.githubusercontent.com/k-young-passionate/TermsandConditions/master/terms-and-conditions.json")
 				.then((response) => response.json())
 				.then((responseJson) => {
 
 					this.setState({
 						dataSource: responseJson.terms,
 					}, function(){
-						ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
+						//ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
 					});
 
 				})
 				.catch((error) =>{
-        console.error(error);
+					console.error(error);
 				});
 
 		}
@@ -75,12 +74,13 @@ export default class SettingTab extends Component {
 											<Text style={{color : '#12799f'}}> Terms and Conditions </Text>
 										</View>
                   </TouchableOpacity>
-                    <TouchableOpacity style={{flex: 1}} onPress={() => firebase.auth().signOut()}>
-											<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{color : '#12799f'}}> SignOut </Text>
 
-											</View>
-                    </TouchableOpacity>
+                  <TouchableOpacity style={{flex: 1}} onPress={() => firebase.auth().signOut()}>
+										<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                      <Text style={{color : '#12799f'}}> SignOut </Text>
+
+										</View>
+                  </TouchableOpacity>
 								<View style={{ flex: 8, justifyContent: 'center', alignItems: 'center' }}>
                 </View>
 
