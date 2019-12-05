@@ -2,7 +2,6 @@
   <v-container>
     <v-card>
       <tour-form v-model="tourDoc" page_title="Tour Edit"></tour-form>
-      <image-uploader v-model="tourDoc.images" label="Tour Images"/>
       <v-row class="justify-end">
         <v-col xs="2" sm="2" cols="2">
           <v-btn class="mx-3" large text @click="$router.go(-1)">
@@ -25,14 +24,12 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import TourForm from '@/components/TourForm'
-import FirebaseStorageImageUploader from '@/components/FirebaseStorageUploader'
 import tourDocMixin from '@/mixins/TourDoc'
 
 export default {
   mixins: [ tourDocMixin, ],  // Access tour document form as this.tourDoc, this.timestampDoc
   components: {
-    TourForm: TourForm,
-    ImageUploader: FirebaseStorageImageUploader
+    TourForm: TourForm
   },
   mounted () {
     firebase.firestore().collection('Tour').doc(this.$route.params.doc_id).onSnapshot((documentSnapshot) => {

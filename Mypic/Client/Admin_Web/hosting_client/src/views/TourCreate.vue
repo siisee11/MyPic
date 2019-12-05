@@ -2,7 +2,6 @@
   <v-container>
     <v-card>
       <tour-form v-model="tourDoc" page_title="Tour Create" :doc_id="docId"></tour-form>
-      <image-uploader/>
       <v-row class="justify-end">
         <v-col xs="2" sm="2" cols="2">
           <v-btn class="mx-3" large text @click="$router.go(-1)">
@@ -26,7 +25,6 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 import autoId from '@/utils/FirestoreNewId'
 import TourForm from '@/components/TourForm'
-import FirebaseStorageImageUploader from '@/components/FirebaseStorageUploader'
 import tourDocMixin from '@/mixins/TourDoc'
 
 export default {
@@ -37,8 +35,7 @@ export default {
     }
   },
   components: {
-    TourForm: TourForm,
-    ImageUploader: FirebaseStorageImageUploader
+    TourForm: TourForm
   },
   methods: {
     createTourDoc: function () {
