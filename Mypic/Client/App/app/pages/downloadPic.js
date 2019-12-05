@@ -21,6 +21,10 @@ import * as Font from "expo-font";
 import * as MediaLibrary from 'expo-media-library';
 import * as Permissions from 'expo-permissions';
 import * as FileSystem from 'expo-file-system';
+import ndarray from 'ndarray'
+import gemm from 'ndarray-gemm'
+import ops from 'ndarray-ops'
+
 
 var { height, width } = Dimensions.get('window');
 
@@ -120,13 +124,19 @@ export default class DownloadPic extends Component {
     }
 
     get_angular_distances(embs1, embs2) {
-        dots = nj.dot(embs1, embs2.transpose())
-        norms1 = nj.linalg.norm(embs1, axis=1).reshape((embs1.shape[0], 1))
-        norms2 = nj.linalg.norm(embs2, axis=1).reshape((1, embs2.shape[0]))
-        cos_angle = nj.clip(dots / norms1 / norms2, -1.0, 1.0)
-        angle = nj.arccos(cos_angle)
-        
-        return angle
+        // Returns Cosine Angular Distance Matrix of given 2 sets of embeddings.
+        var distanceMatrix = ndarray(new Float32Array(embs1.shape[0] * embs2.shape[0]), [embs1.shape[0], embs2.shape[0]])
+        gemm(distanceMatrix, embs1, embs2.transpose(1, 0))
+
+        for (let i=0; i<embs1.shape[0]; ++i) {
+            ops.divseq(distanceMatrix.pick(i, null), ops.norm2(embs1.pick(i, null)))
+        }
+
+        for (let j=0; j<embs2.shape[0]; ++j) {
+            ops.divseq(distanceMatrix.pick(null, j), ops.norm2(embs2.pick(j, null)))
+        }
+
+        return distanceMatrix
     }
 
     saveData =async()=>{
