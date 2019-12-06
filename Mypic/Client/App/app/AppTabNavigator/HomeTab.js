@@ -56,7 +56,7 @@ export default class HomeTab extends Component {
     }
 
     componentDidMount = async () => {
-        await this.getUserInfo();
+        this.getUserInfo();
 
         firebase.firestore().collection("User").doc(this.state.user.uid)
         .onSnapshot((doc) => {
@@ -67,6 +67,15 @@ export default class HomeTab extends Component {
             ) : null
         });
 
+        firebase.firestore()
+            .collection("Tour")
+            .onSnapshot((querySnapshot) => {
+                querySnapshot.forEach( (doc) => {
+                    console.log(doc.id, " => ", doc.data());
+                })
+            })
+
+/*
         await firebase.firestore()
             .collection("User")
             .doc(this.state.user.uid)
@@ -97,6 +106,7 @@ export default class HomeTab extends Component {
                         }).catch(error => console.log(error))
                 })
             })
+*/
 
         await Font.loadAsync({
             'Dancing_Script-Bold': require('../../assets/fonts/Dancing_Script/DancingScript-Bold.ttf'),
@@ -133,6 +143,7 @@ export default class HomeTab extends Component {
         return (
             <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
                 <MyHeader />
+                {/*
                 <ScrollView style={{flex : 1}}>
                     {
                         this.state.tours.map((tour, index) => {
@@ -184,6 +195,7 @@ export default class HomeTab extends Component {
                         })
                     }
                 </ScrollView>
+                */}
             </SafeAreaView>
         );
     }
