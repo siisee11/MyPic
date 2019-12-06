@@ -1,18 +1,23 @@
 <template>
-  <v-card>
-    <v-row align="center" justify="center" pa-3>
-      <v-col sm="6" cols="6">
-        <v-subheader>
-          {{ label }}
-        </v-subheader>
-      </v-col>
-      <v-col sm="4" cols="4" mt-4 mx-3>
-        <v-file-input v-model="tourImages" label="Upload..." accept="image/jpg" multiple flat/>
-      </v-col>
-      <v-col sm="12" cols="12">
-        <image-list v-model="value"/>
-      </v-col>
-    </v-row>
+  <v-card flat>
+    <v-container>
+      <v-row align="center" justify="center" pa-1>
+        <v-col sm="12" cols="12">
+          <v-subheader>
+            {{ label }}
+          </v-subheader>
+        </v-col>
+        
+        <v-col sm="12" cols="12">
+          <image-list v-model="value"/>
+        </v-col>
+
+        <v-col cols="6"/>
+        <v-col cols="4" mt-4 mx-3>
+          <v-file-input v-model="tourImages" label="Upload..." accept="image/jpg" multiple flat/>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-card>
 </template>
 

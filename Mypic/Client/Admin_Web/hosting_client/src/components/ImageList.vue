@@ -1,7 +1,11 @@
 <template>
   <v-row>
-    <v-col cols="12" sm="10" offset-sm="1">
-      <v-container fluid>
+    <v-col cols="12" sm="12">
+      <v-container 
+        fluid
+        style="max-height: 500px"
+        class="overflow-y-auto"
+      >
         <v-row>
           <v-col
             v-for="(item, index) in value"
