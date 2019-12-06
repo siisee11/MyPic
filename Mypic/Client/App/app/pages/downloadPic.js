@@ -58,6 +58,7 @@ export default class DownloadPic extends Component {
     }
 
     componentDidMount = async () => {
+        /*
         this.props.mypic_ref
 //            .get()
             .onSnapshot(res => {
@@ -83,14 +84,17 @@ export default class DownloadPic extends Component {
                         }));
                     }
                 })
+                console.log(this.state.my_images);
 
             }).catch(error => console.log(error));
 
-
+        console.log(this.props.tour_ref);
+        */
+        
         this.props.tour_ref
             .collection("Embedding")
-//            .get().then( (querySnapshot) => {
-            .onSnapshot( (querySnapshot) => {
+            .get().then( (querySnapshot) => {
+//            .onSnapshot( (querySnapshot) => {
                 querySnapshot.forEach( (doc) => {
                     let doc_data = doc.data();
                     let doc_id = doc.id;
@@ -103,17 +107,14 @@ export default class DownloadPic extends Component {
                     image_map.set("embeddings", image_embeddings);
                     image_map.set("file_name", doc_id);
 
-//                    if (doc_id === '20190924_131430.jpg')
-//                        console.log(image_embeddings)
-
                     let append_tour_images_embeddings= this.state.tour_images_embeddings.concat(image_embeddings);
                     this.setState({
                         tour_images_embeddings : append_tour_images_embeddings,
                     })
                 })
 
+                console.log(this.state.tour_images_embeddings.length);
                 let tour_embeddings_to_ndarray = pack(this.state.tour_images_embeddings)
-
                 this.setState({
                     tour_images_embeddings_ndarray: tour_embeddings_to_ndarray,
                 })
@@ -121,6 +122,7 @@ export default class DownloadPic extends Component {
                 console.log(this.state.tour_images_embeddings_ndarray.shape)
             }).catch(error => console.log(error));
 
+            
         await Font.loadAsync({
             'Gaegu-Regular': require('../../assets/fonts/Gaegu/Gaegu-Regular.ttf'),
             'EastSeaDokdo-Regular': require('../../assets/fonts/East_Sea_Dokdo/EastSeaDokdo-Regular.ttf'),
@@ -267,7 +269,8 @@ export default class DownloadPic extends Component {
 
     render() {
         this.state.tour_images_embeddings_ndarray && this.state.profile_embeddings_ndarray? (
-            console.log(this.get_angular_distances(this.state.tour_images_embeddings_ndarray, this.state.profile_embeddings_ndarray))
+            console.log("get_angular_distances")
+//            console.log(this.get_angular_distances(this.state.tour_images_embeddings_ndarray, this.state.profile_embeddings_ndarray))
         ) : null
 
         return(

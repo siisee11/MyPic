@@ -17,9 +17,9 @@ let SCREEN_HEIGHT= Dimensions.get('window').height;
 
 const fonts = [
     { id: 1, font: 'Gaegu-Regular'},
-    { id: 2, font: 'EastSeaDokdo-Regular'},
-    { id: 3, font: 'Nanum_pen_Script-Regular'},
-    { id: 4, font: 'Yeon_Sung-Regular'},
+    { id: 2, font: 'Nanum_pen_Script-Regular'},
+    { id: 3, font: 'Yeon_Sung-Regular'},
+    { id: 4, font: 'EastSeaDokdo-Regular'},
 ]
 
 export default class HomeTab extends Component {
@@ -56,7 +56,7 @@ export default class HomeTab extends Component {
     }
 
     componentDidMount = async () => {
-        this.getUserInfo();
+        await this.getUserInfo();
 
         firebase.firestore().collection("User").doc(this.state.user.uid)
         .onSnapshot((doc) => {
@@ -71,11 +71,25 @@ export default class HomeTab extends Component {
             .collection("Tour")
             .onSnapshot((querySnapshot) => {
                 querySnapshot.forEach( (doc) => {
-                    console.log(doc.id, " => ", doc.data());
+                    let data = doc.data();
+                    console.log(doc.id, " => ", data.tourName);
+                    let tour_info = {
+                        tour_name : data.tourName,
+                        tour_description : data.description,
+                        tour_thumbnail : data.thumbnail,
+                        tour_startedAt : data.tourStartedAt,
+                        tour_location : data.location,
+                    };
+                    let append_tours = this.state.tours.concat(tour_info);
+                    let tour_ref_append = this.state.tour_refs.concat(doc.ref);
+                    this.setState({
+                        tour_refs : tour_ref_append,
+                        tours : append_tours,
+                    })
                 })
             })
 
-/*
+
         await firebase.firestore()
             .collection("User")
             .doc(this.state.user.uid)
@@ -84,29 +98,11 @@ export default class HomeTab extends Component {
                 querySnapshot.forEach( (doc) => {
                     let doc_data = doc.data();
                     let append_mypic_refs = this.state.mypic_refs.concat(doc_data.thisRef);
-                    let append_tour_refs = this.state.tour_refs.concat(doc_data.tourRef);
                     this.setState({
                         mypic_refs : append_mypic_refs,
-                        tour_refs : append_tour_refs,
                     })
-                    doc_data.tourRef.get()
-                        .then(res =>{
-                            let data = res.data();
-                            let tour_info = {
-                                tour_name : data.tourName,
-                                tour_description : data.description,
-                                tour_thumbnail : data.thumbnail,
-                                tour_startedAt : data.tourStartedAt,
-                                tour_location : data.location,
-                            };
-                            let append_tours = this.state.tours.concat(tour_info);
-                            this.setState(prevState => ({
-                                tours : append_tours,
-                            }));
-                        }).catch(error => console.log(error))
                 })
             })
-*/
 
         await Font.loadAsync({
             'Dancing_Script-Bold': require('../../assets/fonts/Dancing_Script/DancingScript-Bold.ttf'),
@@ -143,7 +139,6 @@ export default class HomeTab extends Component {
         return (
             <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
                 <MyHeader />
-                {/*
                 <ScrollView style={{flex : 1}}>
                     {
                         this.state.tours.map((tour, index) => {
@@ -195,7 +190,6 @@ export default class HomeTab extends Component {
                         })
                     }
                 </ScrollView>
-                */}
             </SafeAreaView>
         );
     }
