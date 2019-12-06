@@ -24,6 +24,7 @@ import * as FileSystem from 'expo-file-system';
 import ndarray from 'ndarray'
 import gemm from 'ndarray-gemm'
 import ops from 'ndarray-ops'
+import pack from 'ndarray-pack'
 
 
 var { height, width } = Dimensions.get('window');
@@ -106,7 +107,28 @@ export default class DownloadPic extends Component {
                         tour_images_embeddings : append_tour_images_embeddings,
                     })
                 })
-                console.log(this.state.tour_images_embeddings)
+                let embeddings_length = this.state.tour_images_embeddings.length;
+                let dimension_length = this.state.tour_images_embeddings[0].length;
+                var embeddings_1d = [];
+
+                console.log(embeddings_length + " , " + dimension_length)
+                for (var i = 0 ; i < embeddings_length; i++) {
+                    embeddings_1d = embeddings_1d.concat(this.state.tour_images_embeddings[i])
+                }
+                console.log("len of 1d:")
+                console.log(embeddings_1d.length)
+                let test_ndarray = ndarray(new Float32Array(embeddings_1d), [embeddings_length, dimension_length])
+                test_ndarray = pack(this.state.tour_images_embeddings)
+                console.log("shape of embeddings: ")
+                console.log(test_ndarray.shape)
+                console.log("data of embeddings: ")
+                console.log(test_ndarray[0])
+
+
+                this.setState({
+                    tour_images_embeddings: ndarray(new Float32Array(embeddings_1d, [embeddings_length, dimension_length,]))
+                })
+//                console.log(this.state.tour_images_embeddings.shape)
             }).catch(error => console.log(error));
 
         await Font.loadAsync({
