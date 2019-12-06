@@ -7,13 +7,13 @@
           :key="item.title"
           :to="item.path">
           <v-list-item-action>
-            <v-icon>{{ 'mdi-' + item.icon }}</v-icon>
+            <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-action>
           <v-list-item-content>{{ item.title }}</v-list-item-content>
         </v-list-item>
         <v-list-item v-if="isAuthenticated" @click="userSignOut">
           <v-list-item-action>
-            <v-icon>mdi-exit-to-app</v-icon>
+            <v-icon>lock_open</v-icon>
           </v-list-item-action>
           <v-list-item-content>Sign Out</v-list-item-content>
         </v-list-item>
@@ -38,12 +38,12 @@
           v-for="item in menuItems"
           :key="item.title"
           :to="item.path">
-          <v-icon left dark>{{ 'mdi-' + item.icon }}</v-icon>
+          <v-icon left dark>{{ item.icon }}</v-icon>
           {{ item.title }}
         </v-btn>
 
         <v-btn text v-if="isAuthenticated" @click="userSignOut">
-          <v-icon left>mdi-exit-to-app</v-icon>
+          <v-icon left>lock_open</v-icon>
           Sign Out
         </v-btn>
       
@@ -73,11 +73,11 @@ export default {
       if (this.isAuthenticated) {
         return [  // Search Icons from https://materialdesignicons.com/
           { title: 'Home', path: '/home', icon: 'home' },
-          { title: 'Tour', path: '/tourlist', icon: 'format-list-bulleted'}
+          { title: 'Tour', path: '/tourlist', icon: 'menu'}
         ]
       } else {
         return [
-          { title: 'Sign In', path: '/signin', icon: 'lock-open' }
+          { title: 'Sign In', path: '/signin', icon: 'lock' }
         ]
       }
     }
