@@ -42,7 +42,11 @@
       </v-col>
 
       <v-col sm="10" cols="12">
-        <v-file-input v-model="tourImages" label="Tour Images" accept="image/jpg" multiple flat/>
+        <user-selector v-model="value.participants"/>
+      </v-col>
+
+      <v-col sm="10" cols="12">
+        <image-uploader v-model="value.images" label="Tour Images" :path="`/tour_images/${this.doc_id}/`"/>
       </v-col>
     </v-row>
   </v-container>
@@ -55,17 +59,20 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/storage'
 import { isNullOrUndefined } from 'util'
+import FirebaseStorageImageUploader from '@/components/FirebaseStorageUploader'
+import FirebaseUserSelector from '@/components/FirebaseUserSelector'
 
 
 export default {
   props: ['value', 'page_title', 'doc_id'],
   components: {
-    textDatePicker: TextDatePicker
+    textDatePicker: TextDatePicker,
+    imageUploader: FirebaseStorageImageUploader,
+    userSelector: FirebaseUserSelector
   },
   data () {
     return {
-      thumbnailFile: null,
-      tourImages: null
+      thumbnailFile: null
     }
   },
   computed: {
@@ -92,25 +99,12 @@ export default {
       var url = await uploadsnapshot.ref.getDownloadURL()
       return url
     },
-    upload_GetURL_doThis: async function (path, file, func) {
-      var uploadsnapshot = await firebase.storage().ref(path).put(file)
-      var url = await uploadsnapshot.ref.getDownloadURL()
-      func(url)
-    }
   },
   watch: {
     thumbnailFile: async function (val) {
       if (!isNullOrUndefined(val)) {
         this.upload_GetURL_doThis(`/tour_images/${this.doc_id}/thumbnail.jpg`, val, (url) => {
           this.value.thumbnail = url
-        })
-      }
-    },
-    tourImages: async function (val) {
-      for (let i = 0; i < val.length; i++) {
-        const file = val[i]
-        this.upload_GetURL_doThis(`/tour_images/${this.doc_id}/${file.name}`, file, (url) => {
-          this.value.images.push(url)
         })
       }
     }
