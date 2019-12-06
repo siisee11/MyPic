@@ -51,14 +51,17 @@ export default class DownloadPic extends Component {
             fontLoaded: false,
             threshold: 50,
             profile_embeddings: this.props.profile_embeddings,
+            profile_embeddings_ndarray: null,
             tour_images_embeddings: [],
+            tour_images_embeddings_ndarray: null,
         };
     }
 
     componentDidMount = async () => {
         this.props.mypic_ref
-            .get()
-            .then(res => {
+//            .get()
+            .onSnapshot(res => {
+//            .then(res => {
                 let data = res.data();
                 for (const key in data.myImages) {
                     let likelihood = data.myImages[key];
@@ -86,7 +89,8 @@ export default class DownloadPic extends Component {
 
         this.props.tour_ref
             .collection("Embedding")
-            .get().then( (querySnapshot) => {
+//            .get().then( (querySnapshot) => {
+            .onSnapshot( (querySnapshot) => {
                 querySnapshot.forEach( (doc) => {
                     let doc_data = doc.data();
                     let doc_id = doc.id;
@@ -107,28 +111,14 @@ export default class DownloadPic extends Component {
                         tour_images_embeddings : append_tour_images_embeddings,
                     })
                 })
-                let embeddings_length = this.state.tour_images_embeddings.length;
-                let dimension_length = this.state.tour_images_embeddings[0].length;
-                var embeddings_1d = [];
 
-                console.log(embeddings_length + " , " + dimension_length)
-                for (var i = 0 ; i < embeddings_length; i++) {
-                    embeddings_1d = embeddings_1d.concat(this.state.tour_images_embeddings[i])
-                }
-                console.log("len of 1d:")
-                console.log(embeddings_1d.length)
-                let test_ndarray = ndarray(new Float32Array(embeddings_1d), [embeddings_length, dimension_length])
-                test_ndarray = pack(this.state.tour_images_embeddings)
-                console.log("shape of embeddings: ")
-                console.log(test_ndarray.shape)
-                console.log("data of embeddings: ")
-                console.log(test_ndarray[0])
-
+                let tour_embeddings_to_ndarray = pack(this.state.tour_images_embeddings)
 
                 this.setState({
-                    tour_images_embeddings: ndarray(new Float32Array(embeddings_1d, [embeddings_length, dimension_length,]))
+                    tour_images_embeddings_ndarray: tour_embeddings_to_ndarray,
                 })
-//                console.log(this.state.tour_images_embeddings.shape)
+                console.log("shape of tour embeddings: ")
+                console.log(this.state.tour_images_embeddings_ndarray.shape)
             }).catch(error => console.log(error));
 
         await Font.loadAsync({
@@ -139,6 +129,13 @@ export default class DownloadPic extends Component {
         });
         this.setState({ fontLoaded: true });
 
+        let profile_embeddings_to_array = Object.values(this.state.profile_embeddings);
+        let profile_embeddings_to_ndarray = pack(profile_embeddings_to_array);
+        console.log("shape of profile embeddings:")
+        console.log(profile_embeddings_to_ndarray.shape);
+        this.setState({
+            profile_embeddings_ndarray: profile_embeddings_to_ndarray,
+        });
     };
 
     goBack() {
@@ -269,9 +266,8 @@ export default class DownloadPic extends Component {
     }
 
     render() {
-        this.state.tour_images_embeddings ? (
-            console.log("calculate angular distance fail.")
-//            console.log(this.get_angular_distances(this.state.tour_images_embeddings, this.state.profile_embeddings))
+        this.state.tour_images_embeddings_ndarray && this.state.profile_embeddings_ndarray? (
+            console.log(this.get_angular_distances(this.state.tour_images_embeddings_ndarray, this.state.profile_embeddings_ndarray))
         ) : null
 
         return(
