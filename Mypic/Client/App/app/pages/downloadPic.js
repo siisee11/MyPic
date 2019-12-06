@@ -21,27 +21,47 @@ import * as Font from "expo-font";
 import * as MediaLibrary from 'expo-media-library';
 import * as Permissions from 'expo-permissions';
 import * as FileSystem from 'expo-file-system';
+import ndarray from 'ndarray'
+import gemm from 'ndarray-gemm'
+import ops from 'ndarray-ops'
+import pack from 'ndarray-pack'
+
 
 var { height, width } = Dimensions.get('window');
 
 export default class DownloadPic extends Component {
     constructor(props){
         super(props);
+        /*
+        props : {
+            uid : user id
+            profile_embeddings: user's profile embeddings
+            tour_info : tour information
+            mypic_ref: reference to 'User/Mytour/<Tourname>'
+            tour_refs : reference to 'Tour/<Tourname>'
+        }
+        */
+
         this.state={
-            tour: this.props.tour_info,
-            images : [],
-            likelihoods : [],
-            my_images : [],
-            uris : [],
+            tour: this.props.tour_info, // copy from props for easy use
+            images : [],                // All images from myImages
+            likelihoods : [],           // All likelihoods from myImages
+            my_images : [],             // images above threshold
+            uris : [],                  // uri for download images (Unused)
             fontLoaded: false,
             threshold: 50,
+            profile_embeddings: this.props.profile_embeddings,
+            profile_embeddings_ndarray: null,
+            tour_images_embeddings: [],
+            tour_images_embeddings_ndarray: null,
         };
     }
 
     componentDidMount = async () => {
         this.props.mypic_ref
-            .get()
-            .then(res => {
+//            .get()
+            .onSnapshot(res => {
+//            .then(res => {
                 let data = res.data();
                 for (const key in data.myImages) {
                     let likelihood = data.myImages[key];
@@ -66,6 +86,41 @@ export default class DownloadPic extends Component {
 
             }).catch(error => console.log(error));
 
+
+        this.props.tour_ref
+            .collection("Embedding")
+//            .get().then( (querySnapshot) => {
+            .onSnapshot( (querySnapshot) => {
+                querySnapshot.forEach( (doc) => {
+                    let doc_data = doc.data();
+                    let doc_id = doc.id;
+                    let image_embeddings = new Array(); 
+                    let image_map = new Map();      // map image name and embedding
+                    for (var key in doc_data){
+                        value = doc_data[key]
+                        image_embeddings.push(value)
+                    }
+                    image_map.set("embeddings", image_embeddings);
+                    image_map.set("file_name", doc_id);
+
+//                    if (doc_id === '20190924_131430.jpg')
+//                        console.log(image_embeddings)
+
+                    let append_tour_images_embeddings= this.state.tour_images_embeddings.concat(image_embeddings);
+                    this.setState({
+                        tour_images_embeddings : append_tour_images_embeddings,
+                    })
+                })
+
+                let tour_embeddings_to_ndarray = pack(this.state.tour_images_embeddings)
+
+                this.setState({
+                    tour_images_embeddings_ndarray: tour_embeddings_to_ndarray,
+                })
+                console.log("shape of tour embeddings: ")
+                console.log(this.state.tour_images_embeddings_ndarray.shape)
+            }).catch(error => console.log(error));
+
         await Font.loadAsync({
             'Gaegu-Regular': require('../../assets/fonts/Gaegu/Gaegu-Regular.ttf'),
             'EastSeaDokdo-Regular': require('../../assets/fonts/East_Sea_Dokdo/EastSeaDokdo-Regular.ttf'),
@@ -74,11 +129,33 @@ export default class DownloadPic extends Component {
         });
         this.setState({ fontLoaded: true });
 
-//        console.log(this.props.profile_embeddings)
+        let profile_embeddings_to_array = Object.values(this.state.profile_embeddings);
+        let profile_embeddings_to_ndarray = pack(profile_embeddings_to_array);
+        console.log("shape of profile embeddings:")
+        console.log(profile_embeddings_to_ndarray.shape);
+        this.setState({
+            profile_embeddings_ndarray: profile_embeddings_to_ndarray,
+        });
     };
 
     goBack() {
         Actions.pop()
+    }
+
+    get_angular_distances(embs1, embs2) {
+        // Returns Cosine Angular Distance Matrix of given 2 sets of embeddings.
+        var distanceMatrix = ndarray(new Float32Array(embs1.shape[0] * embs2.shape[0]), [embs1.shape[0], embs2.shape[0]])
+        gemm(distanceMatrix, embs1, embs2.transpose(1, 0))
+
+        for (let i=0; i<embs1.shape[0]; ++i) {
+            ops.divseq(distanceMatrix.pick(i, null), ops.norm2(embs1.pick(i, null)))
+        }
+
+        for (let j=0; j<embs2.shape[0]; ++j) {
+            ops.divseq(distanceMatrix.pick(null, j), ops.norm2(embs2.pick(j, null)))
+        }
+
+        return distanceMatrix
     }
 
     saveData =async()=>{
@@ -137,8 +214,10 @@ export default class DownloadPic extends Component {
 
     renderSection() {
         return (
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', }}>
-                {this.renderGridImages()}
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginVertical: 2, }}>
+                {
+                    this.renderGridImages()
+                }
             </View>
         )
     }
@@ -187,6 +266,10 @@ export default class DownloadPic extends Component {
     }
 
     render() {
+        this.state.tour_images_embeddings_ndarray && this.state.profile_embeddings_ndarray? (
+            console.log(this.get_angular_distances(this.state.tour_images_embeddings_ndarray, this.state.profile_embeddings_ndarray))
+        ) : null
+
         return(
             <SafeAreaView style={styles.container}>
                 <DownloadPicHeader title="Download Pictures" />
@@ -195,7 +278,7 @@ export default class DownloadPic extends Component {
                     style={{
                         height : height / 5,
                         width: width,
-                        marginVertical: 5
+                        marginTop: 5,
                     }}>
                     { this.state.tour.tour_thumbnail? this.renderThumbnail() : null }
                 </View>
