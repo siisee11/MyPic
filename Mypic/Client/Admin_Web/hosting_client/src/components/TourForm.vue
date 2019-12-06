@@ -40,7 +40,11 @@
       <v-col sm="5" cols="12">
         <text-date-picker v-model="endedAt" label="End Date"/>
       </v-col>
-      
+
+      <v-col sm="10" cols="12">
+        <user-selector v-model="value.participants"/>
+      </v-col>
+
       <v-col sm="10" cols="12">
         <image-uploader v-model="value.images" label="Tour Images" :path="`/tour_images/${this.doc_id}/`"/>
       </v-col>
@@ -56,13 +60,15 @@ import 'firebase/firestore'
 import 'firebase/storage'
 import { isNullOrUndefined } from 'util'
 import FirebaseStorageImageUploader from '@/components/FirebaseStorageUploader'
+import FirebaseUserSelector from '@/components/FirebaseUserSelector'
 
 
 export default {
   props: ['value', 'page_title', 'doc_id'],
   components: {
     textDatePicker: TextDatePicker,
-    imageUploader: FirebaseStorageImageUploader
+    imageUploader: FirebaseStorageImageUploader,
+    userSelector: FirebaseUserSelector
   },
   data () {
     return {
