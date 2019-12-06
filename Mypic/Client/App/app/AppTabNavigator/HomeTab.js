@@ -74,6 +74,7 @@ export default class HomeTab extends Component {
                     let data = doc.data();
                     console.log(doc.id, " => ", data.tourName);
                     let tour_info = {
+                        tour_id: doc.id,
                         tour_name : data.tourName,
                         tour_description : data.description,
                         tour_thumbnail : data.thumbnail,
