@@ -76,15 +76,16 @@ export default class DownloadPic extends Component {
                         value = doc_data[key]
                         image_embeddings.push(value)
                     }
-//                    image_map.set("embeddings", image_embeddings);
-//                    image_map.set("file_name", doc_id);
+                    
+                    /* photo with only one face would fail, so just duplicate it */
+                    if (image_embeddings.length == 1) {
+                        image_embeddings.push(image_embeddings[0]);
+                    }
 
                     let append_file_name = this.state.file_names.concat(doc_id);
-                    let append_tour_images_embeddings= this.state.tour_images_embeddings.concat(image_embeddings);
                     let append_tour_images_embeddings_ndarray = this.state.tour_images_embeddings_ndarray.concat(pack(image_embeddings))
                     this.setState({
                         file_names : append_file_name,
-                        tour_images_embeddings : append_tour_images_embeddings,
                         tour_images_embeddings_ndarray: append_tour_images_embeddings_ndarray,
                     })
                 })
@@ -100,11 +101,14 @@ export default class DownloadPic extends Component {
         });
         this.setState({ fontLoaded: true });
       
+
         let profile_embeddings_to_array = Object.values(this.state.profile_embeddings);
+        /*
+        if (profile_embeddings_to_array.length == 1) {
+            profile_embeddings_to_array = profile_embeddings_to_array.push(profile_embeddings_to_array[0]);
+        }
+        */
         let profile_embeddings_to_ndarray = pack(profile_embeddings_to_array);
-//        let profile_embeddings_to_ndarray = pack(this.state.profile_embeddings);
-//        console.log("shape of profile embeddings:")
-//        console.log(profile_embeddings_to_ndarray.shape);
         this.setState({
             profile_embeddings_ndarray: profile_embeddings_to_ndarray,
         });
@@ -117,25 +121,29 @@ export default class DownloadPic extends Component {
     }
 
     update_my_images() {
-				this.setState({
+        this.setState({
             my_images: [],
         }, () => {
-				 console.log(this.state.my_images)
-        for (var i = 0 ; i < this.state.tour_images_embeddings_ndarray.length; i++) {
-            let distances = this.get_angular_distances(this.state.tour_images_embeddings_ndarray[i], this.state.profile_embeddings_ndarray);
-            let argmax = ops.argmax(distances);
-            let max = distances.get(argmax[0], argmax[1]);
-            if (max > this.state.threshold) {
-                this.getImage(this.state.file_names[i])
-								console.log(this.state.file_names[i])
-								console.log("added")
+            console.log(this.state.my_images)
+            for (var i = 0; i < this.state.tour_images_embeddings_ndarray.length; i++) {
+                let distances = ndarray(new Float32Array([0.01]), [1,1])
+                if (this.state.tour_images_embeddings_ndarray[i].shape[0] != 0){
+                    distances = this.get_angular_distances(this.state.tour_images_embeddings_ndarray[i], this.state.profile_embeddings_ndarray);
+                }
+                let argmax = ops.argmax(distances);
+                let max = distances.get(argmax[0], argmax[1]);
+                if (max > this.state.threshold) {
+                    this.getImage(this.state.file_names[i])
+                    console.log(this.state.file_names[i])
+                    console.log("added")
+                }
             }
-        }
 
-				})
+        })
     }
 
     get_angular_distances(embs1, embs2) {
+        console.log(embs1.shape[0], embs1.shape[1], embs2.shape[0], embs2.shape[1])
         // Returns Cosine Angular Distance Matrix of given 2 sets of embeddings.
         var distanceMatrix = ndarray(new Float32Array(embs1.shape[0] * embs2.shape[0]), [embs1.shape[0], embs2.shape[0]])
         gemm(distanceMatrix, embs1, embs2.transpose(1, 0))
@@ -286,7 +294,6 @@ export default class DownloadPic extends Component {
                             { Math.round(this.state.threshold*100)/100 }
                         </Text>
                         <Slider 
-//                            style={{width : width * 2 / 3, alignSelf:'center', marginTop:5,}}
                             style={{width : width * 2 / 3, marginTop:5,}}
                             maximumValue={1}
                             minimumValue={0}
@@ -295,9 +302,8 @@ export default class DownloadPic extends Component {
                             step={0.05} 
                             value={this.state.threshold}
                             onValueChange={(sliderValue) => {
-																console.log(sliderValue + " value changed")
-                                this.setState({ threshold : sliderValue, })
-                                this.update_my_images()
+                                    this.setState({ threshold : sliderValue, })
+                                    this.update_my_images()
                                 }
                             }
                         />
