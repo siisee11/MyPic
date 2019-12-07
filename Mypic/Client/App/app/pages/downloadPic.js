@@ -299,7 +299,7 @@ export default class DownloadPic extends Component {
                         <Slider 
                             style={{width : width * 2 / 3, marginTop:5,}}
                             maximumValue={1}
-                            minimumValue={0}
+                            minimumValue={0.4}
                             minimumTrackTintColor="#307ecc"
                             maximumTrackTintColor="#000000"
                             step={0.05} 
