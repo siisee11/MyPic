@@ -79,6 +79,7 @@ export default class DownloadPic extends Component {
 //                    image_map.set("embeddings", image_embeddings);
 //                    image_map.set("file_name", doc_id);
 
+										
                     let append_file_name = this.state.file_names.concat(doc_id);
                     let append_tour_images_embeddings= this.state.tour_images_embeddings.concat(image_embeddings);
                     let append_tour_images_embeddings_ndarray = this.state.tour_images_embeddings_ndarray.concat(pack(image_embeddings))
@@ -119,9 +120,12 @@ export default class DownloadPic extends Component {
     update_my_images() {
 				this.setState({
             my_images: [],
+//            file_names : [],
+//            tour_images_embeddings : [],
+//            tour_images_embeddings_ndarray: [],
         }, () => {
 				 console.log(this.state.my_images)
-        for (var i = 0 ; i < this.state.tour_images_embeddings_ndarray.length; i++) {
+	       for (var i = 0 ; i < this.state.tour_images_embeddings_ndarray.length; i++) {
             let distances = this.get_angular_distances(this.state.tour_images_embeddings_ndarray[i], this.state.profile_embeddings_ndarray);
             let argmax = ops.argmax(distances);
             let max = distances.get(argmax[0], argmax[1]);
@@ -129,8 +133,8 @@ export default class DownloadPic extends Component {
                 this.getImage(this.state.file_names[i])
 								console.log(this.state.file_names[i])
 								console.log("added")
-            }
-        }
+						  }
+					 }
 
 				})
     }
@@ -294,7 +298,7 @@ export default class DownloadPic extends Component {
                             maximumTrackTintColor="#000000"
                             step={0.05} 
                             value={this.state.threshold}
-                            onValueChange={(sliderValue) => {
+                            onSlidingComplete={(sliderValue) => {
 																console.log(sliderValue + " value changed")
                                 this.setState({ threshold : sliderValue, })
                                 this.update_my_images()
