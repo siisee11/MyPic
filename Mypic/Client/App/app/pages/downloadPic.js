@@ -25,6 +25,9 @@ import ndarray from 'ndarray'
 import gemm from 'ndarray-gemm'
 import ops from 'ndarray-ops'
 import pack from 'ndarray-pack'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/firestore'
 
 
 var { height, width } = Dimensions.get('window');
@@ -49,49 +52,18 @@ export default class DownloadPic extends Component {
             my_images : [],             // images above threshold
             uris : [],                  // uri for download images (Unused)
             fontLoaded: false,
-            threshold: 50,
+            threshold: 0.45,
+            file_names: [],
             profile_embeddings: this.props.profile_embeddings,
             profile_embeddings_ndarray: null,
             tour_images_embeddings: [],
-            tour_images_embeddings_ndarray: null,
+            tour_images_embeddings_ndarray: [],
         };
     }
 
     componentDidMount = async () => {
-        /*
-        this.props.mypic_ref
-//            .get()
-            .onSnapshot(res => {
-//            .then(res => {
-                let data = res.data();
-                for (const key in data.myImages) {
-                    let likelihood = data.myImages[key];
-                    let append_images = this.state.images.concat(key)
-                    this.setState(({
-                        images : append_images,
-                    }));
-                    let append_likelihood = this.state.likelihoods.concat(likelihood)
-                    this.setState(({
-                        likelihoods : append_likelihood,
-                    }));
-                }
-
-                this.state.images.map( (image, index) => {
-                    if (this.state.likelihoods[index] * 100 > this.state.threshold) {
-                        let append_my_images = this.state.my_images.concat(image);
-                        this.setState(({
-                            my_images : append_my_images,
-                        }));
-                    }
-                })
-                console.log(this.state.my_images);
-
-            }).catch(error => console.log(error));
-
-        console.log(this.props.tour_ref);
-        */
         
-        this.props.tour_ref
+        await this.props.tour_ref
             .collection("Embedding")
             .get().then( (querySnapshot) => {
 //            .onSnapshot( (querySnapshot) => {
@@ -99,27 +71,24 @@ export default class DownloadPic extends Component {
                     let doc_data = doc.data();
                     let doc_id = doc.id;
                     let image_embeddings = new Array(); 
-                    let image_map = new Map();      // map image name and embedding
+//                    let image_map = new Map();      // map image name and embedding
                     for (var key in doc_data){
                         value = doc_data[key]
                         image_embeddings.push(value)
                     }
-                    image_map.set("embeddings", image_embeddings);
-                    image_map.set("file_name", doc_id);
+//                    image_map.set("embeddings", image_embeddings);
+//                    image_map.set("file_name", doc_id);
 
+                    let append_file_name = this.state.file_names.concat(doc_id);
                     let append_tour_images_embeddings= this.state.tour_images_embeddings.concat(image_embeddings);
+                    let append_tour_images_embeddings_ndarray = this.state.tour_images_embeddings_ndarray.concat(pack(image_embeddings))
                     this.setState({
+                        file_names : append_file_name,
                         tour_images_embeddings : append_tour_images_embeddings,
+                        tour_images_embeddings_ndarray: append_tour_images_embeddings_ndarray,
                     })
                 })
 
-                console.log(this.state.tour_images_embeddings.length);
-                let tour_embeddings_to_ndarray = pack(this.state.tour_images_embeddings)
-                this.setState({
-                    tour_images_embeddings_ndarray: tour_embeddings_to_ndarray,
-                })
-                console.log("shape of tour embeddings: ")
-                console.log(this.state.tour_images_embeddings_ndarray.shape)
             }).catch(error => console.log(error));
 
             
@@ -130,18 +99,36 @@ export default class DownloadPic extends Component {
             'Yeon_Sung-Regular': require('../../assets/fonts/Yeon_Sung/YeonSung-Regular.ttf'),
         });
         this.setState({ fontLoaded: true });
-
+      
         let profile_embeddings_to_array = Object.values(this.state.profile_embeddings);
         let profile_embeddings_to_ndarray = pack(profile_embeddings_to_array);
-        console.log("shape of profile embeddings:")
-        console.log(profile_embeddings_to_ndarray.shape);
+//        let profile_embeddings_to_ndarray = pack(this.state.profile_embeddings);
+//        console.log("shape of profile embeddings:")
+//        console.log(profile_embeddings_to_ndarray.shape);
         this.setState({
             profile_embeddings_ndarray: profile_embeddings_to_ndarray,
         });
+
+        this.update_my_images()
     };
 
     goBack() {
         Actions.pop()
+    }
+
+    update_my_images() {
+        this.setState({
+            my_images: [],
+        })
+        console.log(this.state.my_images)
+        for (var i = 0 ; i < this.state.tour_images_embeddings_ndarray.length; i++) {
+            let distances = this.get_angular_distances(this.state.tour_images_embeddings_ndarray[i], this.state.profile_embeddings_ndarray);
+            let argmax = ops.argmax(distances);
+            let max = distances.get(argmax[0], argmax[1]);
+            if (max > this.state.threshold) {
+                this.getImage(this.state.file_names[i])
+            }
+        }
     }
 
     get_angular_distances(embs1, embs2) {
@@ -186,12 +173,13 @@ export default class DownloadPic extends Component {
         this.goBack();
     };
 
-    getImage = async (image) => {
-        const ref = firebase.storage().ref().child("tour_images/" + this.state.tour.tour_name + image);
+    getImage = (image) => {
+        const ref = firebase.storage().ref().child("tour_images/" + this.state.tour.tour_id + '/' + image);
         ref.getDownloadURL().then( (url) => {
-            this.setState(prevState => ({
-                uris : [url, ...prevState.uris]
-            }));
+            let append_my_images = this.state.my_images.concat(url);
+            this.setState({
+                my_images: append_my_images,
+            })
         }).catch( (error) => {
             console.log('cannot get image from firebase');
         });
@@ -268,11 +256,6 @@ export default class DownloadPic extends Component {
     }
 
     render() {
-        this.state.tour_images_embeddings_ndarray && this.state.profile_embeddings_ndarray? (
-            console.log("get_angular_distances")
-//            console.log(this.get_angular_distances(this.state.tour_images_embeddings_ndarray, this.state.profile_embeddings_ndarray))
-        ) : null
-
         return(
             <SafeAreaView style={styles.container}>
                 <DownloadPicHeader title="Download Pictures" />
@@ -293,16 +276,26 @@ export default class DownloadPic extends Component {
                     </View>
                 </ScrollView>
 
-                    <Slider 
-                        style={{width : width * 2 / 3, alignSelf:'center', marginTop:5,}}
-                        maximumValue={100}
-                        minimumValue={0}
-                        minimumTrackTintColor="#307ecc"
-                        maximumTrackTintColor="#000000"
-                        step={1} 
-                        value={this.state.threshold}
-                        onValueChange={(sliderValue) => this.setState({ threshold : sliderValue })}
-                    />
+                    <View style={{ flexDirection:'row', justifyContent:'center'}}>
+                        <Text>
+                            { Math.round(this.state.threshold*100)/100 }
+                        </Text>
+                        <Slider 
+//                            style={{width : width * 2 / 3, alignSelf:'center', marginTop:5,}}
+                            style={{width : width * 2 / 3, marginTop:5,}}
+                            maximumValue={1}
+                            minimumValue={0}
+                            minimumTrackTintColor="#307ecc"
+                            maximumTrackTintColor="#000000"
+                            step={0.05} 
+                            value={this.state.threshold}
+                            onValueChange={(sliderValue) => {
+                                this.setState({ threshold : sliderValue, })
+                                this.update_my_images()
+                                }
+                            }
+                        />
+                    </View>
 
                     <TouchableOpacity style={{...styles.button}}>
                         <Text style={{fontSize:20, fontWeight: 'bold'}} onPress={this.saveData}>
