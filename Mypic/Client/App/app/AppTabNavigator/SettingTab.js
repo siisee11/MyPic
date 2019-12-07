@@ -23,30 +23,30 @@ export default class SettingTab extends Component {
         this.setState({ fontLoaded: true });
     }
 		
-		async getTermsandConditions() {
-			return fetch("https://raw.githubusercontent.com/k-young-passionate/TermsandConditions/master/terms-and-conditions.json")
-				.then((response) => response.json())
-				.then((responseJson) => {
+	async getTermsandConditions() {
+		return fetch("https://raw.githubusercontent.com/k-young-passionate/TermsandConditions/master/terms-and-conditions.json")
+			.then((response) => response.json())
+			.then((responseJson) => {
 
-					this.setState({
-						dataSource: responseJson.terms,
-					}, function(){
-						//ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
-					});
-
-				})
-				.catch((error) =>{
-					console.error(error);
+				this.setState({
+					dataSource: responseJson.terms,
+				}, function(){
+					//ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
 				});
 
-		}
+			})
+			.catch((error) =>{
+				console.error(error);
+			});
 
-		setModalVisible(visible) {
-			this.setState({modalVisible: visible});
-			if(visible){
-				return this.getTermsandConditions()
-			}
+	}
+
+	setModalVisible(visible) {
+		this.setState({modalVisible: visible});
+		if(visible){
+			return this.getTermsandConditions()
 		}
+	}
 
     render() {
         return (
