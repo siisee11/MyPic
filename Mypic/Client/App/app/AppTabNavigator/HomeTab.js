@@ -27,7 +27,6 @@ export default class HomeTab extends Component {
         super()
         this.state={
             tours: [],
-            mypic_refs: [],
             tour_refs: [],
             thumbnails: [],
             user: {
@@ -50,7 +49,6 @@ export default class HomeTab extends Component {
             uid: this.state.user.uid,
             profile_embeddings: this.state.profile_embeddings,
             tour_info : this.state.tours[index],
-            mypic_ref: this.state.mypic_refs[index],
             tour_ref : this.state.tour_refs[index],
         })
     }
@@ -86,21 +84,6 @@ export default class HomeTab extends Component {
                     this.setState({
                         tour_refs : tour_ref_append,
                         tours : append_tours,
-                    })
-                })
-            })
-
-
-        await firebase.firestore()
-            .collection("User")
-            .doc(this.state.user.uid)
-            .collection("MyTour")
-            .get().then( (querySnapshot) => {
-                querySnapshot.forEach( (doc) => {
-                    let doc_data = doc.data();
-                    let append_mypic_refs = this.state.mypic_refs.concat(doc_data.thisRef);
-                    this.setState({
-                        mypic_refs : append_mypic_refs,
                     })
                 })
             })
