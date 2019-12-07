@@ -65,7 +65,6 @@ export default class ProfileTab extends Component {
 
     urlToFilename(url) {
         let filename = url.split('%')[2].split('?')[0].slice(2);
-        console.log(filename)
         return filename
     }
 
@@ -83,11 +82,26 @@ export default class ProfileTab extends Component {
         });
 
         firebase
+            .firestore()
+            .collection('User')
+            .doc(this.state.user.uid)
+            .get().then( (doc) => {
+                if (doc.exists) {
+                    console.log("Document data:", doc.data());
+                } else {
+                    console.log("No such document!");
+                }
+            }).catch(function(error) {
+                console.log("Error getting document:", error);
+            });
+
+        firebase
                 .firestore()
                 .collection('User')
                 .doc(this.state.user.uid)
                 .update({
                     uris: firebase.firestore.FieldValue.arrayRemove(uri),
+                    ['embeddings.' + index] : firebase.firestore.FieldValue.delete()
                 }).then((result) => {
                     console.log("URI uploaded to cloud firestore.")
                 }).catch((error) => {
@@ -106,7 +120,7 @@ export default class ProfileTab extends Component {
         const response = await fetch(uri);
         const blob = await response.blob();
 
-        const ref = firebase.storage().ref().child("user_images/" + this.state.user.uid + '/'+ imageName);
+        const ref = firebase.storage().ref().child("user_images/" + this.state.user.uid + '/'+ imageName + '.jpg');
         await ref.put(blob);
 
         ref.getDownloadURL().then( (url) => {
