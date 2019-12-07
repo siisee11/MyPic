@@ -44,6 +44,7 @@ export default class SettingTab extends Component {
 		}
 
 
+
 		async getTermsandConditions() {
 			return fetch("https://raw.githubusercontent.com/k-young-passionate/TermsandConditions/master/terms-and-conditions.json")
 				.then((response) => response.json())
@@ -53,7 +54,6 @@ export default class SettingTab extends Component {
 						dataSource: responseJson.terms,
 					}, function(){
 						//ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
-					});
 				});
 
 			})
@@ -62,6 +62,7 @@ export default class SettingTab extends Component {
 			});
 
 	}
+
 
 	setModalVisible(visible) {
 		this.setState({modalVisible: visible});
