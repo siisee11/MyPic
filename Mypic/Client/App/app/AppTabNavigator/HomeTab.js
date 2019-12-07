@@ -9,7 +9,6 @@ import 'firebase/auth'
 import 'firebase/firestore'
 
 import MyHeader from '../components/MyHeader'
-import DownloadPic from '../pages/downloadPic'
 import {Actions} from 'react-native-router-flux';
 
 let SCREEN_WIDTH = Dimensions.get('window').width;

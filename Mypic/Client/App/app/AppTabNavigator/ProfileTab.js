@@ -81,6 +81,7 @@ export default class ProfileTab extends Component {
             console.log(error)
         });
 
+        /*
         firebase
             .firestore()
             .collection('User')
@@ -94,6 +95,7 @@ export default class ProfileTab extends Component {
             }).catch(function(error) {
                 console.log("Error getting document:", error);
             });
+        */
 
         firebase
                 .firestore()
