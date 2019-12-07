@@ -34,6 +34,9 @@
         "googleSignIn": {
           "apiKey": "AIzaSyBtErZYm0vP-Glc9wqea8pfvHJf-w-UpFs",
           "certificateHash": "B374DFB13D0E6267176DD5D8A76218919DF09824"
+        },
+        "googleMaps": {
+          "apiKey" :"AIzaSyBtErZYm0vP-Glc9wqea8pfvHJf-w-UpFs"
         }
       }
     },

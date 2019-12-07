@@ -54,20 +54,21 @@ export default class SettingTab extends Component {
 					}, function(){
 						//ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
 					});
-
-				})
-				.catch((error) =>{
-					console.error(error);
 				});
 
-		}
+			})
+			.catch((error) =>{
+				console.error(error);
+			});
 
-		setModalVisible(visible) {
-			this.setState({modalVisible: visible});
-			if(visible){
-				return this.getTermsandConditions()
-			}
+	}
+
+	setModalVisible(visible) {
+		this.setState({modalVisible: visible});
+		if(visible){
+			return this.getTermsandConditions()
 		}
+	}
 
 		setTeamVisible(visible) {
 			this.setState({teamVisible: visible});
