@@ -117,18 +117,22 @@ export default class DownloadPic extends Component {
     }
 
     update_my_images() {
-        this.setState({
+				this.setState({
             my_images: [],
-        })
-        console.log(this.state.my_images)
+        }, () => {
+				 console.log(this.state.my_images)
         for (var i = 0 ; i < this.state.tour_images_embeddings_ndarray.length; i++) {
             let distances = this.get_angular_distances(this.state.tour_images_embeddings_ndarray[i], this.state.profile_embeddings_ndarray);
             let argmax = ops.argmax(distances);
             let max = distances.get(argmax[0], argmax[1]);
             if (max > this.state.threshold) {
                 this.getImage(this.state.file_names[i])
+								console.log(this.state.file_names[i])
+								console.log("added")
             }
         }
+
+				})
     }
 
     get_angular_distances(embs1, embs2) {
@@ -181,6 +185,7 @@ export default class DownloadPic extends Component {
                 my_images: append_my_images,
             })
         }).catch( (error) => {
+						console.log(error)
             console.log('cannot get image from firebase');
         });
     };
@@ -290,6 +295,7 @@ export default class DownloadPic extends Component {
                             step={0.05} 
                             value={this.state.threshold}
                             onValueChange={(sliderValue) => {
+																console.log(sliderValue + " value changed")
                                 this.setState({ threshold : sliderValue, })
                                 this.update_my_images()
                                 }
