@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     createTourDoc: function () {
-      firebase.firestore().collection('Tour').doc().set(this.tourDoc).then(() => {
+      firebase.firestore().collection('Tour').doc(this.docId).set(this.tourDoc).then(() => {
         this.$router.go(-1)
       }).catch((error) => {
         alert(error)

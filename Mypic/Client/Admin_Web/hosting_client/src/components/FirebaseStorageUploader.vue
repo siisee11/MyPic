@@ -48,7 +48,7 @@ export default {
       for (let i = 0; i < val.length; i++) {
         const file = val[i]
         this.upload_GetURL_doThis(`/tour_images/${this.doc_id}/${file.name}`, file, (url) => {
-          this.value.images.push(url)
+          this.value.push(url)
         })
       }
     }

@@ -94,10 +94,10 @@ export default {
     }
   },
   methods: {
-    uploadAndGetURL: async function (path, file) {
+    upload_GetURL_doThis: async function (path, file, func) {
       var uploadsnapshot = await firebase.storage().ref(path).put(file)
       var url = await uploadsnapshot.ref.getDownloadURL()
-      return url
+      func(url)
     },
   },
   watch: {
