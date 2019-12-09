@@ -66,8 +66,9 @@ export default class HomeTab extends Component {
 
         firebase.firestore()
             .collection("Tour")
-            .onSnapshot((querySnapshot) => {
-                querySnapshot.forEach( (doc) => {
+            .onSnapshot((snapshot) => {
+                snapshot.docChanges().forEach( (change) => {
+                    let doc = change.doc
                     let data = doc.data();
                     console.log(doc.id, " => ", data.tourName);
                     let tour_info = {

@@ -106,11 +106,9 @@ export default class DownloadPic extends Component {
       
 
         let profile_embeddings_to_array = Object.values(this.state.profile_embeddings);
-        /*
         if (profile_embeddings_to_array.length == 1) {
             profile_embeddings_to_array = profile_embeddings_to_array.push(profile_embeddings_to_array[0]);
         }
-        */
         let profile_embeddings_to_ndarray = pack(profile_embeddings_to_array);
         this.setState({
             profile_embeddings_ndarray: profile_embeddings_to_ndarray,
@@ -126,9 +124,6 @@ export default class DownloadPic extends Component {
     update_my_images() {
         this.setState({
             my_images: [],
-//            file_names : [],
-//            tour_images_embeddings : [],
-//            tour_images_embeddings_ndarray: [],
         }, () => {
             let profile_embeddings_ndarray = this.state.profile_embeddings_ndarray;
             for (var i = 0; i < this.state.tour_images_embeddings_ndarray.length; i++) {
@@ -316,16 +311,14 @@ export default class DownloadPic extends Component {
                             maximumTrackTintColor="#000000"
                             step={0.05} 
                             value={this.state.threshold}
-
-														onValueChange={(sliderValue)=>{
-																this.setState({threshold : sliderValue, })
-															}
-														}
+                            onValueChange={(sliderValue)=>{
+								this.setState({threshold : sliderValue, })
+							    }
+							}
                             onSlidingComplete={(sliderValue) => {
-																console.log(sliderValue + " value changed")
                                 this.setState({ threshold : sliderValue, })
                                 this.update_my_images()
-															}
+								}
                             }
                         />
                     </View>
