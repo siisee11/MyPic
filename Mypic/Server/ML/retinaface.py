@@ -172,6 +172,7 @@ class RetinaFace:
 
   def detect(self, img, threshold=0.5, scales=[1.0], do_flip=False):
     #print('in_detect', threshold, scales, do_flip, do_nms)
+    self.ctx.empty_cache()
     proposals_list = []
     scores_list = []
     landmarks_list = []

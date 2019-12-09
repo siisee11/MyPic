@@ -25,6 +25,8 @@ import ndarray from 'ndarray'
 import gemm from 'ndarray-gemm'
 import ops from 'ndarray-ops'
 import pack from 'ndarray-pack'
+import unpack from 'ndarray-unpack'
+import crows from 'ndarray-concat-rows'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
@@ -128,25 +130,35 @@ export default class DownloadPic extends Component {
 //            tour_images_embeddings : [],
 //            tour_images_embeddings_ndarray: [],
         }, () => {
-            console.log(this.state.my_images)
+            let profile_embeddings_ndarray = this.state.profile_embeddings_ndarray;
             for (var i = 0; i < this.state.tour_images_embeddings_ndarray.length; i++) {
                 let distances = ndarray(new Float32Array([0.01]), [1,1])
                 if (this.state.tour_images_embeddings_ndarray[i].shape[0] != 0){
-                    distances = this.get_angular_distances(this.state.tour_images_embeddings_ndarray[i], this.state.profile_embeddings_ndarray);
+                    distances = this.get_angular_distances(this.state.tour_images_embeddings_ndarray[i], profile_embeddings_ndarray);
                 }
                 let argmax = ops.argmax(distances);
                 let max = distances.get(argmax[0], argmax[1]);
                 if (max > this.state.threshold) {
                     this.getImage(this.state.file_names[i])
-                    console.log(this.state.file_names[i])
                     console.log("added")
+                }
+
+
+                if (max > 0.65 && profile_embeddings_ndarray.shape[0] < 6) { 
+                    // this probably my face so reuse it as profile embeddings.
+                    let unpacked_tour_embeddings = unpack(this.state.tour_images_embeddings_ndarray[i]);
+                    let expected_my_embedding = unpacked_tour_embeddings[argmax[0]];
+                    let unpacked_profile_embeddings = unpack(profile_embeddings_ndarray);
+                    unpacked_profile_embeddings.push(expected_my_embedding);
+                    profile_embeddings_ndarray = pack(unpacked_profile_embeddings);
+                    console.log(profile_embeddings_ndarray.shape)
                 }
             }
         })
     }
 
     get_angular_distances(embs1, embs2) {
-        console.log(embs1.shape[0], embs1.shape[1], embs2.shape[0], embs2.shape[1])
+//        console.log(embs1.shape[0], embs1.shape[1], embs2.shape[0], embs2.shape[1])
         // Returns Cosine Angular Distance Matrix of given 2 sets of embeddings.
         var distanceMatrix = ndarray(new Float32Array(embs1.shape[0] * embs2.shape[0]), [embs1.shape[0], embs2.shape[0]])
         gemm(distanceMatrix, embs1, embs2.transpose(1, 0))
@@ -299,7 +311,7 @@ export default class DownloadPic extends Component {
                         <Slider 
                             style={{width : width * 2 / 3, marginTop:5,}}
                             maximumValue={1}
-                            minimumValue={0}
+                            minimumValue={0.4}
                             minimumTrackTintColor="#307ecc"
                             maximumTrackTintColor="#000000"
                             step={0.05} 
