@@ -56,7 +56,7 @@ export default class DownloadPic extends Component {
             fontLoaded: false,
             threshold: 0.45,
             file_names: [],
-            profile_embeddings: this.props.profile_embeddings,
+            profile_embeddings: [],
             profile_embeddings_ndarray: null,
             tour_images_embeddings: [],
             tour_images_embeddings_ndarray: [],
@@ -95,6 +95,40 @@ export default class DownloadPic extends Component {
 
             }).catch(error => console.log(error));
 
+        await firebase.firestore().collection("User")
+        .doc(this.props.uid)
+        .collection("Embedding")
+        .get().then( (querySnapshot) => {
+//        .onSnapshot( (querySnapshot) => {
+            querySnapshot.forEach( (doc) => {
+                let doc_data = doc.data();
+                let doc_id = doc.id;
+                let image_embeddings = new Array(); 
+    //                    let image_map = new Map();      // map image name and embedding
+                for (var key in doc_data){
+                    value = doc_data[key]
+                    image_embeddings.push(value)
+                }
+                
+                let append_profile_embeddings = this.state.profile_embeddings.concat(image_embeddings)
+                this.setState({
+                    profile_embeddings: append_profile_embeddings,
+                })
+            })
+            console.log(this.state.profile_embeddings.length)
+
+            let profile_embeddings_to_array = this.state.profile_embeddings;
+            if (profile_embeddings_to_array.length == 1) {
+                profile_embeddings_to_array = profile_embeddings_to_array.push(profile_embeddings_to_array[0]);
+            }
+            let profile_embeddings_to_ndarray = pack(profile_embeddings_to_array);
+            this.setState({
+                profile_embeddings_ndarray: profile_embeddings_to_ndarray,
+            });
+            console.log(this.state.profile_embeddings_ndarray.shape)
+
+        }).catch(error => console.log(error));
+
             
         await Font.loadAsync({
             'Gaegu-Regular': require('../../assets/fonts/Gaegu/Gaegu-Regular.ttf'),
@@ -103,17 +137,6 @@ export default class DownloadPic extends Component {
             'Yeon_Sung-Regular': require('../../assets/fonts/Yeon_Sung/YeonSung-Regular.ttf'),
         });
         this.setState({ fontLoaded: true });
-      
-
-//        let profile_embeddings_to_array = Object.values(this.state.profile_embeddings);
-        let profile_embeddings_to_array = this.state.profile_embeddings;
-        if (profile_embeddings_to_array.length == 1) {
-            profile_embeddings_to_array = profile_embeddings_to_array.push(profile_embeddings_to_array[0]);
-        }
-        let profile_embeddings_to_ndarray = pack(profile_embeddings_to_array);
-        this.setState({
-            profile_embeddings_ndarray: profile_embeddings_to_ndarray,
-        });
 
         this.update_my_images()
     };
@@ -138,7 +161,6 @@ export default class DownloadPic extends Component {
                     this.getImage(this.state.file_names[i])
                     console.log("added")
                 }
-
 
                 if (max > 0.65 && profile_embeddings_ndarray.shape[0] < 6 && global.ReuseFace) { 
                     // this probably my face so reuse it as profile embeddings.
