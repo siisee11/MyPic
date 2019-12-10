@@ -40,6 +40,7 @@ export default class App extends Component {
     this.state={
       isReady : false
     };
+    global.ReuseFace = false;
   }
 
   componentDidMount() {

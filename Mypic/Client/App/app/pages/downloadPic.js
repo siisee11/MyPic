@@ -124,7 +124,7 @@ export default class DownloadPic extends Component {
     update_my_images() {
         this.setState({
             my_images: [],
-        }, () => {
+        }, async () => {
             let profile_embeddings_ndarray = this.state.profile_embeddings_ndarray;
             for (var i = 0; i < this.state.tour_images_embeddings_ndarray.length; i++) {
                 let distances = ndarray(new Float32Array([0.01]), [1,1])
@@ -139,7 +139,7 @@ export default class DownloadPic extends Component {
                 }
 
 
-                if (max > 0.65 && profile_embeddings_ndarray.shape[0] < 6) { 
+                if (max > 0.65 && profile_embeddings_ndarray.shape[0] < 6 && global.ReuseFace) { 
                     // this probably my face so reuse it as profile embeddings.
                     let unpacked_tour_embeddings = unpack(this.state.tour_images_embeddings_ndarray[i]);
                     let expected_my_embedding = unpacked_tour_embeddings[argmax[0]];
