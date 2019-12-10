@@ -53,7 +53,7 @@ export default class DownloadPic extends Component {
             likelihoods : [],           // All likelihoods from myImages
             my_images : [],             // images above threshold
             my_images_uri : [],             // images above threshold
-      //      origin_my_images : [],             // images above threshold
+            my_origin_images: [],             // images above threshold
             uris : [],                  // uri for download images (Unused)
             fontLoaded: false,
             threshold: 0.45,
@@ -127,7 +127,7 @@ export default class DownloadPic extends Component {
         this.setState({
 			//origin_my_images: [],
             my_images: [],
-            my_images_url: [],
+            my_origin_images: [],
         }, async () => {
             let profile_embeddings_ndarray = this.state.profile_embeddings_ndarray;
             for (var i = 0; i < this.state.tour_images_embeddings_ndarray.length; i++) {
@@ -178,7 +178,7 @@ export default class DownloadPic extends Component {
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
         if (status == 'granted') {
-            this.state.origin_my_images.map(async (img_uri) => {
+            this.state.my_origin_images.map(async (img_uri) => {
                 let img_name = img_uri.split('%')[2].split('?')[0].substring(2);
 
                 const file = await FileSystem.downloadAsync(
@@ -206,7 +206,9 @@ export default class DownloadPic extends Component {
 		let append_img = this.state.my_image_url;
 		this.setState({
 			my_image_url : append_img,
-		});
+        });
+        
+        // get thumbnail of image url
         const ref = firebase.storage().ref().child("tour_images/" + this.state.tour.tour_id + thumbimg );
         ref.getDownloadURL().then( (url) => {
             let append_my_images = this.state.my_images.concat(url);
@@ -214,7 +216,19 @@ export default class DownloadPic extends Component {
                 my_images: append_my_images,
             })
         }).catch( (error) => {
-						console.log(error)
+            console.log(error)
+            console.log('cannot get image from firebase');
+        });
+
+        // get original image url
+        const ref_origin = firebase.storage().ref().child("tour_images/" + this.state.tour.tour_id + '/' + image);
+        ref_origin.getDownloadURL().then( (url) => {
+            let append_my_origin_images = this.state.my_origin_images.concat(url);
+            this.setState({
+                my_origin_images: append_my_origin_images,
+            })
+        }).catch( (error) => {
+            console.log(error)
             console.log('cannot get image from firebase');
         });
     };
