@@ -10,6 +10,8 @@ import 'firebase/firestore'
 
 import MyHeader from '../components/MyHeader';
 import ImageBrowser from "../components/ImageBrower";
+//import { ImageBrowser } from 'expo-multiple-media-imagepicker';
+//import {ImageBrowser,CameraBrowser} from 'expo-multiple-imagepicker';
 
 var { height, width } = Dimensions.get('window');
 
@@ -68,6 +70,12 @@ export default class ProfileTab extends Component {
         return filename
     }
 
+    fileToFilename(file) {
+        let filename_arr = file.split('/');
+        let filename = filename_arr[filename_arr.length - 1]
+        return filename
+    }
+
     onLongPress= (index) => {
         //handler for Long Click
         let uri = this.state.data[index];
@@ -75,41 +83,30 @@ export default class ProfileTab extends Component {
         let ref = firebase.storage().ref().child("user_images/" + this.state.user.uid + '/' + imageName)
 
         ref.delete().then(function() {
-            Alert.alert(index + ' image deleted');
+            Alert.alert(imageName + ' image deleted');
         }).catch(function(error) {
-            // Uh-oh, an error occurred!
             console.log(error)
         });
 
-        /*
         firebase
             .firestore()
             .collection('User')
             .doc(this.state.user.uid)
-            .get().then( (doc) => {
-                if (doc.exists) {
-                    console.log("Document data:", doc.data());
-                } else {
-                    console.log("No such document!");
-                }
-            }).catch(function(error) {
-                console.log("Error getting document:", error);
+            .update({
+                uris: firebase.firestore.FieldValue.arrayRemove(uri),
+            }).then((result) => {
+                console.log("URI uploaded to cloud firestore.")
+            }).catch((error) => {
+                console.log(error)
             });
-        */
-
+        
         firebase
-                .firestore()
-                .collection('User')
-                .doc(this.state.user.uid)
-                .update({
-                    uris: firebase.firestore.FieldValue.arrayRemove(uri),
-                    ['embeddings.' + index] : firebase.firestore.FieldValue.delete()
-                }).then((result) => {
-                    console.log("URI uploaded to cloud firestore.")
-                }).catch((error) => {
-                    console.log(error)
-                });
-
+            .firestore()
+            .collection('User')
+            .doc(this.state.user.uid)
+            .collection('Embedding')
+            .doc(imageName)
+            .delete()
 
         let filteredArray = this.state.data.filter((_, i) => i !== index)
         this.setState({
@@ -118,11 +115,14 @@ export default class ProfileTab extends Component {
 
     };
 
-    uploadImage = async (uri, imageName) => {
+    uploadImage = async (uri, index) => {
+        console.log(uri)
+        const filename = this.fileToFilename(uri);
+        console.log(filename)
         const response = await fetch(uri);
         const blob = await response.blob();
 
-        const ref = firebase.storage().ref().child("user_images/" + this.state.user.uid + '/'+ imageName + '.jpg');
+        const ref = firebase.storage().ref().child("user_images/" + this.state.user.uid + '/'+ filename);
         await ref.put(blob);
 
         ref.getDownloadURL().then( (url) => {
