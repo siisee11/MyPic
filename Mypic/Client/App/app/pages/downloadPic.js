@@ -52,6 +52,8 @@ export default class DownloadPic extends Component {
             images : [],                // All images from myImages
             likelihoods : [],           // All likelihoods from myImages
             my_images : [],             // images above threshold
+            my_images_uri : [],             // images above threshold
+      //      origin_my_images : [],             // images above threshold
             uris : [],                  // uri for download images (Unused)
             fontLoaded: false,
             threshold: 0.45,
@@ -123,7 +125,9 @@ export default class DownloadPic extends Component {
 
     update_my_images() {
         this.setState({
+			//origin_my_images: [],
             my_images: [],
+            my_images_url: [],
         }, async () => {
             let profile_embeddings_ndarray = this.state.profile_embeddings_ndarray;
             for (var i = 0; i < this.state.tour_images_embeddings_ndarray.length; i++) {
@@ -172,8 +176,9 @@ export default class DownloadPic extends Component {
     saveData =async()=>{
         alert('Saving to local device finish in few seconds.');
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
         if (status == 'granted') {
-            this.state.my_images.map(async (img_uri) => {
+            this.state.origin_my_images.map(async (img_uri) => {
                 let img_name = img_uri.split('%')[2].split('?')[0].substring(2);
 
                 const file = await FileSystem.downloadAsync(
@@ -196,7 +201,13 @@ export default class DownloadPic extends Component {
     };
 
     getImage = (image) => {
-        const ref = firebase.storage().ref().child("tour_images/" + this.state.tour.tour_id + '/' + image);
+		var imagebyte = image.split('.');
+		var thumbimg = '/thumbnails/' + imagebyte[0] + "_200x200." + imagebyte[1];
+		let append_img = this.state.my_image_url;
+		this.setState({
+			my_image_url : append_img,
+		});
+        const ref = firebase.storage().ref().child("tour_images/" + this.state.tour.tour_id + thumbimg );
         ref.getDownloadURL().then( (url) => {
             let append_my_images = this.state.my_images.concat(url);
             this.setState({
@@ -370,3 +381,16 @@ const styles = StyleSheet.create({
         elevation: 2
     },
 });
+
+
+
+
+/*
+
+  지금 getImage에서 thumbnail하고 실제 image 경로만 받아서
+  전자는 my_images[] 에, 후자는 my_images_url 에 넣어줬으니깐
+  save_data 에서 my_images_url 이용해서 async하게 이미지 다운받으면서 저장해주면 될듯???? 
+  ㅎㅇㅌ
+
+
+   */
