@@ -395,16 +395,3 @@ const styles = StyleSheet.create({
         elevation: 2
     },
 });
-
-
-
-
-/*
-
-  지금 getImage에서 thumbnail하고 실제 image 경로만 받아서
-  전자는 my_images[] 에, 후자는 my_images_url 에 넣어줬으니깐
-  save_data 에서 my_images_url 이용해서 async하게 이미지 다운받으면서 저장해주면 될듯???? 
-  ㅎㅇㅌ
-
-
-   */
