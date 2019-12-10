@@ -117,7 +117,6 @@ export default class DownloadPic extends Component {
                     profile_embeddings: append_profile_embeddings,
                 })
             })
-            console.log(this.state.profile_embeddings.length)
 
             let profile_embeddings_to_array = this.state.profile_embeddings;
             if (profile_embeddings_to_array.length == 1) {
@@ -149,7 +148,6 @@ export default class DownloadPic extends Component {
 
     update_my_images() {
         this.setState({
-			//origin_my_images: [],
             my_images: [],
             my_origin_images: [],
         }, async () => {
@@ -173,7 +171,6 @@ export default class DownloadPic extends Component {
                     let unpacked_profile_embeddings = unpack(profile_embeddings_ndarray);
                     unpacked_profile_embeddings.push(expected_my_embedding);
                     profile_embeddings_ndarray = pack(unpacked_profile_embeddings);
-                    console.log(profile_embeddings_ndarray.shape)
                 }
             }
         })
@@ -226,10 +223,6 @@ export default class DownloadPic extends Component {
     getImage = (image) => {
 		var imagebyte = image.split('.');
 		var thumbimg = '/thumbnails/' + imagebyte[0] + "_200x200." + imagebyte[1];
-		let append_img = this.state.my_image_url;
-		this.setState({
-			my_image_url : append_img,
-        });
         
         // get thumbnail of image url
         const ref = firebase.storage().ref().child("tour_images/" + this.state.tour.tour_id + thumbimg );
@@ -239,7 +232,10 @@ export default class DownloadPic extends Component {
                 my_images: append_my_images,
             })
         }).catch( (error) => {
-            console.log(error)
+            let append_my_images = this.state.my_images.concat("no");
+            this.setState({
+                my_images: append_my_images,
+            })
             console.log('cannot get image from firebase');
         });
 
@@ -258,6 +254,9 @@ export default class DownloadPic extends Component {
 
     renderGridImages() {
         return this.state.my_images.map((image, index) => {
+            if (image == 'no') {
+                image = this.state.my_origin_images[index];
+            }
             return (
                 <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
                     <Image style={{

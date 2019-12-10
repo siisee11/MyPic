@@ -252,21 +252,22 @@ export default class SearchTab extends Component {
             .onSnapshot((querySnapshot) => {
                 querySnapshot.forEach( (doc) => {
                     let data = doc.data();
-
-                    this.setState({
-                        markers: [
-                          ...this.state.markers,
-                          {
-                            coordinate: {
-                                latitude: data.region.latitude,
-                                longitude: data.region.longitude,
+                    if (data.region){
+                      this.setState({
+                          markers: [
+                            ...this.state.markers,
+                            {
+                              coordinate: {
+                                  latitude: data.region.latitude,
+                                  longitude: data.region.longitude,
+                              },
+                              key: id++,
+                              color: randomColor(),
+                              title: data.tourName,
                             },
-                            key: id++,
-                            color: randomColor(),
-                            title: data.tourName,
-                          },
-                        ],
-                      });
+                          ],
+                        });
+                    }
                 })
             })
 
