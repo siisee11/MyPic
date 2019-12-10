@@ -10,6 +10,8 @@ import 'firebase/firestore'
 
 import MyHeader from '../components/MyHeader';
 import ImageBrowser from "../components/ImageBrower";
+//import { ImageBrowser } from 'expo-multiple-media-imagepicker';
+//import {ImageBrowser,CameraBrowser} from 'expo-multiple-imagepicker';
 
 var { height, width } = Dimensions.get('window');
 
@@ -68,6 +70,12 @@ export default class ProfileTab extends Component {
         return filename
     }
 
+    fileToFilename(file) {
+        let filename_arr = file.split('/');
+        let filename = filename_arr[filename_arr.length - 1]
+        return filename
+    }
+
     onLongPress= (index) => {
         //handler for Long Click
         let uri = this.state.data[index];
@@ -118,11 +126,14 @@ export default class ProfileTab extends Component {
 
     };
 
-    uploadImage = async (uri, imageName) => {
+    uploadImage = async (uri, index) => {
+        console.log(uri)
+        const filename = this.fileToFilename(uri);
+        console.log(filename)
         const response = await fetch(uri);
         const blob = await response.blob();
 
-        const ref = firebase.storage().ref().child("user_images/" + this.state.user.uid + '/'+ imageName + '.jpg');
+        const ref = firebase.storage().ref().child("user_images/" + this.state.user.uid + '/'+ filename + '.jpg');
         await ref.put(blob);
 
         ref.getDownloadURL().then( (url) => {

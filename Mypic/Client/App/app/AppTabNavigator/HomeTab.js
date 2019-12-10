@@ -55,7 +55,9 @@ export default class HomeTab extends Component {
     componentDidMount = async () => {
         await this.getUserInfo();
 
-        firebase.firestore().collection("User").doc(this.state.user.uid)
+        firebase.firestore().collection("User")
+        .doc(this.state.user.uid)
+        .collection("Embedding")
         .onSnapshot((doc) => {
             doc.data().embeddings ? (
                 this.setState({
