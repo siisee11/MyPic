@@ -65,36 +65,32 @@ export default class DownloadPic extends Component {
 
     componentDidMount = async () => {
         
-        await this.props.tour_ref
-            .collection("Embedding")
-            .get().then( (querySnapshot) => {
-//            .onSnapshot( (querySnapshot) => {
-                querySnapshot.forEach( (doc) => {
-                    let doc_data = doc.data();
-                    let doc_id = doc.id;
-                    let image_embeddings = new Array(); 
-//                    let image_map = new Map();      // map image name and embedding
-                    for (var key in doc_data){
-                        value = doc_data[key]
-                        image_embeddings.push(value)
-                    }
-                    
-                    /* photo with only one face would fail, so just duplicate it */
-                    if (image_embeddings.length == 1) {
-                        image_embeddings.push(image_embeddings[0]);
-                    }
+        var querySnapshot = await this.props.tour_ref.collection("Embedding").get()
+            
+        querySnapshot.forEach( (doc) => {
+            let doc_data = doc.data();
+            let doc_id = doc.id;
+            let image_embeddings = new Array(); 
 
-										
-                    let append_file_name = this.state.file_names.concat(doc_id);
-                    let append_tour_images_embeddings_ndarray = this.state.tour_images_embeddings_ndarray.concat(pack(image_embeddings))
-                    this.setState({
-                        file_names : append_file_name,
-                        tour_images_embeddings_ndarray: append_tour_images_embeddings_ndarray,
-                    })
+            for (var key in doc_data){
+                value = doc_data[key]
+                image_embeddings.push(value)
+            }
+            
+            /* photo with only one face would fail, so just duplicate it */
+            if (image_embeddings.length == 1) {
+                image_embeddings.push(image_embeddings[0]);
+                                
+                let append_file_name = this.state.file_names.concat(doc_id);
+                let append_tour_images_embeddings_ndarray = this.state.tour_images_embeddings_ndarray.concat(pack(image_embeddings))
+                this.setState({
+                    file_names : append_file_name,
+                    tour_images_embeddings_ndarray: append_tour_images_embeddings_ndarray,
                 })
-
-            }).catch(error => console.log(error));
-
+            }
+        })
+                
+    
             
         await Font.loadAsync({
             'Gaegu-Regular': require('../../assets/fonts/Gaegu/Gaegu-Regular.ttf'),
