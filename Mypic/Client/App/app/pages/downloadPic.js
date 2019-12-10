@@ -105,7 +105,8 @@ export default class DownloadPic extends Component {
         this.setState({ fontLoaded: true });
       
 
-        let profile_embeddings_to_array = Object.values(this.state.profile_embeddings);
+//        let profile_embeddings_to_array = Object.values(this.state.profile_embeddings);
+        let profile_embeddings_to_array = this.state.profile_embeddings;
         if (profile_embeddings_to_array.length == 1) {
             profile_embeddings_to_array = profile_embeddings_to_array.push(profile_embeddings_to_array[0]);
         }

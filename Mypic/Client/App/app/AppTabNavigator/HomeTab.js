@@ -34,7 +34,7 @@ export default class HomeTab extends Component {
                 photoURL: '',
                 uid: '',
             },
-            profile_embeddings : null,
+            profile_embeddings : [],
         };
         this.goDownloadPic = this.goDownloadPic.bind(this)
     }
@@ -58,13 +58,28 @@ export default class HomeTab extends Component {
         firebase.firestore().collection("User")
         .doc(this.state.user.uid)
         .collection("Embedding")
-        .onSnapshot((doc) => {
-            doc.data().embeddings ? (
+        .get().then( (querySnapshot) => {
+//        .onSnapshot( (querySnapshot) => {
+            querySnapshot.forEach( (doc) => {
+                let doc_data = doc.data();
+                let doc_id = doc.id;
+                let image_embeddings = new Array(); 
+    //                    let image_map = new Map();      // map image name and embedding
+                for (var key in doc_data){
+                    value = doc_data[key]
+                    image_embeddings.push(value)
+                }
+                
+                let append_profile_embeddings = this.state.profile_embeddings.concat(image_embeddings)
                 this.setState({
-                        profile_embeddings: doc.data().embeddings
+                    profile_embeddings: append_profile_embeddings,
                 })
-            ) : null
-        });
+            })
+            if (this.state.profile_embeddings){
+                console.log(this.state.profile_embeddings.length);
+            }
+
+        }).catch(error => console.log(error));
 
         firebase.firestore()
             .collection("Tour")
