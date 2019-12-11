@@ -55,6 +55,7 @@ export default class HomeTab extends Component {
 
         firebase.firestore()
             .collection("Tour")
+            .where("participants", "array-contains", this.state.user.uid)
             .onSnapshot((snapshot) => {
                 snapshot.docChanges().forEach( (change) => {
                     let doc = change.doc
