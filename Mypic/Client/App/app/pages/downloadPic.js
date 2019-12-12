@@ -126,13 +126,6 @@ export default class DownloadPic extends Component {
 
                     /* if there is at least one face */
                     if (image_embeddings.length > 0) {
-                        let append_image_ndarray = {
-                            "name" : doc_id,
-                            "ndarray" : pack(image_embeddings),
-                        }
-                        this.setState({
-                            tour_images_embeddings_ndarray: append_image_ndarray,
-                        })
                         await this.add_to_my_images(doc_id, pack(image_embeddings))
                     } else {
                         /* This might be landscape photo */
@@ -163,49 +156,15 @@ export default class DownloadPic extends Component {
         }
         let argmax = ops.argmax(distances);
         let max = distances.get(argmax[0], argmax[1]);
-        if (max > this.state.threshold) {
-            urls = await this.getImageURLs(file_name)
-            let my_image = {
-                name : file_name,
-                urls : urls,
-                distance : max,
-            };
-            this.setState({
-                my_images : [...this.state.my_images, my_image],
-            });
-            console.log(my_image)
-            console.log("added")
-        }
-    }
-
-    update_my_images() {
+        urls = await this.getImageURLs(file_name)
+        let my_image = {
+            name : file_name,
+            urls : urls,
+            distance : max,
+        };
         this.setState({
-            my_images: [],
-            my_origin_images: [],
-        }, async () => {
-            let profile_embeddings_ndarray = this.state.profile_embeddings_ndarray;
-            for (var i = 0; i < this.state.tour_images_embeddings_ndarray.length; i++) {
-                let distances = ndarray(new Float32Array([0.01]), [1,1])
-                if (this.state.tour_images_embeddings_ndarray[i].shape[0] != 0){
-                    distances = this.get_angular_distances(this.state.tour_images_embeddings_ndarray[i], profile_embeddings_ndarray);
-                }
-                let argmax = ops.argmax(distances);
-                let max = distances.get(argmax[0], argmax[1]);
-                if (max > this.state.threshold) {
-                    this.getImage(this.state.file_names[i])
-                    console.log("added")
-                }
-
-                if (max > 0.65 && profile_embeddings_ndarray.shape[0] < 6 && global.ReuseFace) { 
-                    // this probably my face so reuse it as profile embeddings.
-                    let unpacked_tour_embeddings = unpack(this.state.tour_images_embeddings_ndarray[i]);
-                    let expected_my_embedding = unpacked_tour_embeddings[argmax[0]];
-                    let unpacked_profile_embeddings = unpack(profile_embeddings_ndarray);
-                    unpacked_profile_embeddings.push(expected_my_embedding);
-                    profile_embeddings_ndarray = pack(unpacked_profile_embeddings);
-                }
-            }
-        })
+            my_images : [...this.state.my_images, my_image],
+        });
     }
 
     get_angular_distances(embs1, embs2) {
@@ -285,7 +244,8 @@ export default class DownloadPic extends Component {
     };
 
     renderGridImages() {
-        return this.state.my_images.map((image, index) => {
+        let my_images_over_threshold = this.state.my_images.filter((v) => (v.distance > this.state.threshold));
+        return my_images_over_threshold.map((image, index) => {
             let image_url = image.urls.resized;
             if (image_url == 'no') {
                 image_url = image.urls.original;
@@ -391,13 +351,8 @@ export default class DownloadPic extends Component {
                             maximumTrackTintColor="#000000"
                             step={0.05} 
                             value={this.state.threshold}
-                            onValueChange={(sliderValue)=>{
-								this.setState({threshold : sliderValue, })
-							    }
-							}
                             onSlidingComplete={(sliderValue) => {
                                 this.setState({ threshold : sliderValue, })
-                                this.update_my_images()
 								}
                             }
                         />
