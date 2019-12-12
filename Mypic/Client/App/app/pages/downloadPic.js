@@ -40,7 +40,6 @@ export default class DownloadPic extends Component {
         /*
         props : {
             uid : user id
-            profile_embeddings: user's profile embeddings
             tour_info : tour information
             mypic_ref: reference to 'User/Mytour/<Tourname>'
             tour_refs : reference to 'Tour/<Tourname>'
@@ -49,15 +48,13 @@ export default class DownloadPic extends Component {
 
         this.state={
             tour: this.props.tour_info, // copy from props for easy use
-            images : [],                // All images from myImages
-            likelihoods : [],           // All likelihoods from myImages
-            my_images : [],             // images above threshold
-            my_images_uri : [],             // images above threshold
-            my_origin_images: [],             // images above threshold
+            my_images : [],             // images above threshold (resized images)
+            my_origin_images: [],       // images above threshold (original images)
             uris : [],                  // uri for download images (Unused)
             fontLoaded: false,
-            threshold: 0.45,
+            threshold: 0.45,            // initial threshold is cos(1.1) = 0.45
             file_names: [],
+            landscape_file_names: [],   // file names for landscape images
             profile_embeddings: [],
             profile_embeddings_ndarray: null,
             tour_images_embeddings: [],
@@ -66,47 +63,24 @@ export default class DownloadPic extends Component {
     }
 
     componentDidMount = async () => {
-        
-        await this.props.tour_ref
-            .collection("Embedding")
-            .get().then( (querySnapshot) => {
-//            .onSnapshot( (querySnapshot) => {
-                querySnapshot.forEach( (doc) => {
-                    let doc_data = doc.data();
-                    let doc_id = doc.id;
-                    let image_embeddings = new Array(); 
-//                    let image_map = new Map();      // map image name and embedding
-                    for (var key in doc_data){
-                        value = doc_data[key]
-                        image_embeddings.push(value)
-                    }
-                    
-                    /* photo with only one face would fail, so just duplicate it */
-                    if (image_embeddings.length == 1) {
-                        image_embeddings.push(image_embeddings[0]);
-                    }
+        /* load font */
+        await Font.loadAsync({
+            'Gaegu-Regular': require('../../assets/fonts/Gaegu/Gaegu-Regular.ttf'),
+            'EastSeaDokdo-Regular': require('../../assets/fonts/East_Sea_Dokdo/EastSeaDokdo-Regular.ttf'),
+            'Nanum_pen_Script-Regular': require('../../assets/fonts/Nanum_Pen_Script/NanumPenScript-Regular.ttf'),
+            'Yeon_Sung-Regular': require('../../assets/fonts/Yeon_Sung/YeonSung-Regular.ttf'),
+        });
+        this.setState({ fontLoaded: true });
 
-										
-                    let append_file_name = this.state.file_names.concat(doc_id);
-                    let append_tour_images_embeddings_ndarray = this.state.tour_images_embeddings_ndarray.concat(pack(image_embeddings))
-                    this.setState({
-                        file_names : append_file_name,
-                        tour_images_embeddings_ndarray: append_tour_images_embeddings_ndarray,
-                    })
-                })
-
-            }).catch(error => console.log(error));
-
-        await firebase.firestore().collection("User")
+        /* get user embeddings */
+         await firebase.firestore().collection("User")
         .doc(this.props.uid)
         .collection("Embedding")
         .get().then( (querySnapshot) => {
 //        .onSnapshot( (querySnapshot) => {
             querySnapshot.forEach( (doc) => {
                 let doc_data = doc.data();
-                let doc_id = doc.id;
                 let image_embeddings = new Array(); 
-    //                    let image_map = new Map();      // map image name and embedding
                 for (var key in doc_data){
                     value = doc_data[key]
                     image_embeddings.push(value)
@@ -126,24 +100,82 @@ export default class DownloadPic extends Component {
             this.setState({
                 profile_embeddings_ndarray: profile_embeddings_to_ndarray,
             });
-            console.log(this.state.profile_embeddings_ndarray.shape)
 
         }).catch(error => console.log(error));
 
-            
-        await Font.loadAsync({
-            'Gaegu-Regular': require('../../assets/fonts/Gaegu/Gaegu-Regular.ttf'),
-            'EastSeaDokdo-Regular': require('../../assets/fonts/East_Sea_Dokdo/EastSeaDokdo-Regular.ttf'),
-            'Nanum_pen_Script-Regular': require('../../assets/fonts/Nanum_Pen_Script/NanumPenScript-Regular.ttf'),
-            'Yeon_Sung-Regular': require('../../assets/fonts/Yeon_Sung/YeonSung-Regular.ttf'),
-        });
-        this.setState({ fontLoaded: true });
+        /* get tour embeddings */
+        this.props.tour_ref
+            .collection("Embedding")
+            .onSnapshot( async (querySnapshot) => {
+                querySnapshot.forEach( async (doc) => {
+                    let doc_data = doc.data();
+                    let doc_id = doc.id;
 
-        this.update_my_images()
+                    console.log("[Start] file => ", doc_id);
+
+                    let image_embeddings = new Array(); 
+                    for (var key in doc_data){
+                        value = doc_data[key]
+                        image_embeddings.push(value)
+                    }
+                    
+                    /* photo with only one face would fail, so just duplicate it */
+                    if (image_embeddings.length == 1) {
+                        image_embeddings.push(image_embeddings[0]);
+                    }
+
+                    /* if there is at least one face */
+                    if (image_embeddings.length > 0) {
+                        let append_image_ndarray = {
+                            "name" : doc_id,
+                            "ndarray" : pack(image_embeddings),
+                        }
+                        this.setState({
+                            tour_images_embeddings_ndarray: append_image_ndarray,
+                        })
+                        await this.add_to_my_images(doc_id, pack(image_embeddings))
+                    } else {
+                        /* This might be landscape photo */
+                        console.log("landscape image");
+                        let append_landscape_file_names = this.state.landscape_file_names.concat(doc_id);
+                        this.setState({
+                            landscape_file_names : append_landscape_file_names,
+                        })
+                    }
+                    console.log(this.state.my_images.length);
+                    console.log("[End] file => ", doc_id);
+                })
+
+            })
+
+        console.log("[-----------ComponentDidMount------------]")
     };
 
     goBack() {
         Actions.pop()
+    }
+
+    async add_to_my_images(file_name, tour_embedding_ndarray) {
+        let profile_embeddings_ndarray = this.state.profile_embeddings_ndarray;
+        let distances = ndarray(new Float32Array([0.01]), [1,1])
+        if (tour_embedding_ndarray.shape[0] != 0){
+            distances = this.get_angular_distances(tour_embedding_ndarray, profile_embeddings_ndarray);
+        }
+        let argmax = ops.argmax(distances);
+        let max = distances.get(argmax[0], argmax[1]);
+        if (max > this.state.threshold) {
+            urls = await this.getImageURLs(file_name)
+            let my_image = {
+                name : file_name,
+                urls : urls,
+                distance : max,
+            };
+            this.setState({
+                my_images : [...this.state.my_images, my_image],
+            });
+            console.log(my_image)
+            console.log("added")
+        }
     }
 
     update_my_images() {
@@ -198,8 +230,9 @@ export default class DownloadPic extends Component {
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
         if (status == 'granted') {
-            this.state.my_origin_images.map(async (img_uri) => {
-                let img_name = img_uri.split('%')[2].split('?')[0].substring(2);
+            this.state.my_images.map(async (img) => {
+                let img_uri = img.urls.original;
+                let img_name = img.name;
 
                 const file = await FileSystem.downloadAsync(
                     img_uri,
@@ -220,42 +253,42 @@ export default class DownloadPic extends Component {
         this.goBack();
     };
 
-    getImage = (image) => {
+    /* get URL by file name and add it to my_images array */
+    getImageURLs = async (image) => {
+        var urls = {
+            resized : null,
+            original : null,
+        }
+
 		var imagebyte = image.split('.');
 		var thumbimg = '/thumbnails/' + imagebyte[0] + "_200x200." + imagebyte[1];
         
         // get thumbnail of image url
         const ref = firebase.storage().ref().child("tour_images/" + this.state.tour.tour_id + thumbimg );
-        ref.getDownloadURL().then( (url) => {
-            let append_my_images = this.state.my_images.concat(url);
-            this.setState({
-                my_images: append_my_images,
-            })
+        await ref.getDownloadURL().then( (url) => {
+            urls.resized = url;
         }).catch( (error) => {
-            let append_my_images = this.state.my_images.concat("no");
-            this.setState({
-                my_images: append_my_images,
-            })
-            console.log('cannot get image from firebase');
+            urls.resized = "no";
+            console.log('cannot get ', thumbimg, ' from firebase');
         });
 
         // get original image url
         const ref_origin = firebase.storage().ref().child("tour_images/" + this.state.tour.tour_id + '/' + image);
-        ref_origin.getDownloadURL().then( (url) => {
-            let append_my_origin_images = this.state.my_origin_images.concat(url);
-            this.setState({
-                my_origin_images: append_my_origin_images,
-            })
+        await ref_origin.getDownloadURL().then( (url) => {
+            urls.original = url;
         }).catch( (error) => {
             console.log(error)
             console.log('cannot get image from firebase');
         });
+
+        return urls;
     };
 
     renderGridImages() {
         return this.state.my_images.map((image, index) => {
-            if (image == 'no') {
-                image = this.state.my_origin_images[index];
+            let image_url = image.urls.resized;
+            if (image_url == 'no') {
+                image_url = image.urls.original;
             }
             return (
                 <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
@@ -265,7 +298,7 @@ export default class DownloadPic extends Component {
                         width: undefined,
                         height: undefined,
                     }}
-                           source={{ uri: image}}>
+                           source={{ uri: image_url}}>
                     </Image>
                 </View>
             )
