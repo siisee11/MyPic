@@ -1,6 +1,6 @@
 <div align="center">
   
-  [![Current Version](https://img.shields.io/badge/version-0.2.0-green.svg)](https://github.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design)
+  [![Current Version](https://img.shields.io/badge/version-1.1.0-green.svg)](https://github.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design)
   ![Python](https://img.shields.io/badge/python-v3.6+-blue.svg)
   ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
   ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
@@ -30,10 +30,10 @@
 ## Roadmap
   - [x] ~~face recognation and classifying~~
   - [x] ~~Support Docker~~
-  - [ ] enhance classfication
-  - [ ] GPU enable
-  - [ ] web 
-  - [ ] cross-platform application with React.js
+  - [x] enhance classfication
+  - [x] GPU enable
+  - [x] web 
+  - [x] cross-platform application with React.js
 
 ## Getting Started with Mypic
 
