@@ -46,7 +46,7 @@
       </v-col>
 
       <v-col sm="10" cols="12">
-        <image-uploader v-model="value.images" label="Tour Images" :path="`/tour_images/${this.doc_id}/`"/>
+        <image-uploader v-model="value.images" label="Tour Images" :path="`/tour_images/${this.doc_id}`"/>
       </v-col>
     </v-row>
   </v-container>
@@ -94,10 +94,10 @@ export default {
     }
   },
   methods: {
-    uploadAndGetURL: async function (path, file) {
+    upload_GetURL_doThis: async function (path, file, func) {
       var uploadsnapshot = await firebase.storage().ref(path).put(file)
       var url = await uploadsnapshot.ref.getDownloadURL()
-      return url
+      func(url)
     },
   },
   watch: {
