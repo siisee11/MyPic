@@ -8,7 +8,8 @@ import HomeTab from "../AppTabNavigator/HomeTab";
 import ProfileTab from "../AppTabNavigator/ProfileTab";
 import SettingTab from "../AppTabNavigator/SettingTab";
 import MapTab from "../AppTabNavigator/MapTab";
-import IconWithBadge from '../AppTabNavigator/IconWithBadge'
+import CreateTourTab from "../AppTabNavigator/CreateTourTab";
+import IconWithBadge from '../AppTabNavigator/IconWithBadge';
 
 const HomeIconWithBadge = props => {
     // You should pass down the badgeCount in some other ways like context, redux, mobx or event emitters.
@@ -29,6 +30,8 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
         iconName = 'ios-person';
     } else if (routeName === 'Map') {
         iconName = 'ios-compass';
+    } else if (routeName === 'CreateTour') {
+        iconName = 'ios-create';
     }
 
     // You can return any component that you like here!
@@ -41,6 +44,7 @@ const AppTabContainet = createAppContainer(
             Home: { screen: HomeTab},
             Profile: { screen: ProfileTab},
             Map: {screen: MapTab},
+            CreateTour: {screen: CreateTourTab},
             Setting: { screen: SettingTab},
         },
         {
