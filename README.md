@@ -4,7 +4,8 @@
   ![Python](https://img.shields.io/badge/python-v3.6+-blue.svg)
   ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
   ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
-  [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design/graphs/commit-activity)
+  [![Maintenance](https://img.shields.io/maintenance/no/2019)](https://GitHub.com/BlindedShooter/SKKU-2019-Fall-Capstone-Design/graphs/commit-activity)
+  
   
   <img alt="MyPic logo" src="Mypic-logo.png" width="200px" />
 
